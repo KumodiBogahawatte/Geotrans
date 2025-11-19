@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Contact - Geotrans</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -21,7 +22,9 @@
                 <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">CONNECT WITH US</h2>
                 <p class="text-gray-600 mb-6 sm:mb-8">Contact us for all your questions and opinions</p>
 
-                <form class="space-y-4 sm:space-y-6">
+                <div id="contact-message" class="hidden mb-4 p-4 rounded-lg"></div>
+
+                <form id="contact-form" class="space-y-4 sm:space-y-6">
 
                     <!-- Name Fields -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -31,6 +34,7 @@
                             </label>
                             <input
                                 type="text"
+                                name="first_name"
                                 required
                                 class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D4887] focus:border-transparent text-base sm:text-sm">
                         </div>
@@ -40,6 +44,7 @@
                             </label>
                             <input
                                 type="text"
+                                name="last_name"
                                 required
                                 class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D4887] focus:border-transparent text-base sm:text-sm">
                         </div>
@@ -52,6 +57,7 @@
                         </label>
                         <input
                             type="email"
+                            name="email"
                             required
                             class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D4887] focus:border-transparent text-base sm:text-sm">
                     </div>
@@ -63,23 +69,8 @@
                         </label>
                         <input
                             type="tel"
+                            name="phone"
                             class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base sm:text-sm">
-                    </div>
-
-                    <!-- Country/Region -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Country / Region <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            required
-                            class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D4887] focus:border-transparent appearance-none bg-white text-base sm:text-sm">
-                            <option value="">United States (US)</option>
-                            <option value="uk">United Kingdom</option>
-                            <option value="ca">Canada</option>
-                            <option value="au">Australia</option>
-                            <option value="lk">Sri Lanka</option>
-                        </select>
                     </div>
 
                     <!-- Subject -->
@@ -89,6 +80,7 @@
                         </label>
                         <input
                             type="text"
+                            name="subject"
                             class="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D4887] focus:border-transparent text-base sm:text-sm">
                     </div>
 
@@ -98,6 +90,7 @@
                             Message <span class="text-red-500">*</span>
                         </label>
                         <textarea
+                            name="message"
                             required
                             rows="5"
                             placeholder="Hi! I'd like to ask about..."
@@ -120,11 +113,53 @@
                     <!-- Submit Button -->
                     <button
                         type="submit"
+                        id="submit-btn"
                         class="w-full sm:w-auto bg-[#8D4887] hover:bg-[#7a3a6f] text-white font-semibold px-8 py-3 sm:py-2 rounded-lg transition-colors text-base sm:text-sm">
                         SEND MESSAGE
                     </button>
 
                 </form>
+
+                <script>
+                document.getElementById('contact-form').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.getElementById('submit-btn');
+                    const messageDiv = document.getElementById('contact-message');
+                    const formData = new FormData(this);
+                    
+                    // Disable button
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'SENDING...';
+                    
+                    try {
+                        const response = await fetch('api/contact.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const data = await response.json();
+                        
+                        messageDiv.className = data.success 
+                            ? 'mb-4 p-4 rounded-lg bg-green-100 border border-green-400 text-green-700'
+                            : 'mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700';
+                        messageDiv.textContent = data.message;
+                        messageDiv.classList.remove('hidden');
+                        
+                        if (data.success) {
+                            this.reset();
+                        }
+                        
+                    } catch (error) {
+                        messageDiv.className = 'mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700';
+                        messageDiv.textContent = 'An error occurred. Please try again.';
+                        messageDiv.classList.remove('hidden');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'SEND MESSAGE';
+                    }
+                });
+                </script>
             </div>
 
             <!-- Right Side: Contact Info & Map -->

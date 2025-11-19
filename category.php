@@ -1,16 +1,75 @@
+<?php
+require_once 'includes/helpers.php';
+require_once 'classes/Product.php';
+require_once 'classes/Category.php';
+require_once 'classes/Brand.php';
+
+$productModel = new Product();
+$categoryModel = new Category();
+$brandModel = new Brand();
+
+// Get category from URL
+$category_id = isset($_GET['id']) ? intval($_GET['id']) : null;
+$currentCategory = null;
+
+if ($category_id) {
+    $currentCategory = $categoryModel->getById($category_id);
+    if (!$currentCategory) {
+        header('Location: products.php');
+        exit;
+    }
+}
+
+// Get filter parameters
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$per_page = 20;
+$brand_id = isset($_GET['brand']) ? intval($_GET['brand']) : null;
+$min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : null;
+$max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : null;
+$sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+
+// Build filters array
+$filters = [];
+if ($category_id) $filters['category_id'] = $category_id;
+if ($brand_id) $filters['brand_id'] = $brand_id;
+if ($min_price) $filters['min_price'] = $min_price;
+if ($max_price) $filters['max_price'] = $max_price;
+if ($sort_by) $filters['sort_by'] = $sort_by;
+
+// Get products and pagination info
+$result = $productModel->getAll($page, $per_page, $filters);
+$products = $result['products'];
+$total_products = $result['total'];
+$total_pages = $result['total_pages'];
+
+// Get all categories and brands for filters
+$categories = $categoryModel->getAll();
+$brands = $brandModel->getAll();
+$popularBrands = $brandModel->getPopular(6);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Laptops - Game Beyond Limits</title>
+    <title><?= $currentCategory ? htmlspecialchars($currentCategory['name']) : 'All Categories' ?> | GeoTrans</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
+        .text-purple-custom { color: #8D4887; }
+        .bg-purple-custom { background-color: #8D4887; }
+        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
+        .hover\:text-purple-custom:hover { color: #8D4887; }
+        .border-purple-custom { border-color: #8D4887; }
+        
+        .line-clamp-2 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
         }
     </style>
 </head>
@@ -19,439 +78,339 @@
 
     <!-- Include Header -->
     <?php include 'includes/header.php'; ?>
+
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-r from-purple-900 via-pink-800 to-blue-900 text-white overflow-hidden" style="background-image: url('assets/images/pages/asuz-banner.jpg'); background-size: cover; background-position: center;">
         <div class="absolute inset-0 bg-black opacity-40"></div>
         <div class="relative max-w-7xl mx-auto px-4 py-10 sm:py-16 text-center">
-            <h1 class="text-3xl md:text-5xl font-bold mb-4">GAME BEYOND LIMITS.</h1>
-            <p class="text-base md:text-xl mb-8">Unleash legendary strength with cutting-edge gaming technology</p>
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">
+                <?= $currentCategory ? htmlspecialchars($currentCategory['category_name']) : 'All Products' ?>
+            </h1>
+            <p class="text-base md:text-xl mb-8">
+                <?= $currentCategory && !empty($currentCategory['category_description']) ? htmlspecialchars($currentCategory['category_description']) : 'Discover amazing products at unbeatable prices' ?>
+            </p>
         </div>
     </div>
 
+    <!-- Brand Logos -->
     <div class="flex flex-wrap justify-center items-center gap-6 mt-8 px-4">
-        <img src="assets/images/home/hp-300x300-1 1.png" alt="HP" class="h-20 md:h-32 p-2 rounded">
-        <img src="assets/images/home/hp-300x300-1 2.png" alt="ASUS" class="h-20 md:h-32 p-2 rounded">
-        <img src="assets/images/home/hp-300x300-1 3.png" alt="Lenovo" class="h-20 md:h-32 p-2 rounded">
-        <img src="assets/images/home/hp-300x300-1 4.png" alt="MSI" class="h-20 md:h-32 p-2 rounded">
-        <img src="assets/images/home/hp-300x300-1 5.png" alt="Dell" class="h-20 md:h-32 p-2 rounded">
-        <img src="assets/images/home/hp-300x300-1 6.png" alt="Acer" class="h-20 md:h-32 p-2 rounded">
+        <?php foreach ($popularBrands as $b): ?>
+        <a href="?id=<?= $category_id ?>&brand=<?= $b['brand_id'] ?>" class="transform hover:scale-110 transition-transform">
+            <img src="<?= !empty($b['brand_logo']) ? 'assets/images/brands/' . htmlspecialchars($b['brand_logo']) : 'assets/images/home/hp-300x300-1 1.png' ?>" 
+                 alt="<?= htmlspecialchars($b['brand_name']) ?>" 
+                 class="h-20 md:h-32 p-2 rounded">
+        </a>
+        <?php endforeach; ?>
     </div>
 
     <hr class="max-w-7xl mx-auto">
 
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="flex flex-col md:flex-row gap-8">
-            <!-- (mobile Filters button moved into the products header row to avoid duplicate controls) -->
-
-            <!-- Sidebar Filters (hidden on small screens; duplicated in mobile drawer) -->
+            <!-- Sidebar Filters -->
             <aside id="sidebarFilters" class="hidden md:block w-64 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">
-                <h3 class="font-bold text-lg mb-4">All Laptops</h3>
+                <h3 class="font-bold text-lg mb-4">
+                    <?= $currentCategory ? htmlspecialchars($currentCategory['category_name']) : 'All Products' ?>
+                </h3>
 
+                <!-- Categories Filter -->
                 <div class="mb-6">
                     <h4 class="font-semibold mb-3">CATEGORIES</h4>
                     <div class="space-y-2 text-sm">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Gaming Laptops
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Business Laptops
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Ultrabooks
-                        </label>
+                        <a href="products.php" class="flex items-center hover:text-purple-custom <?= !$category_id ? 'text-purple-custom font-semibold' : '' ?>">
+                            All Categories
+                        </a>
+                        <?php foreach ($categories as $cat): ?>
+                        <a href="?id=<?= $cat['category_id'] ?>" 
+                           class="flex items-center hover:text-purple-custom <?= $category_id == $cat['category_id'] ? 'text-purple-custom font-semibold' : '' ?>">
+                            <?= htmlspecialchars($cat['category_name']) ?>
+                        </a>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
+                <!-- Brand Filter -->
                 <div class="mb-6">
                     <h4 class="font-semibold mb-3">BRAND</h4>
                     <div class="space-y-2 text-sm">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> HP
+                        <?php foreach ($brands as $b): ?>
+                        <label class="flex items-center cursor-pointer hover:text-purple-custom">
+                            <input type="checkbox" 
+                                   class="mr-2" 
+                                   <?= $brand_id == $b['brand_id'] ? 'checked' : '' ?>
+                                   onchange="window.location.href='?id=<?= $category_id ?>&brand=<?= $brand_id == $b['brand_id'] ? '' : $b['brand_id'] ?>'">
+                            <?= htmlspecialchars($b['brand_name']) ?>
                         </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> ASUS
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Lenovo
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> MSI
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Dell
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Acer
-                        </label>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
+                <!-- Price Range Filter -->
                 <div class="mb-6">
                     <h4 class="font-semibold mb-3">PRICE RANGE</h4>
-                    <div class="space-y-2 text-sm">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Under Rs1000
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Rs1000 - Rs1500
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Rs1500 - Rs2000
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Over Rs2000
-                        </label>
-                    </div>
+                    <form method="GET" action="">
+                        <?php if ($category_id): ?>
+                        <input type="hidden" name="id" value="<?= $category_id ?>">
+                        <?php endif; ?>
+                        <?php if ($brand_id): ?>
+                        <input type="hidden" name="brand" value="<?= $brand_id ?>">
+                        <?php endif; ?>
+                        <?php if ($sort_by): ?>
+                        <input type="hidden" name="sort" value="<?= $sort_by ?>">
+                        <?php endif; ?>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs text-gray-600">Min Price</label>
+                                <input type="number" name="min_price" value="<?= $min_price ?? '' ?>" 
+                                       placeholder="0" 
+                                       class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-600">Max Price</label>
+                                <input type="number" name="max_price" value="<?= $max_price ?? '' ?>" 
+                                       placeholder="500000" 
+                                       class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                            </div>
+                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-purple-700 text-sm">
+                                Apply
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
+                <?php if ($brand_id || $min_price || $max_price): ?>
+                <!-- Clear Filters -->
                 <div class="mb-6">
-                    <h4 class="font-semibold mb-3">PROCESSOR</h4>
-                    <div class="space-y-2 text-sm">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Intel Core i5
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Intel Core i7
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> Intel Core i9
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> AMD Ryzen 7
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> AMD Ryzen 9
-                        </label>
-                    </div>
+                    <a href="?id=<?= $category_id ?>" class="text-sm text-red-600 hover:text-red-700 font-semibold">
+                        Clear All Filters
+                    </a>
                 </div>
-
-                <div class="mb-6">
-                    <h4 class="font-semibold mb-3">GRAPHICS</h4>
-                    <div class="space-y-2 text-sm">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> RTX 4050
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> RTX 4060
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> RTX 4070
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" class="mr-2"> RTX 4080
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="font-semibold mb-3">SCREEN SIZE</h4>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="px-3 py-1 border rounded hover:bg-gray-100 text-sm">14"</button>
-                        <button class="px-3 py-1 border rounded hover:bg-gray-100 text-sm">15.6"</button>
-                        <button class="px-3 py-1 border rounded hover:bg-gray-100 text-sm">17"</button>
-                    </div>
-                </div>
+                <?php endif; ?>
             </aside>
 
-            <!-- Mobile Filters Drawer (hidden by default) -->
-            <div id="mobile-filters" class="fixed inset-0 z-40 flex md:hidden hidden" aria-hidden="true">
-                <div id="mobile-filters-overlay" class="absolute inset-0 bg-black opacity-50"></div>
-                <aside class="relative z-50 w-11/12 max-w-sm bg-white h-full p-6 overflow-auto">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">Filters</h3>
-                        <button id="closeFiltersBtn" class="text-gray-600">Close</button>
-                    </div>
+            <!-- Main Content -->
+            <div class="flex-1">
+                <!-- Mobile Filter Button -->
+                <div class="md:hidden mb-4">
+                    <button id="mobileFilterBtn" class="w-full bg-purple-custom text-white py-3 px-4 rounded-lg font-semibold flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                        </svg>
+                        Filters
+                    </button>
+                </div>
 
-                    <!-- BEGIN: duplicated filter content for mobile drawer -->
-                    <div class="mb-6">
-                        <h4 class="font-semibold mb-3">CATEGORIES</h4>
-                        <div class="space-y-2 text-sm">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Gaming Laptops
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Business Laptops
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Ultrabooks
-                            </label>
-                        </div>
+                <!-- Toolbar -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 bg-white p-4 rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-600">
+                        Showing <?= min(($page - 1) * $per_page + 1, $total_products) ?>–<?= min($page * $per_page, $total_products) ?> of <?= $total_products ?> results
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <form method="GET" action="" class="flex items-center gap-2">
+                            <?php if ($category_id): ?>
+                            <input type="hidden" name="id" value="<?= $category_id ?>">
+                            <?php endif; ?>
+                            <?php if ($brand_id): ?>
+                            <input type="hidden" name="brand" value="<?= $brand_id ?>">
+                            <?php endif; ?>
+                            <?php if ($min_price): ?>
+                            <input type="hidden" name="min_price" value="<?= $min_price ?>">
+                            <?php endif; ?>
+                            <?php if ($max_price): ?>
+                            <input type="hidden" name="max_price" value="<?= $max_price ?>">
+                            <?php endif; ?>
+                            
+                            <label class="text-sm text-gray-600">Sort:</label>
+                            <select name="sort" onchange="this.form.submit()" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                                <option value="newest" <?= $sort_by == 'newest' ? 'selected' : '' ?>>Newest</option>
+                                <option value="price_low" <?= $sort_by == 'price_low' ? 'selected' : '' ?>>Price: Low to High</option>
+                                <option value="price_high" <?= $sort_by == 'price_high' ? 'selected' : '' ?>>Price: High to Low</option>
+                                <option value="bestsellers" <?= $sort_by == 'bestsellers' ? 'selected' : '' ?>>Best Sellers</option>
+                                <option value="rating" <?= $sort_by == 'rating' ? 'selected' : '' ?>>Top Rated</option>
+                            </select>
+                        </form>
                     </div>
-
-                    <div class="mb-6">
-                        <h4 class="font-semibold mb-3">BRAND</h4>
-                        <div class="space-y-2 text-sm">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> HP
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> ASUS
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Lenovo
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> MSI
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Dell
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Acer
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="font-semibold mb-3">PRICE RANGE</h4>
-                        <div class="space-y-2 text-sm">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Under Rs1000
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Rs1000 - Rs1500
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Rs1500 - Rs2000
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Over Rs2000
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="font-semibold mb-3">PROCESSOR</h4>
-                        <div class="space-y-2 text-sm">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Intel Core i5
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Intel Core i7
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> Intel Core i9
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> AMD Ryzen 7
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> AMD Ryzen 9
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="font-semibold mb-3">GRAPHICS</h4>
-                        <div class="space-y-2 text-sm">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> RTX 4050
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> RTX 4060
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> RTX 4070
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" class="mr-2"> RTX 4080
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="font-semibold mb-3">SCREEN SIZE</h4>
-                        <div class="flex gap-2 flex-wrap">
-                            <button class="px-3 py-1 border rounded hover:bg-gray-100 text-sm">14"</button>
-                            <button class="px-3 py-1 border rounded hover:bg-gray-100 text-sm">15.6"</button>
-                            <button class="px-3 py-1 border rounded hover:bg-gray-100 text-sm">17"</button>
-                        </div>
-                    </div>
-                    <!-- END: duplicated filter content for mobile drawer -->
-                </aside>
-            </div>
-
-            <!-- Product Grid -->
-            <main class="flex-1 w-full">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-2xl font-bold">Gaming Laptops</h2>
-                        <!-- Mobile-only Filters button (opens the same mobile drawer) -->
-                        <button id="openFiltersBtn" aria-controls="mobile-filters" aria-expanded="false" class="md:hidden px-3 py-1 bg-[#8D4887] text-white rounded">Filters</button>
-                    </div>
-                    <select class="border rounded px-4 py-2">
-                        <option>Sort by: Featured</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest First</option>
-                    </select>
                 </div>
 
                 <!-- Products Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Product Card 1 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">HP Omen 16 Gaming Laptop, Intel Core i7</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,299</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,499</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
+                <?php if (empty($products)): ?>
+                <div class="text-center py-12 bg-white rounded-lg">
+                    <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                    <p class="text-gray-600 text-lg mb-4">No products found in this category</p>
+                    <a href="products.php" class="text-purple-custom hover:underline font-semibold">Browse all products</a>
+                </div>
+                <?php else: ?>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                    <?php foreach ($products as $p): ?>
+                    <div class="bg-white rounded-2xl p-5 relative shadow-sm hover:shadow-lg transition-shadow group">
+                        <button onclick="addToCart(<?= $p['product_id'] ?>)" 
+                                class="absolute top-3 right-3 w-8 h-8 bg-white border border-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-purple-custom hover:text-white hover:border-purple-custom transition-colors z-10">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
 
-                    <!-- Product Card 2 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">ASUS ROG Strix G15, AMD Ryzen 9</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,599</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,799</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
+                        <a href="product_detail.php?id=<?= $p['product_id'] ?>" class="block">
+                            <div class="flex items-center justify-center h-48 mb-4">
+                                <?php
+                                $mainImage = !empty($p['main_image']) ? 'assets/images/products/' . $p['main_image'] : 'assets/images/categories/default.png';
+                                ?>
+                                <img src="<?= $mainImage ?>" alt="<?= htmlspecialchars($p['product_name']) ?>" class="max-h-full object-contain">
+                            </div>
 
-                    <!-- Product Card 3 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">Lenovo Legion 5 Pro, Intel Core i7</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,449</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,649</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
+                            <?php if ($p['discount_percentage'] > 0): ?>
+                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold inline-block mb-2">
+                                -<?= $p['discount_percentage'] ?>% OFF
+                            </span>
+                            <?php endif; ?>
 
-                    <!-- Product Card 4 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">MSI Stealth 15M, Intel Core i9</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,899</span>
-                            <span class="text-sm text-gray-400 line-through">Rs2,099</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
+                            <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
+                                <?= htmlspecialchars($p['product_name']) ?>
+                            </h3>
 
-                    <!-- Product Card 5 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">Dell G15 Gaming Laptop, AMD Ryzen 7</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,199</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,399</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
+                            <div class="flex items-center mb-3">
+                                <div class="flex text-yellow-400 text-xs">
+                                    <?php 
+                                    $rating = $p['avg_rating'] ?? 0;
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        echo $i <= $rating ? '★' : '☆';
+                                    }
+                                    ?>
+                                </div>
+                                <span class="text-gray-500 text-xs ml-1">(<?= $p['review_count'] ?? 0 ?>)</span>
+                            </div>
 
-                    <!-- Product Card 6 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">Acer Predator Helios 300, Intel Core i7</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,349</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,549</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
+                            <div class="flex items-baseline flex-wrap gap-2">
+                                <?php if (!empty($p['sale_price']) && $p['sale_price'] < $p['price']): ?>
+                                    <span class="text-purple-custom font-bold text-lg">
+                                        Rs<?= number_format($p['sale_price'], 2) ?>
+                                    </span>
+                                    <span class="text-gray-400 text-sm line-through">
+                                        Rs<?= number_format($p['price'], 2) ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="text-purple-custom font-bold text-lg">
+                                        Rs<?= number_format($p['price'], 2) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </a>
                     </div>
-
-                    <!-- Product Card 7 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1602080858428-57174f9431cf?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">ASUS TUF Gaming A15, AMD Ryzen 9</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs1,499</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,699</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
-
-                    <!-- Product Card 8 -->
-                    <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                        <div class="relative">
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">IN STOCK</span>
-                            <img src="https://images.unsplash.com/photo-1593642634443-44adaa06623a?w=400" alt="Gaming Laptop" class="w-full h-40 sm:h-48 object-cover rounded mb-4">
-                        </div>
-                        <h3 class="font-semibold text-sm mb-2">HP Victus 16, Intel Core i5</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-2xl font-bold text-green-600">Rs999</span>
-                            <span class="text-sm text-gray-400 line-through">Rs1,199</span>
-                        </div>
-                        <button class="w-full bg-[#8D4887] text-white py-2 rounded hover:bg-[#71386a] transition" aria-label="Add to Cart">Add to Cart</button>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <!-- Pagination -->
-                <div class="flex justify-center items-center gap-2 mt-8">
-                    <button class="px-4 py-2 border rounded hover:bg-gray-100">&lt;</button>
-                    <button class="px-4 py-2 bg-[#8D4887] text-white rounded">1</button>
-                    <button class="px-4 py-2 border rounded hover:bg-gray-100">2</button>
-                    <button class="px-4 py-2 border rounded hover:bg-gray-100">3</button>
-                    <button class="px-4 py-2 border rounded hover:bg-gray-100">4</button>
-                    <button class="px-4 py-2 border rounded hover:bg-gray-100">&gt;</button>
+                <?php if ($total_pages > 1): ?>
+                <div class="flex justify-center items-center space-x-2">
+                    <?php if ($page > 1): ?>
+                    <a href="?id=<?= $category_id ?>&page=<?= $page - 1 ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?>" 
+                       class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+                        Previous
+                    </a>
+                    <?php endif; ?>
+
+                    <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
+                    <a href="?id=<?= $category_id ?>&page=<?= $i ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?>" 
+                       class="px-4 py-2 border rounded <?= $i == $page ? 'bg-purple-custom text-white border-purple-custom' : 'border-gray-300 hover:bg-gray-100' ?>">
+                        <?= $i ?>
+                    </a>
+                    <?php endfor; ?>
+
+                    <?php if ($page < $total_pages): ?>
+                    <a href="?id=<?= $category_id ?>&page=<?= $page + 1 ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?>" 
+                       class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+                        Next
+                    </a>
+                    <?php endif; ?>
                 </div>
-            </main>
+                <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
-    <!-- Mobile filters drawer script -->
-    <script>
-        (function(){
-            const openBtn = document.getElementById('openFiltersBtn');
-            const closeBtn = document.getElementById('closeFiltersBtn');
-            const mobileFilters = document.getElementById('mobile-filters');
-            const overlay = document.getElementById('mobile-filters-overlay');
+    <!-- Mobile Filter Drawer -->
+    <div id="mobileFilterDrawer" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Filters</h3>
+                    <button id="closeMobileFilter" class="text-gray-600 hover:text-gray-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
 
-            function openFilters(){
-                if(!mobileFilters) return;
-                mobileFilteRsclassList.remove('hidden');
-                mobileFilteRssetAttribute('aria-hidden','false');
-                openBtn && openBtn.setAttribute('aria-expanded','true');
-                document.body.classList.add('overflow-hidden');
-            }
+                <!-- Same filters as sidebar -->
+                <div class="space-y-6">
+                    <!-- Categories -->
+                    <div>
+                        <h4 class="font-semibold mb-3">CATEGORIES</h4>
+                        <div class="space-y-2 text-sm">
+                            <a href="products.php" class="block hover:text-purple-custom">All Categories</a>
+                            <?php foreach ($categories as $cat): ?>
+                            <a href="?id=<?= $cat['category_id'] ?>" class="block hover:text-purple-custom">
+                                <?= htmlspecialchars($cat['name']) ?>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
 
-            function closeFilters(){
-                if(!mobileFilters) return;
-                mobileFilteRsclassList.add('hidden');
-                mobileFilteRssetAttribute('aria-hidden','true');
-                openBtn && openBtn.setAttribute('aria-expanded','false');
-                document.body.classList.remove('overflow-hidden');
-            }
-
-            openBtn && openBtn.addEventListener('click', openFilters);
-            closeBtn && closeBtn.addEventListener('click', closeFilters);
-            overlay && overlay.addEventListener('click', closeFilters);
-
-            // close on Escape key
-            document.addEventListener('keydown', function(e){
-                if(e.key === 'Escape') closeFilters();
-            });
-        })();
-    </script>
+                    <!-- Brands -->
+                    <div>
+                        <h4 class="font-semibold mb-3">BRAND</h4>
+                        <div class="space-y-2 text-sm">
+                            <?php foreach ($brands as $b): ?>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="mr-2" <?= $brand_id == $b['brand_id'] ? 'checked' : '' ?>
+                                       onchange="window.location.href='?id=<?= $category_id ?>&brand=<?= $brand_id == $b['brand_id'] ? '' : $b['brand_id'] ?>'">
+                                <?= htmlspecialchars($b['name']) ?>
+                            </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Include Footer -->
     <?php include 'includes/footer.php'; ?>
-</body>
 
+    <script>
+        function addToCart(productId) {
+            if (window.cartManager) {
+                window.cartManager.addToCart(productId, 1);
+            }
+        }
+
+        // Mobile filter drawer
+        const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+        const mobileFilterDrawer = document.getElementById('mobileFilterDrawer');
+        const closeMobileFilter = document.getElementById('closeMobileFilter');
+
+        if (mobileFilterBtn) {
+            mobileFilterBtn.addEventListener('click', () => {
+                mobileFilterDrawer.classList.remove('hidden');
+            });
+        }
+
+        if (closeMobileFilter) {
+            closeMobileFilter.addEventListener('click', () => {
+                mobileFilterDrawer.classList.add('hidden');
+            });
+        }
+
+        mobileFilterDrawer?.addEventListener('click', (e) => {
+            if (e.target === mobileFilterDrawer) {
+                mobileFilterDrawer.classList.add('hidden');
+            }
+        });
+    </script>
+
+</body>
 </html>

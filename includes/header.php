@@ -1,25 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+if (!function_exists('isLoggedIn')) {
+    require_once __DIR__ . '/../includes/helpers.php';
+}
+require_once __DIR__ . '/../classes/Cart.php';
+require_once __DIR__ . '/../classes/Category.php';
+require_once __DIR__ . '/../classes/Wishlist.php';
+// require_once __DIR__ . '/../includes/currency.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geotrans</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+// Define base URL for navigation
+$base_url = '/SLTDS/Geotrans/';
 
-<body class="bg-gray-50">
+$cart = new Cart();
+$category = new Category();
+$wishlist = new Wishlist();
+
+$user_id = getUserId();
+$session_id = !$user_id ? getSessionId() : null;
+$cart_count = $cart->getCount($user_id, $session_id);
+$wishlist_count = $user_id ? $wishlist->getCount($user_id) : 0;
+$categories = $category->getAll(true); // Get only parent categories
+// $selected_currency = CurrencyConverter::getSelectedCurrency();
+
+?>
 
     <!-- Top Banner -->
     <div class="text-white py-2 px-6 sm:px-8 lg:px-20 text-center text-sm" style="background-color: #8D4887;">
         <span class="bg-white px-3 py-1 rounded-full font-semibold text-xs mr-2" style="color: #8D4887;">Special</span>
         Get 10% <span class="font-bold">DISCOUNT</span> for first order
-        <a href="#" class="underline ml-2" style="color: #FFFFFF;" onmouseover="this.style.color='#C4A3D1'" onmouseout="this.style.color='#FFFFFF'">Register Now</a>
+        <?php if (!isLoggedIn()): ?>
+        <a href="<?= $base_url ?>register.php" class="underline ml-2" style="color: #FFFFFF;" onmouseover="this.style.color='#C4A3D1'" onmouseout="this.style.color='#FFFFFF'">Register Now</a>
+        <?php endif; ?>
     </div>
 
     <!-- Main Header -->
-    <header class="bg-white shadow-sm">
+    <header id="main-header" class="bg-white shadow-sm sticky top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <!-- Mobile Header -->
             <div class="lg:hidden flex items-center justify-between">
@@ -31,8 +45,8 @@
                 </button>
                 
                 <!-- Logo -->
-                <a href="index.php" class="flex items-center">
-                    <img src="assets/images/logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-12 object-contain">
+                <a href="<?= $base_url ?>index.php" class="flex items-center">
+                    <img src="<?= $base_url ?>assets/images/logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-12 object-contain">
                 </a>
 
                 <!-- Mobile Icons -->
@@ -45,21 +59,25 @@
                     </button>
                     
                     <!-- Wishlist -->
-                    <a href="#" class="relative" style="color: #8D4887;">
+                    <a href="<?= $base_url ?>wishlist.php" class="relative" style="color: #8D4887;">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
-                        <span class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;">2</span>
+                        <?php if ($wishlist_count > 0): ?>
+                        <span class="wishlist-count absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;"><?php echo $wishlist_count; ?></span>
+                        <?php endif; ?>
                     </a>
 
                     <!-- Cart -->
-                    <a href="#" class="relative" style="color: #8D4887;">
+                    <a href="<?= $base_url ?>cart.php" class="relative" style="color: #8D4887;">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        <span class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;">4</span>
+                        <?php if ($cart_count > 0): ?>
+                        <span id="mobile-cart-count" class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;"><?php echo $cart_count; ?></span>
+                        <?php endif; ?>
                     </a>
                 </div>
             </div>
@@ -90,24 +108,25 @@
             <div class="hidden lg:flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="index.php" class="flex items-center">
-                        <img src="assets/images/logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-16 object-contain">
+                    <a href="<?= $base_url ?>index.php" class="flex items-center">
+                        <img src="<?= $base_url ?>assets/images/logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-16 object-contain">
                     </a>
                 </div>
 
                 <!-- Search Bar -->
-                <div class="flex items-center flex-1 max-w-2xl mx-8">
-                    <select class="bg-gray-100 border-0 rounded-l-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;">
-                        <option>All Categories</option>
-                        <option>Electronics</option>
-                        <option>Clothing</option>
-                        <option>Home & Garden</option>
+                <div class="flex items-center flex-1 max-w-2xl mx-8 search-container relative">
+                    <select id="category-select" class="bg-gray-100 border-0 rounded-l-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;">
+                        <option value="">All Categories</option>
+                        <?php foreach ($categories as $cat): ?>
+                        <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['category_name']); ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <div class="relative flex-1">
-                        <input type="text" placeholder="Search anything..."
+                        <input type="text" id="search-input" placeholder="Search anything..."
                             class="w-full px-4 py-2 border-0 bg-gray-100 text-sm focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;" />
+                        <div id="search-results" class="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50 hidden"></div>
                     </div>
-                    <button class="text-white px-6 py-2 rounded-r-lg transition-colors" style="background-color: #8D4887;" onmouseover="this.style.backgroundColor='#9C5AA2'" onmouseout="this.style.backgroundColor='#8D4887'">
+                    <button onclick="performSearch()" class="text-white px-6 py-2 rounded-r-lg transition-colors" style="background-color: #8D4887;" onmouseover="this.style.backgroundColor='#9C5AA2'" onmouseout="this.style.backgroundColor='#8D4887'">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -124,22 +143,54 @@
                     </div>
 
                     <!-- Wishlist -->
-                    <a href="#" class="relative" style="color: #8D4887;">
+                    <a href="<?= $base_url ?>wishlist.php" class="relative" style="color: #8D4887;">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
-                        <span class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;">2</span>
+                        <?php if ($wishlist_count > 0): ?>
+                        <span class="wishlist-count absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;"><?php echo $wishlist_count; ?></span>
+                        <?php endif; ?>
                     </a>
 
                     <!-- Cart -->
-                    <a href="#" class="relative" style="color: #8D4887;">
+                    <a href="<?= $base_url ?>cart.php" class="relative" style="color: #8D4887;">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        <span class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;">4</span>
+                        <?php if ($cart_count > 0): ?>
+                        <span id="cart-count" class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #8D4887;"><?php echo $cart_count; ?></span>
+                        <?php else: ?>
+                        <span id="cart-count" class="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden" style="background-color: #8D4887;">0</span>
+                        <?php endif; ?>
                     </a>
+
+                    <!-- User Account -->
+                    <?php if (isLoggedIn()): ?>
+                    <div class="relative" id="user-dropdown">
+                        <button id="user-menu-btn" class="flex items-center gap-2" style="color: #8D4887;">
+                            <i class="fas fa-user-circle text-2xl"></i>
+                            <div class="hidden lg:block text-left">
+                                <div class="text-xs text-gray-500">Hello</div>
+                                <div class="text-sm font-semibold"><?php echo htmlspecialchars(getUserData('first_name')); ?></div>
+                            </div>
+                        </button>
+                        <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50">
+                            <a href="<?= $base_url ?>account/profile.php" class="block px-4 py-2 text-sm hover:bg-gray-100">My Profile</a>
+                            <a href="<?= $base_url ?>account/orders.php" class="block px-4 py-2 text-sm hover:bg-gray-100">My Orders</a>
+                            <a href="<?= $base_url ?>account/addresses.php" class="block px-4 py-2 text-sm hover:bg-gray-100">My Addresses</a>
+                            <a href="<?= $base_url ?>wishlist.php" class="block px-4 py-2 text-sm hover:bg-gray-100">My Wishlist</a>
+                            <?php if (isAdmin()): ?>
+                            <a href="<?= $base_url ?>admin/" class="block px-4 py-2 text-sm hover:bg-gray-100">Admin Panel</a>
+                            <?php endif; ?>
+                            <hr class="my-2">
+                            <a href="<?= $base_url ?>logout.php" class="block px-4 py-2 text-sm hover:bg-gray-100 text-red-600">Logout</a>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <a href="<?= $base_url ?>login.php" class="text-sm font-semibold px-4 py-2 rounded hover:bg-purple-50" style="color: #8D4887;">Login / Register</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -151,46 +202,42 @@
                 <div class="px-4 py-3 space-y-3">
                     <!-- Main Navigation -->
                     <div class="space-y-2">
-                        <a href="index" class="block py-2 text-sm" style="color: #8D4887;">Home</a>
-                        <a href="about" class="block py-2 text-sm" style="color: #8D4887;">About</a>
-                        <a href="products" class="block py-2 text-sm" style="color: #8D4887;">Products</a>
-                        <a href="contact" class="block py-2 text-sm" style="color: #8D4887;">Contact</a>
+                        <a href="<?= $base_url ?>index.php" class="block py-2 text-sm" style="color: #8D4887;">Home</a>
+                        <a href="<?= $base_url ?>about.php" class="block py-2 text-sm" style="color: #8D4887;">About</a>
+                        <a href="<?= $base_url ?>products.php" class="block py-2 text-sm" style="color: #8D4887;">Products</a>
+                        <a href="<?= $base_url ?>contact.php" class="block py-2 text-sm" style="color: #8D4887;">Contact</a>
                     </div>
                     
                     <!-- Additional Links -->
                     <div class="border-t border-gray-200 pt-3 space-y-2">
-                        <a href="#" class="flex items-center py-2 text-sm" style="color: #8D4887;">
+                        <!-- <a href="#" class="flex items-center py-2 text-sm" style="color: #8D4887;">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                             Sell on Geotrans
-                        </a>
-                        <a href="#" class="flex items-center py-2 text-sm" style="color: #8D4887;">
+                        </a> -->
+                        <a href="<?= $base_url ?>order-tracking.php" class="flex items-center py-2 text-sm" style="color: #8D4887;">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                             Order Tracking
                         </a>
-                        <a href="#" class="block py-2 text-sm" style="color: #8D4887;">Recently Viewed</a>
+                        <a href="<?= $base_url ?>recently-viewed.php" class="block py-2 text-sm" style="color: #8D4887;">Recently Viewed</a>
                     </div>
                     
-                    <!-- Language/Currency -->
+                    <!-- Currency -->
                     <div class="border-t border-gray-200 pt-3">
                         <div class="text-xs text-gray-500 mb-2">Hotline: +94 71 3757555</div>
-                        <div class="flex items-center space-x-4">
-                            <select class="bg-gray-100 border rounded px-2 py-1 text-sm focus:outline-none" style="color: #8D4887;">
-                                <option>USD</option>
-                                <option>EUR</option>
-                                <option>GBP</option>
+                        <!-- <div class="flex items-center space-x-4">
+                            <select id="currency-selector-mobile" class="bg-gray-100 border rounded px-2 py-1 text-sm focus:outline-none" style="color: #8D4887;">
+                                <option value="LKR">LKR</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
                             </select>
-                            <select class="bg-gray-100 border rounded px-2 py-1 text-sm focus:outline-none" style="color: #8D4887;">
-                                <option>🇺🇸 Eng</option>
-                                <option>🇪🇸 Esp</option>
-                                <option>🇫🇷 Fra</option>
-                            </select>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -200,39 +247,27 @@
                 <div class="flex items-center justify-between py-3">
                     <ul class="flex items-center space-x-8 text-sm">
                         <li>
-                            <a href="index" class="flex items-center" style="color: #8D4887;">
+                            <a href="<?= $base_url ?>index.php" class="flex items-center hover:text-purple-700" style="color: #8D4887;">
                                 Home
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
                             </a>
                         </li>
                         <li>
-                            <a href="about" class="flex items-center" style="color: #8D4887;">
+                            <a href="<?= $base_url ?>about.php" class="flex items-center hover:text-purple-700" style="color: #8D4887;">
                                 About
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
                             </a>
                         </li>
                         <li>
-                            <a href="products" class="flex items-center" style="color: #8D4887;">
+                            <a href="<?= $base_url ?>products.php" class="flex items-center hover:text-purple-700" style="color: #8D4887;">
                                 Products
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
                             </a>
                         </li>
                         <li>
-                            <a href="contact" style="color: #8D4887;">Contact</a>
+                            <a href="<?= $base_url ?>contact.php" class="hover:text-purple-700" style="color: #8D4887;">Contact</a>
                         </li>
                     </ul>
 
                     <ul class="flex items-center space-x-6 text-sm">
-                        <li class="hidden xl:block">
+                        <!-- <li class="hidden xl:block">
                             <a href="#" class="flex items-center" style="color: #8D4887;">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -240,9 +275,9 @@
                                 </svg>
                                 Sell on Geotrans
                             </a>
-                        </li>
+                        </li> -->
                         <li class="hidden xl:block">
-                            <a href="#" class="flex items-center" style="color: #8D4887;">
+                            <a href="<?= $base_url ?>order-tracking.php" class="flex items-center" style="color: #8D4887;">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
@@ -250,30 +285,31 @@
                                 Order Tracking
                             </a>
                         </li>
-                        <li class="hidden lg:block">
-                            <a href="#" class="flex items-center" style="color: #8D4887;">
+                        <li class="hidden lg:block relative" id="recently-viewed-dropdown">
+                            <button type="button" class="flex items-center" style="color: #8D4887;">
                                 Recently Viewed
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 9l-7 7-7-7"></path>
                                 </svg>
-                            </a>
-                        </li>
-                        <li>
-                            <!-- Language/Currency -->
-                            <div class="flex items-center space-x-2 lg:space-x-4">
-                                <select class="bg-transparent border-0 text-xs lg:text-sm text-gray-600 focus:outline-none cursor-pointer" style="color: #8D4887;">
-                                    <option>USD</option>
-                                    <option>EUR</option>
-                                    <option>GBP</option>
-                                </select>
-                                <select class="bg-transparent border-0 text-xs lg:text-sm text-gray-600 focus:outline-none cursor-pointer" style="color: #8D4887;">
-                                    <option>🇺🇸 Eng</option>
-                                    <option>🇪🇸 Esp</option>
-                                    <option>🇫🇷 Fra</option>
-                                </select>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 border border-gray-200 max-h-96 overflow-y-auto">
+                                <div id="recently-viewed-content" class="p-4">
+                                    <div class="text-center text-gray-500 py-4">Loading...</div>
+                                </div>
                             </div>
                         </li>
+                        <!-- <li>
+                            Currency Selector
+                            <div class="flex items-center space-x-2 lg:space-x-4">
+                                <select id="currency-selector" class="bg-transparent border-0 text-xs lg:text-sm text-gray-600 focus:outline-none cursor-pointer" style="color: #8D4887;">
+                                    <option value="LKR">LKR</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="GBP">GBP</option>
+                                </select>
+                            </div>
+                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -308,8 +344,153 @@
                 mobileSearch.classList.add('hidden');
             }
         });
+
+        // Perform search (redirect to products page)
+        function performSearch() {
+            const searchInput = document.getElementById('search-input');
+            const categorySelect = document.getElementById('category-select');
+            const query = searchInput.value.trim();
+            
+            if (query.length > 0) {
+                let url = 'products.php?search=' + encodeURIComponent(query);
+                if (categorySelect && categorySelect.value) {
+                    url += '&category=' + categorySelect.value;
+                }
+                window.location.href = url;
+            }
+        }
+
+        // Allow Enter key to trigger search
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+            
+            // User dropdown menu toggle
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            const userMenu = document.getElementById('user-menu');
+            
+            if (userMenuBtn && userMenu) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userMenu.classList.toggle('hidden');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!document.getElementById('user-dropdown').contains(e.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+                
+                // Prevent dropdown from closing when clicking inside it
+                userMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Currency selector handlers
+            // const currencySelector = document.getElementById('currency-selector');
+            // const currencySelectorMobile = document.getElementById('currency-selector-mobile');
+            
+            // if (currencySelector) {
+            //     currencySelector.addEventListener('change', function() {
+            //         changeCurrency(this.value);
+            //     });
+            // }
+            
+            // if (currencySelectorMobile) {
+            //     currencySelectorMobile.addEventListener('change', function() {
+            //         changeCurrency(this.value);
+            //     });
+            // }
+            
+            // Recently viewed dropdown
+            const recentlyViewedDropdown = document.getElementById('recently-viewed-dropdown');
+            if (recentlyViewedDropdown) {
+                const button = recentlyViewedDropdown.querySelector('button');
+                const dropdown = recentlyViewedDropdown.querySelector('div');
+                
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('hidden');
+                    
+                    if (!dropdown.classList.contains('hidden')) {
+                        loadRecentlyViewed();
+                    }
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!recentlyViewedDropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+        
+        // Change currency via AJAX
+        // function changeCurrency(currency) {
+        //     fetch('<?= $base_url ?>api/set-currency.php', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/x-www-form-urlencoded',
+        //         },
+        //         body: 'currency=' + currency
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.success) {
+        //             window.location.reload();
+        //         }
+        //     })
+        //     .catch(error => console.error('Currency change error:', error));
+        // }
+        
+        // Load recently viewed products
+        function loadRecentlyViewed() {
+            const content = document.getElementById('recently-viewed-content');
+            
+            fetch('<?= $base_url ?>api/get-recently-viewed.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.products && data.products.length > 0) {
+                        let html = '<div class="space-y-3">';
+                        html += '<div class="flex items-center justify-between mb-3">';
+                        html += '<h3 class="font-semibold text-gray-900">Recently Viewed</h3>';
+                        html += '<a href="<?= $base_url ?>recently-viewed.php" class="text-sm text-purple-custom hover:underline">View All</a>';
+                        html += '</div>';
+                        
+                        data.products.forEach(product => {
+                            html += '<a href="<?= $base_url ?>product_detail.php?slug=' + product.product_slug + '" class="flex items-center space-x-3 hover:bg-gray-50 p-2 rounded">';
+                            html += '<img src="<?= $base_url ?>assets/images/products/' + (product.main_image || 'default.png') + '" alt="' + product.product_name + '" class="w-16 h-16 object-contain">';
+                            html += '<div class="flex-1 min-w-0">';
+                            html += '<p class="text-sm font-medium text-gray-900 truncate">' + product.product_name + '</p>';
+                            html += '<p class="text-sm text-purple-custom font-semibold">Rs' + parseFloat(product.price).toFixed(2) + '</p>';
+                            html += '</div>';
+                            html += '</a>';
+                        });
+                        
+                        html += '</div>';
+                        content.innerHTML = html;
+                    } else {
+                        content.innerHTML = '<div class="text-center text-gray-500 py-4">No recently viewed products</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading recently viewed:', error);
+                    content.innerHTML = '<div class="text-center text-red-500 py-4">Error loading products</div>';
+                });
+        }
     </script>
+    
+    <!-- Include Cart and Search Scripts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="<?= $base_url ?>assets/js/cart.js" defer></script>
+    <script src="<?= $base_url ?>assets/js/search.js" defer></script>
+    <script src="<?= $base_url ?>assets/js/wishlist.js" defer></script>
 
-</body>
-
-</html>

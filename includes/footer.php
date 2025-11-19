@@ -1,3 +1,15 @@
+<?php
+// Define base URL for footer assets
+if (!isset($base_url)) {
+    $base_url = '/SLTDS/Geotrans/';
+}
+
+// Get selected currency
+// if (!class_exists('CurrencyConverter')) {
+//     require_once __DIR__ . '/currency.php';
+// }
+// $selected_currency = CurrencyConverter::getSelectedCurrency();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,22 +35,65 @@
                 </div>
 
                 <!-- Email Input -->
-                <div class="flex flex-col sm:flex-row items-center bg-white px-2 sm:px-4 py-2 w-full lg:w-96 gap-2 sm:gap-0" style="border-radius: 9px;">
+                <div id="newsletter-message" class="hidden text-white text-sm mb-2"></div>
+                <form id="newsletter-form" class="flex flex-col sm:flex-row items-center bg-white px-2 sm:px-4 py-2 w-full lg:w-96 gap-2 sm:gap-0" style="border-radius: 9px;">
                     <div class="flex items-center w-full sm:flex-1">
                         <svg class="w-5 h-5 text-gray-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        <input type="email" placeholder="Enter your email address" class="flex-1 px-4 py-2 focus:outline-none text-sm" style="border-radius: 9px;" />
+                        <input type="email" name="email" required placeholder="Enter your email address" class="flex-1 px-4 py-2 focus:outline-none text-sm" style="border-radius: 9px;" />
                     </div>
-                    <button class="bg-black text-white px-4 sm:px-6 py-2 font-semibold hover:bg-gray-800 transition-colors text-sm w-full sm:w-auto" style="border-radius: 9px;">
+                    <button type="submit" id="newsletter-btn" class="bg-black text-white px-4 sm:px-6 py-2 font-semibold hover:bg-gray-800 transition-colors text-sm w-full sm:w-auto" style="border-radius: 9px;">
                         SUBSCRIBE
                     </button>
-                </div>
+                </form>
             </div>
         </div>
 
         <!-- Centered Decorative Plane -->
-        <img src="assets/images/home/plane.png" alt="Decorative paper plane" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 md:w-96 h-auto opacity-80 pointer-events-none" />
+        <img src="<?= $base_url ?>assets/images/home/plane.png" alt="Decorative paper plane" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 md:w-96 h-auto opacity-80 pointer-events-none" />
+    </section>
+
+    <script>
+    document.getElementById('newsletter-form')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('newsletter-btn');
+        const messageDiv = document.getElementById('newsletter-message');
+        const formData = new FormData(this);
+        
+        btn.disabled = true;
+        btn.textContent = 'SUBSCRIBING...';
+        
+        try {
+            const response = await fetch('<?= $base_url ?>api/newsletter.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            messageDiv.className = data.success 
+                ? 'text-green-300 text-sm mb-2'
+                : 'text-red-300 text-sm mb-2';
+            messageDiv.textContent = data.message;
+            messageDiv.classList.remove('hidden');
+            
+            if (data.success) {
+                this.reset();
+                setTimeout(() => messageDiv.classList.add('hidden'), 5000);
+            }
+            
+        } catch (error) {
+            messageDiv.className = 'text-red-300 text-sm mb-2';
+            messageDiv.textContent = 'An error occurred. Please try again.';
+            messageDiv.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'SUBSCRIBE';
+        }
+    });
+    </script>
     </section>
 
     <!-- Features Section -->
@@ -106,7 +161,7 @@
                     <!-- Logo -->
                     <div class="flex items-center justify-center sm:justify-start">
                         <a href="index.php" class="flex items-center">
-                            <img src="assets/images/logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-12 md:h-16 object-contain">
+                            <img src="<?= $base_url ?>assets/images/logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-12 md:h-16 object-contain">
                         </a>
                     </div>
                     <br>
@@ -218,29 +273,77 @@
 
                 <!-- Payment Methods -->
                 <div class="flex items-center space-x-2 md:space-x-4 order-first lg:order-none">
-                    <img src="assets/images/footer/paypal.png" alt="PayPal" class="h-3 md:h-4">
-                    <img src="assets/images/footer/stripe.png" alt="Stripe" class="h-3 md:h-4">
-                    <img src="assets/images/footer/master.png" alt="Mastercard" class="h-3 md:h-4">
-                    <img src="assets/images/footer/klarna.png" alt="Klarna" class="h-3 md:h-4">
-                    <img src="assets/images/footer/visa.png" alt="Visa" class="h-3 md:h-4">
+                    <img src="<?= $base_url ?>assets/images/footer/paypal.png" alt="PayPal" class="h-3 md:h-4">
+                    <img src="<?= $base_url ?>assets/images/footer/stripe.png" alt="Stripe" class="h-3 md:h-4">
+                    <img src="<?= $base_url ?>assets/images/footer/master.png" alt="Mastercard" class="h-3 md:h-4">
+                    <img src="<?= $base_url ?>assets/images/footer/klarna.png" alt="Klarna" class="h-3 md:h-4">
+                    <img src="<?= $base_url ?>assets/images/footer/visa.png" alt="Visa" class="h-3 md:h-4">
                 </div>
 
-                <!-- Language/Currency -->
-                <div class="flex items-center space-x-2 md:space-x-4">
-                    <select class="bg-transparent border-0 text-xs md:text-sm text-gray-600 focus:outline-none cursor-pointer">
-                        <option>USD</option>
-                        <option>EUR</option>
-                        <option>GBP</option>
+                <!-- Currency Selector -->
+                <!-- <div class="flex items-center space-x-2 md:space-x-4">
+                    <select id="footer-currency-selector" class="bg-transparent border-0 text-xs md:text-sm text-gray-600 focus:outline-none cursor-pointer" style="color: #8D4887;">
+                        <option value="LKR">LKR</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
                     </select>
-                    <select class="bg-transparent border-0 text-xs md:text-sm text-gray-600 focus:outline-none cursor-pointer">
-                        <option>🇺🇸 Eng</option>
-                        <option>🇪🇸 Esp</option>
-                        <option>🇫🇷 Fra</option>
-                    </select>
-                </div>
+                    <span class="text-xs md:text-sm text-gray-600">🇺🇸 English</span>
+                </div> -->
             </div>
         </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-to-top" class="fixed bottom-8 right-8 bg-purple-custom text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 opacity-0 invisible z-50" style="background-color: #8D4887;">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+    // Scroll to Top Button
+    const scrollToTopBtn = document.getElementById('scroll-to-top');
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.classList.remove('opacity-0', 'invisible');
+            scrollToTopBtn.classList.add('opacity-100', 'visible');
+        } else {
+            scrollToTopBtn.classList.remove('opacity-100', 'visible');
+            scrollToTopBtn.classList.add('opacity-0', 'invisible');
+        }
+    });
+    
+    // Scroll to top when clicked
+    scrollToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    </script>
+
+    <!-- <script>
+    // Footer currency selector
+    document.getElementById('footer-currency-selector')?.addEventListener('change', function() {
+        fetch('<?= $base_url ?>api/set-currency.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'currency=' + this.value
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            }
+        })
+        .catch(error => console.error('Currency change error:', error));
+    });
+    </script> -->
 
 </body>
 

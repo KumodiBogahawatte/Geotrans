@@ -1,17 +1,17 @@
-# Enable Rewrite Engine
-RewriteEngine On
+# # Enable Rewrite Engine
+# RewriteEngine On
 
-# 1. Force HTTPS
-RewriteCond %{HTTPS} !=on
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# # 1. Force HTTPS
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# 2. Remove .php extension from URLs
-# If the request is not a real file or directory
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-# Rewrite to add .php
-RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php [L]
+# # 2. Remove .php extension from URLs
+# # If the request is not a real file or directory
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# # Rewrite to add .php
+# RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php [L]
 
-# Optional: Redirect URLs with .php to clean URL
-RewriteCond %{THE_REQUEST} \s([^.]+)\.php [NC]
-RewriteRule ^ %1 [R=301,L]
+# # Optional: Redirect URLs with .php to clean URL
+# RewriteCond %{THE_REQUEST} \s([^.]+)\.php [NC]
+# RewriteRule ^ %1 [R=301,L]
