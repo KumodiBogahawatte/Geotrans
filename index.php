@@ -348,7 +348,7 @@ $testimonials = $testimonial->getActive();
                 </div>
             </div>
 
-            <div class="bg-gradient-to-br rounded-3xl overflow-hidden relative h-64" style="background-image: url('assets/images/home/black-wireless-headphones-black-surface 1.png'); background-size: cover; background-position: center;">
+            <div class="bg-gradient-to-br rounded-3xl overflow-hidden relative h-64" style="background-image: url('assets/images/pages/headphones-displayed-against-dark-background.jpg'); background-size: cover; background-position: center;">
                 <div class="absolute inset-0 p-8 flex flex-col">
                     <h3 class="text-white text-2xl font-bold mb-2">Headset</h3>
                     <div class="mt-auto">
@@ -358,17 +358,17 @@ $testimonials = $testimonial->getActive();
                 </div>
             </div>
 
-            <div class="bg-gradient-to-br from-gray-300 to-gray-400 rounded-3xl overflow-hidden relative h-64">
+            <div class="bg-gradient-to-br from-gray-300 to-gray-400 rounded-3xl overflow-hidden relative h-64" style="background-image: url('assets/images/pages/view-computer-monitor-display.jpg'); background-size: cover; background-position: center;">
                 <div class="absolute inset-0 p-8">
-                    <p class="text-gray-600 text-xs uppercase mb-1">MONITORS</p>
+                    <p class="text-white text-xs uppercase mb-1">MONITORS</p>
                     <h3 class="text-white text-xl font-bold mb-1">VS197DE</h3>
                     <h4 class="text-white text-xl font-bold mb-1">LED</h4>
                     <h5 class="text-white text-xl font-bold mb-6">Monitor</h5>
                     <a href="products.php?category=monitors" class="bg-white hover:bg-gray-100 text-gray-900 px-6 py-2.5 rounded-full font-semibold text-sm inline-block">Shop Now</a>
                 </div>
-                <div class="absolute right-0 bottom-0 w-1/2 h-3/4">
-                    <img src="assets/images/home/modern-tv-screen-isolated 1.png" alt="Monitor" class="h-full w-full object-contain">
-                </div>
+                <!--<div class="absolute right-0 bottom-0 w-1/2 h-3/4">-->
+                <!--    <img src="assets/images/pages/view-computer-monitor-display.jpg" alt="Monitor" class="h-full w-full object-contain">-->
+                <!--</div>-->
             </div>
         </div>
     </section>
