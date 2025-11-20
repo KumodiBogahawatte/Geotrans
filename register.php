@@ -17,24 +17,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = sanitizeInput($_POST['phone']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $profile_photo_name = null;
+    
+    // Handle profile photo upload
+    if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+        
+        if (!in_array($_FILES['profile_photo']['type'], $allowed_types)) {
+            $error = 'Invalid file type. Only JPG, PNG and GIF allowed';
+        } elseif ($_FILES['profile_photo']['size'] > $max_size) {
+            $error = 'File too large. Maximum size is 5MB';
+        } else {
+            $upload_dir = 'assets/images/profiles/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            $file_extension = pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION);
+            $profile_photo_name = 'user_' . time() . '_' . uniqid() . '.' . $file_extension;
+            $upload_path = $upload_dir . $profile_photo_name;
+            
+            if (!move_uploaded_file($_FILES['profile_photo']['tmp_name'], $upload_path)) {
+                $error = 'Failed to upload profile photo';
+                $profile_photo_name = null;
+            }
+        }
+    }
     
     // Validation
-    if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
+    if (empty($error) && (empty($first_name) || empty($last_name) || empty($email) || empty($password))) {
         $error = 'Please fill in all required fields';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (empty($error) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address';
-    } elseif (strlen($password) < 6) {
+    } elseif (empty($error) && strlen($password) < 6) {
         $error = 'Password must be at least 6 characters long';
-    } elseif ($password !== $confirm_password) {
+    } elseif (empty($error) && $password !== $confirm_password) {
         $error = 'Passwords do not match';
-    } else {
+    } elseif (empty($error)) {
         $user = new User();
         
         // Check if email already exists
         if ($user->emailExists($email)) {
             $error = 'Email address is already registered';
         } else {
-            $user_id = $user->register($email, $password, $first_name, $last_name, $phone);
+            $user_id = $user->register($email, $password, $first_name, $last_name, $phone, $profile_photo_name);
             
             if ($user_id) {
                 $success = 'Registration successful! You can now login.';
@@ -93,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <?php endif; ?>
 
-                <form method="POST" action="">
+                <form method="POST" action="" enctype="multipart/form-data">
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">First Name *</label>
@@ -121,6 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="tel" name="phone" 
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-custom"
                                placeholder="+94 77 123 4567">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Profile Photo (Optional)</label>
+                        <input type="file" name="profile_photo" accept="image/*" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-custom">
+                        <p class="text-xs text-gray-500 mt-1">JPG, PNG or GIF. Max 5MB</p>
                     </div>
 
                     <div class="mb-4">

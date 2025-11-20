@@ -8,16 +8,42 @@ $conn = $database->getConnection();
 $order = null;
 $error = null;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $order_number = $_POST['order_number'] ?? '';
+// Check if order number is passed via URL
+$url_order_number = $_GET['order'] ?? '';
+$auto_load = !empty($url_order_number);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || $auto_load) {
+    $order_number = $auto_load ? $url_order_number : ($_POST['order_number'] ?? '');
     $email = $_POST['email'] ?? '';
+    
+    // If auto-loading from URL, get email from session if logged in
+    if ($auto_load && isset($_SESSION['user_id'])) {
+        $userQuery = "SELECT email FROM users WHERE user_id = :user_id";
+        $userStmt = $conn->prepare($userQuery);
+        $userStmt->bindParam(':user_id', $_SESSION['user_id']);
+        $userStmt->execute();
+        $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
+        $email = $userData['email'] ?? '';
+    }
     
     if (!empty($order_number) && !empty($email)) {
         $query = "SELECT o.order_id, o.order_number, o.user_id, o.total_amount, 
                   o.order_status, o.payment_method, o.payment_status, o.shipping_address_id,
                   o.created_at as order_date, o.order_status as status,
                   u.email, u.first_name, u.last_name,
-                  CONCAT(sa.address_line1, ', ', sa.city, ', ', sa.state, ' ', sa.postal_code) as shipping_address
+                  COALESCE(
+                      CONCAT_WS(', ', 
+                          NULLIF(sa.address_line1, ''),
+                          NULLIF(sa.address_line2, ''),
+                          NULLIF(sa.city, ''),
+                          NULLIF(sa.state, ''),
+                          NULLIF(sa.postal_code, ''),
+                          NULLIF(sa.country, '')
+                      ),
+                      'Address information not available'
+                  ) as shipping_address,
+                  sa.full_name as shipping_name,
+                  sa.phone as shipping_phone
                   FROM orders o
                   LEFT JOIN users u ON o.user_id = u.user_id
                   LEFT JOIN user_addresses sa ON o.shipping_address_id = sa.address_id
@@ -38,8 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Please enter both order number and email address.";
     }
 }
-
-include 'includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -97,17 +121,29 @@ include 'includes/header.php';
 </head>
 <body class="bg-gray-50">
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<?php include 'includes/header.php'; ?>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
     <h1 class="text-3xl font-bold text-gray-900 mb-6">Track Your Order</h1>
     
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
         <form method="POST" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Order Number</label>
-                <input type="text" name="order_number" required 
-                       value="<?= htmlspecialchars($_POST['order_number'] ?? '') ?>"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                       placeholder="e.g., ORD-20240115-001">
+                <?php if ($auto_load): ?>
+                    <div class="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-medium flex items-center">
+                        <span class="text-gray-500 mr-1">#</span><?= htmlspecialchars($url_order_number) ?>
+                    </div>
+                    <input type="hidden" name="order_number" value="<?= htmlspecialchars($url_order_number) ?>">
+                <?php else: ?>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">#</span>
+                        <input type="text" name="order_number" required 
+                               value="<?= htmlspecialchars($_POST['order_number'] ?? '') ?>"
+                               class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                               placeholder="e.g., ORD-20240115-001">
+                    </div>
+                <?php endif; ?>
             </div>
             
             <div>
@@ -166,7 +202,17 @@ include 'includes/header.php';
             <div>
                 <h3 class="text-sm font-semibold text-gray-700 mb-2">Shipping Address</h3>
                 <p class="text-sm text-gray-600">
-                    <?= htmlspecialchars($order['shipping_address']) ?>
+                    <?php if (!empty($order['shipping_address']) && $order['shipping_address'] !== 'Address information not available'): ?>
+                        <?php if (!empty($order['shipping_name'])): ?>
+                            <strong><?= htmlspecialchars($order['shipping_name']) ?></strong><br>
+                        <?php endif; ?>
+                        <?= htmlspecialchars($order['shipping_address']) ?>
+                        <?php if (!empty($order['shipping_phone'])): ?>
+                            <br>Phone: <?= htmlspecialchars($order['shipping_phone']) ?>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <span class="text-gray-400">Address information not available</span>
+                    <?php endif; ?>
                 </p>
             </div>
             <div>
@@ -189,37 +235,44 @@ include 'includes/header.php';
             $historyStmt->execute();
             $history = $historyStmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Define status order
+            // Define status order (case-insensitive)
             $statusOrder = ['Pending', 'Processing', 'Shipped', 'Delivered'];
-            $currentStatus = $order['status'] ?? $order['order_status'] ?? 'Pending';
+            $currentStatus = ucfirst(strtolower($order['status'] ?? $order['order_status'] ?? 'Pending'));
             $currentStatusIndex = array_search($currentStatus, $statusOrder);
+            if ($currentStatusIndex === false) $currentStatusIndex = 0;
             
             foreach ($statusOrder as $index => $status):
                 $completed = $index < $currentStatusIndex;
                 $active = $status === $currentStatus;
                 $historyItem = null;
                 
+                // Find matching history item (case-insensitive)
                 foreach ($history as $item) {
-                    $itemStatus = $item['status'] ?? $item['order_status'] ?? '';
+                    $itemStatus = ucfirst(strtolower($item['status'] ?? $item['order_status'] ?? ''));
                     if ($itemStatus === $status) {
                         $historyItem = $item;
                         break;
                     }
                 }
+                
+                // If current status is active, use order date if no history
+                if ($active && !$historyItem) {
+                    $historyItem = ['created_at' => $order['order_date'], 'comments' => ''];
+                }
             ?>
             <div class="timeline-item">
                 <div class="timeline-dot <?= $completed ? 'completed' : ($active ? 'active' : '') ?>"></div>
                 <div>
-                    <h4 class="font-semibold text-gray-900"><?= $status ?></h4>
+                    <h4 class="font-semibold <?= ($active || $completed) ? 'text-gray-900' : 'text-gray-500' ?>"><?= $status ?></h4>
                     <?php if ($historyItem): ?>
                     <p class="text-sm text-gray-500">
                         <?= date('F j, Y g:i A', strtotime($historyItem['created_at'])) ?>
                     </p>
-                    <?php if ($historyItem['comments']): ?>
+                    <?php if (!empty($historyItem['comments'])): ?>
                     <p class="text-sm text-gray-600 mt-1"><?= htmlspecialchars($historyItem['comments']) ?></p>
                     <?php endif; ?>
                     <?php else: ?>
-                    <p class="text-sm text-gray-400">Not yet processed</p>
+                    <p class="text-sm text-gray-400">Awaiting processing</p>
                     <?php endif; ?>
                 </div>
             </div>

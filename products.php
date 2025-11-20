@@ -79,14 +79,14 @@ $brands = $brandModel->getAll();
 
         <!-- Top Banners -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <div class="bg-gray-800 rounded-lg p-8 flex items-center justify-between" style="background-color: #A1A4AD; background-image: url('assets/images/pages/noice-cancel-headphone.png'); background-size: cover; background-position: center;">
+            <div class="bg-gray-800 rounded-lg p-8 flex items-center justify-between" style="background-color: #A1A4AD; background-image: url('assets/images/pages/headphones-displayed-against-dark-background.jpg'); background-size: cover; background-position: center;">
                 <div class="text-white">
                     <p class="text-sm uppercase mb-2">The best place to play</p>
                     <h2 class="text-2xl font-bold mb-4">Noise Cancelling<br>Headphones</h2>
                     <a href="products.php?category=15" class="bg-white text-black px-6 py-2 rounded-full text-sm font-medium inline-block">SHOP NOW</a>
                 </div>
             </div>
-            <div class="bg-red-700 rounded-lg p-8 flex items-center justify-between" style="background-image: url('assets/images/pages/homepod-mini.jpeg'); background-size: cover; background-position: center;">
+            <div class="bg-red-700 rounded-lg p-8 flex items-center justify-between" style="background-image: url('assets/images/pages/homepod-mini-2.jpeg'); background-size: cover; background-position: center;">
                 <div class="text-white">
                     <p class="text-sm uppercase mb-2">Introducing New</p>
                     <h2 class="text-2xl font-bold mb-4">Apple Homepod<br>Mini</h2>
@@ -180,10 +180,15 @@ $brands = $brandModel->getAll();
                     <ul class="space-y-2 text-sm">
                         <?php foreach ($brands as $b): ?>
                         <li>
-                            <a href="products.php?brand=<?= $b['brand_id'] ?><?= $category_id ? '&category=' . $category_id : '' ?>" 
-                               class="flex items-center hover:text-purple-custom <?= $brand_id == $b['brand_id'] ? 'text-purple-custom font-semibold' : '' ?>">
-                                <span><?= htmlspecialchars($b['brand_name']) ?></span>
-                            </a>
+                            <label class="flex items-center cursor-pointer hover:text-purple-custom">
+                                <input type="checkbox" 
+                                       class="brand-filter mr-2 rounded text-purple-custom focus:ring-purple-custom"
+                                       value="<?= $b['brand_id'] ?>"
+                                       <?= $brand_id == $b['brand_id'] ? 'checked' : '' ?>>
+                                <span class="<?= $brand_id == $b['brand_id'] ? 'text-purple-custom font-semibold' : '' ?>">
+                                    <?= htmlspecialchars($b['brand_name']) ?>
+                                </span>
+                            </label>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -306,11 +311,18 @@ $brands = $brandModel->getAll();
                             </div>
                         </a>
                         
-                        <!-- Add to Cart Button - Pushed to bottom -->
-                        <button onclick="addToCart(<?= $p['product_id'] ?>)" 
-                                class="w-full bg-purple-custom text-white py-2 rounded-lg hover:bg-purple-700 text-sm font-semibold transition-colors mt-auto">
-                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
-                        </button>
+                        <!-- Action Buttons - Pushed to bottom -->
+                        <div class="flex gap-2 mt-auto">
+                            <button onclick="buyNowFromList(<?= $p['product_id'] ?>)" 
+                                    class="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 text-sm font-semibold transition-colors">
+                                <i class="fas fa-credit-card mr-2"></i>Buy Now
+                            </button>
+                            <button onclick="addToCart(<?= $p['product_id'] ?>)" 
+                                    class="bg-purple-custom text-white p-2 rounded-lg hover:bg-purple-700 transition-colors"
+                                    title="Add to Cart">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -354,6 +366,56 @@ $brands = $brandModel->getAll();
                 window.cartManager.addToCart(productId, 1);
             }
         }
+
+        // Buy Now - Add to cart and redirect to checkout
+        function buyNowFromList(productId) {
+            const formData = new FormData();
+            formData.append('action', 'add');
+            formData.append('product_id', productId);
+            formData.append('quantity', 1);
+
+            fetch('api/cart.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to checkout page
+                    window.location.href = 'checkout.php';
+                } else {
+                    if (window.cartManager) {
+                        window.cartManager.showNotification(data.message || 'Failed to add product', 'error');
+                    } else {
+                        alert(data.message || 'Failed to add product');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (window.cartManager) {
+                    window.cartManager.showNotification('An error occurred', 'error');
+                } else {
+                    alert('An error occurred');
+                }
+            });
+        }
+
+        // Brand filter checkboxes
+        document.querySelectorAll('.brand-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const brandId = this.value;
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                if (this.checked) {
+                    urlParams.set('brand', brandId);
+                } else {
+                    urlParams.delete('brand');
+                }
+                
+                window.location.href = 'products.php?' + urlParams.toString();
+            });
+        });
     </script>
 
 </body>

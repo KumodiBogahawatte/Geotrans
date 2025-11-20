@@ -1,7 +1,7 @@
 // Wishlist functionality
 class WishlistManager {
     constructor() {
-        this.baseUrl = '/SLTDS/Geotrans/';
+        this.baseUrl = '/Geotrans/';
         this.init();
     }
 

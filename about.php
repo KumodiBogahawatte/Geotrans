@@ -58,7 +58,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-gray-900 w-full lg:w-auto">
                 <div class="sm:border-r sm:pr-6 lg:pr-8 border-gray-300">
-                    <p class="text-3xl sm:text-4xl font-extrabold">$12,5M</p>
+                    <p class="text-3xl sm:text-4xl font-extrabold">Rs.12,5M</p>
                     <p class="text-sm mt-1 text-gray-500">REVENUE <br> 2021 - 2025</p>
                 </div>
                 <div class="sm:border-r sm:pr-6 lg:pr-8 border-gray-300">

@@ -299,7 +299,7 @@ class Product {
     }
 
     // Search products
-    public function search($search_term, $limit = 10) {
+    public function search($search_term, $limit = 10, $category_id = 0) {
         $query = "SELECT p.*, c.category_name, b.brand_name 
                   FROM " . $this->table . " p
                   LEFT JOIN categories c ON p.category_id = c.category_id
@@ -309,14 +309,24 @@ class Product {
                   OR p.short_description LIKE :search
                   OR b.brand_name LIKE :search
                   OR c.category_name LIKE :search)
-                  AND p.is_active = 1
-                  ORDER BY p.product_name
-                  LIMIT :limit";
+                  AND p.is_active = 1";
+        
+        // Add category filter if specified
+        if ($category_id > 0) {
+            $query .= " AND p.category_id = :category_id";
+        }
+        
+        $query .= " ORDER BY p.product_name LIMIT :limit";
         
         $stmt = $this->conn->prepare($query);
         $search_param = '%' . $search_term . '%';
         $stmt->bindParam(':search', $search_param);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        
+        if ($category_id > 0) {
+            $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        }
+        
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

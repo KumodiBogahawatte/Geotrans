@@ -8,7 +8,7 @@ require_once __DIR__ . '/../classes/Wishlist.php';
 // require_once __DIR__ . '/../includes/currency.php';
 
 // Define base URL for navigation
-$base_url = '/SLTDS/Geotrans/';
+$base_url = '/Geotrans/';
 
 $cart = new Cart();
 $category = new Category();
@@ -24,11 +24,12 @@ $categories = $category->getAll(true); // Get only parent categories
 ?>
 
     <!-- Top Banner -->
-    <div class="text-white py-2 px-6 sm:px-8 lg:px-20 text-center text-sm" style="background-color: #8D4887;">
-        <span class="bg-white px-3 py-1 rounded-full font-semibold text-xs mr-2" style="color: #8D4887;">Special</span>
-        Get 10% <span class="font-bold">DISCOUNT</span> for first order
+    <div class="text-white py-2 px-4 sm:px-6 lg:px-20 text-center text-xs sm:text-sm" style="background-color: #8D4887;">
+        <span class="bg-white px-2 sm:px-3 py-1 rounded-full font-semibold text-xs mr-1 sm:mr-2" style="color: #8D4887;">Special</span>
+        <span class="hidden sm:inline">Get 10% <span class="font-bold">DISCOUNT</span> for first order</span>
+        <span class="sm:hidden">10% <span class="font-bold">OFF</span> First Order</span>
         <?php if (!isLoggedIn()): ?>
-        <a href="<?= $base_url ?>register.php" class="underline ml-2" style="color: #FFFFFF;" onmouseover="this.style.color='#C4A3D1'" onmouseout="this.style.color='#FFFFFF'">Register Now</a>
+        <a href="<?= $base_url ?>register.php" class="underline ml-1 sm:ml-2 font-semibold" style="color: #FFFFFF;" onmouseover="this.style.color='#C4A3D1'" onmouseout="this.style.color='#FFFFFF'">Register Now</a>
         <?php endif; ?>
     </div>
 
@@ -84,23 +85,25 @@ $categories = $category->getAll(true); // Get only parent categories
 
             <!-- Mobile Search Bar (Hidden by default) -->
             <div id="mobile-search" class="lg:hidden hidden mt-4">
-                <div class="flex items-center">
-                    <select class="bg-gray-100 border-0 rounded-l-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;">
-                        <option>All</option>
-                        <option>Electronics</option>
-                        <option>Clothing</option>
-                        <option>Home & Garden</option>
+                <div class="flex flex-col gap-2">
+                    <select id="category-select-mobile" class="bg-gray-100 border-0 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;">
+                        <option value="">All Categories</option>
+                        <?php foreach ($categories as $cat): ?>
+                        <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['category_name']); ?></option>
+                        <?php endforeach; ?>
                     </select>
-                    <div class="relative flex-1">
-                        <input type="text" placeholder="Search anything..."
-                            class="w-full px-3 py-2 border-0 bg-gray-100 text-sm focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;" />
+                    <div class="flex items-center">
+                        <div class="relative flex-1">
+                            <input type="text" id="search-input-mobile" placeholder="Search anything..."
+                                class="w-full px-3 py-2 border-0 bg-gray-100 text-sm rounded-l-lg focus:outline-none focus:ring-2" style="--tw-ring-color: #8D4887;" />
+                        </div>
+                        <button onclick="performMobileSearch()" class="text-white px-4 py-2 rounded-r-lg transition-colors" style="background-color: #8D4887;" onmouseover="this.style.backgroundColor='#9C5AA2'" onmouseout="this.style.backgroundColor='#8D4887'">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <button class="text-white px-4 py-2 rounded-r-lg transition-colors" style="background-color: #8D4887;" onmouseover="this.style.backgroundColor='#9C5AA2'" onmouseout="this.style.backgroundColor='#8D4887'">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
                 </div>
             </div>
 
@@ -170,7 +173,18 @@ $categories = $category->getAll(true); // Get only parent categories
                     <?php if (isLoggedIn()): ?>
                     <div class="relative" id="user-dropdown">
                         <button id="user-menu-btn" class="flex items-center gap-2" style="color: #8D4887;">
-                            <i class="fas fa-user-circle text-2xl"></i>
+                            <?php 
+                            $profile_photo = getUserData('profile_photo');
+                            if (!empty($profile_photo) && file_exists(__DIR__ . '/../assets/images/profiles/' . $profile_photo)): 
+                            ?>
+                                <img src="<?= $base_url ?>assets/images/profiles/<?= htmlspecialchars($profile_photo) ?>" 
+                                     alt="<?= htmlspecialchars(getUserData('first_name')) ?>" 
+                                     class="w-8 h-8 rounded-full object-cover border-2 border-purple-300">
+                            <?php else: ?>
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-sm" style="background-color: #8D4887;">
+                                    <?= strtoupper(substr(getUserData('first_name'), 0, 1)) ?>
+                                </div>
+                            <?php endif; ?>
                             <div class="hidden lg:block text-left">
                                 <div class="text-xs text-gray-500">Hello</div>
                                 <div class="text-sm font-semibold"><?php echo htmlspecialchars(getUserData('first_name')); ?></div>
@@ -200,6 +214,42 @@ $categories = $category->getAll(true); // Get only parent categories
             <!-- Mobile Menu (Hidden by default) -->
             <div id="mobile-menu" class="lg:hidden hidden border-b border-gray-200">
                 <div class="px-4 py-3 space-y-3">
+                    <!-- User Section -->
+                    <?php if (isLoggedIn()): ?>
+                    <div class="flex items-center gap-3 pb-3 border-b border-gray-200">
+                        <?php 
+                        $profile_photo = getUserData('profile_photo');
+                        if (!empty($profile_photo) && file_exists(__DIR__ . '/../assets/images/profiles/' . $profile_photo)): 
+                        ?>
+                            <img src="<?= $base_url ?>assets/images/profiles/<?= htmlspecialchars($profile_photo) ?>" 
+                                 alt="<?= htmlspecialchars(getUserData('first_name')) ?>" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-purple-300">
+                        <?php else: ?>
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold" style="background-color: #8D4887;">
+                                <?= strtoupper(substr(getUserData('first_name'), 0, 1)) ?>
+                            </div>
+                        <?php endif; ?>
+                        <div>
+                            <div class="text-xs text-gray-500">Hello</div>
+                            <div class="text-sm font-semibold" style="color: #8D4887;"><?php echo htmlspecialchars(getUserData('first_name')); ?></div>
+                        </div>
+                    </div>
+                    <div class="space-y-2 pb-3 border-b border-gray-200">
+                        <a href="<?= $base_url ?>account/profile.php" class="block py-2 text-sm" style="color: #8D4887;">My Profile</a>
+                        <a href="<?= $base_url ?>account/orders.php" class="block py-2 text-sm" style="color: #8D4887;">My Orders</a>
+                        <a href="<?= $base_url ?>account/addresses.php" class="block py-2 text-sm" style="color: #8D4887;">My Addresses</a>
+                        <a href="<?= $base_url ?>wishlist.php" class="block py-2 text-sm" style="color: #8D4887;">My Wishlist</a>
+                        <?php if (isAdmin()): ?>
+                        <a href="<?= $base_url ?>admin/" class="block py-2 text-sm" style="color: #8D4887;">Admin Panel</a>
+                        <?php endif; ?>
+                        <a href="<?= $base_url ?>logout.php" class="block py-2 text-sm text-red-600">Logout</a>
+                    </div>
+                    <?php else: ?>
+                    <div class="pb-3 border-b border-gray-200">
+                        <a href="<?= $base_url ?>login.php" class="block w-full text-center text-white font-semibold px-4 py-3 rounded-lg transition-colors" style="background-color: #8D4887;" onmouseover="this.style.backgroundColor='#9C5AA2'" onmouseout="this.style.backgroundColor='#8D4887'">Login / Register</a>
+                    </div>
+                    <?php endif; ?>
+                    
                     <!-- Main Navigation -->
                     <div class="space-y-2">
                         <a href="<?= $base_url ?>index.php" class="block py-2 text-sm" style="color: #8D4887;">Home</a>
@@ -210,13 +260,13 @@ $categories = $category->getAll(true); // Get only parent categories
                     
                     <!-- Additional Links -->
                     <div class="border-t border-gray-200 pt-3 space-y-2">
-                        <!-- <a href="#" class="flex items-center py-2 text-sm" style="color: #8D4887;">
+                        <a href="<?= $base_url ?>submit-feedback.php" class="flex items-center py-2 text-sm" style="color: #8D4887;">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
-                            Sell on Geotrans
-                        </a> -->
+                            Submit Feedback
+                        </a>
                         <a href="<?= $base_url ?>order-tracking.php" class="flex items-center py-2 text-sm" style="color: #8D4887;">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -267,15 +317,15 @@ $categories = $category->getAll(true); // Get only parent categories
                     </ul>
 
                     <ul class="flex items-center space-x-6 text-sm">
-                        <!-- <li class="hidden xl:block">
-                            <a href="#" class="flex items-center" style="color: #8D4887;">
+                        <li class="hidden xl:block">
+                            <a href="<?= $base_url ?>submit-feedback.php" class="flex items-center" style="color: #8D4887;">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                                 </svg>
-                                Sell on Geotrans
+                                Submit Feedback
                             </a>
-                        </li> -->
+                        </li>
                         <li class="hidden xl:block">
                             <a href="<?= $base_url ?>order-tracking.php" class="flex items-center" style="color: #8D4887;">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -359,6 +409,21 @@ $categories = $category->getAll(true); // Get only parent categories
                 window.location.href = url;
             }
         }
+        
+        // Perform mobile search
+        function performMobileSearch() {
+            const searchInput = document.getElementById('search-input-mobile');
+            const categorySelect = document.getElementById('category-select-mobile');
+            const query = searchInput.value.trim();
+            
+            if (query.length > 0) {
+                let url = 'products.php?search=' + encodeURIComponent(query);
+                if (categorySelect && categorySelect.value) {
+                    url += '&category=' + categorySelect.value;
+                }
+                window.location.href = url;
+            }
+        }
 
         // Allow Enter key to trigger search
         document.addEventListener('DOMContentLoaded', function() {
@@ -367,6 +432,15 @@ $categories = $category->getAll(true); // Get only parent categories
                 searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         performSearch();
+                    }
+                });
+            }
+            
+            const searchInputMobile = document.getElementById('search-input-mobile');
+            if (searchInputMobile) {
+                searchInputMobile.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performMobileSearch();
                     }
                 });
             }

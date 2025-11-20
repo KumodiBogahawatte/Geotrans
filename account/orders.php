@@ -111,10 +111,17 @@ $orders = $order->getByUserId($_SESSION['user_id']);
                                         <p class="text-sm text-gray-600">Total Amount</p>
                                         <p class="text-lg font-bold text-gray-900">Rs<?= number_format($order['total_amount'], 2) ?></p>
                                     </div>
-                                    <a href="../order-confirmation.php?order=<?= $order['order_id'] ?>" 
-                                       class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-                                        View Details
-                                    </a>
+                                    <div class="flex gap-2">
+                                        <a href="../order-tracking.php?order=<?= urlencode($order['order_number']) ?>" 
+                                           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                                            <i class="fas fa-truck"></i>
+                                            Track Order
+                                        </a>
+                                        <a href="../order-confirmation.php?order=<?= $order['order_id'] ?>" 
+                                           class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                                            View Details
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <?php endforeach; ?>

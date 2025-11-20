@@ -42,9 +42,9 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
 
 <?php include 'includes/header.php'; ?>
 
-<main class="min-h-screen bg-gray-50 py-8">
-    <div class="container mx-auto px-4 max-w-3xl">
-        <!-- Success Message -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="max-w-3xl mx-auto">
+    <!-- Success Message -->
         <div class="bg-white rounded-lg shadow-md p-8 text-center mb-6">
             <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,6 +96,9 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
             <div class="space-y-4">
                 <?php foreach ($order_data['items'] as $item): ?>
                 <div class="flex items-center space-x-4 py-3 border-b">
+                    <img src="assets/images/products/<?= htmlspecialchars($item['main_image'] ?? 'default.png') ?>" 
+                         alt="<?= htmlspecialchars($item['product_name']) ?>"
+                         class="w-20 h-20 object-contain rounded border border-gray-200">
                     <div class="flex-1">
                         <p class="font-semibold text-gray-900"><?= htmlspecialchars($item['product_name']) ?></p>
                         <p class="text-sm text-gray-600">Quantity: <?= $item['quantity'] ?> × Rs<?= number_format($item['unit_price'], 2) ?></p>
@@ -150,6 +153,6 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
             </p>
         </div>
     </div>
-</main>
+</div>
 
 <?php include 'includes/footer.php'; ?>

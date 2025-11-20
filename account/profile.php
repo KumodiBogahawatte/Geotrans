@@ -21,6 +21,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $current_password = $_POST['current_password'] ?? '';
     $new_password = $_POST['new_password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
+    $profile_photo_name = $user_data['profile_photo'];
+    
+    // Handle profile photo upload
+    if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+        
+        if (!in_array($_FILES['profile_photo']['type'], $allowed_types)) {
+            $errors[] = 'Invalid file type. Only JPG, PNG and GIF allowed';
+        } elseif ($_FILES['profile_photo']['size'] > $max_size) {
+            $errors[] = 'File too large. Maximum size is 5MB';
+        } else {
+            $upload_dir = '../assets/images/profiles/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            $file_extension = pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION);
+            $profile_photo_name = 'user_' . $_SESSION['user_id'] . '_' . time() . '.' . $file_extension;
+            $upload_path = $upload_dir . $profile_photo_name;
+            
+            if (!move_uploaded_file($_FILES['profile_photo']['tmp_name'], $upload_path)) {
+                $errors[] = 'Failed to upload profile photo';
+                $profile_photo_name = $user_data['profile_photo'];
+            } else {
+                // Delete old photo if exists
+                if (!empty($user_data['profile_photo']) && file_exists($upload_dir . $user_data['profile_photo'])) {
+                    unlink($upload_dir . $user_data['profile_photo']);
+                }
+            }
+        }
+    }
     
     if (empty($first_name)) {
         $errors[] = 'First name is required';
@@ -60,22 +92,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (!empty($new_password)) {
             $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-            $query = "UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email, password_hash = :password WHERE user_id = :id";
+            $query = "UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email, profile_photo = :profile_photo, password_hash = :password WHERE user_id = :id";
             $stmt = $conn->prepare($query);
             $stmt->bindParam(':password', $hashed_password);
         } else {
-            $query = "UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email WHERE user_id = :id";
+            $query = "UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email, profile_photo = :profile_photo WHERE user_id = :id";
             $stmt = $conn->prepare($query);
         }
         
         $stmt->bindParam(':first_name', $first_name);
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':profile_photo', $profile_photo_name);
         $stmt->bindParam(':id', $_SESSION['user_id']);
         
         if ($stmt->execute()) {
             $success = 'Profile updated successfully';
             $user_data = $user->getById($_SESSION['user_id']);
+            // Update session with new profile photo
+            $_SESSION['user_data']['profile_photo'] = $user_data['profile_photo'];
         } else {
             $errors[] = 'Failed to update profile';
         }
@@ -154,7 +189,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <?php endif; ?>
                         
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
+                            <!-- Profile Photo -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Profile Photo</label>
+                                <div class="flex items-center gap-6">
+                                    <div class="relative">
+                                        <?php if (!empty($user_data['profile_photo']) && file_exists('../assets/images/profiles/' . $user_data['profile_photo'])): ?>
+                                            <img id="profile-preview" src="../assets/images/profiles/<?= htmlspecialchars($user_data['profile_photo']) ?>" 
+                                                 alt="Profile" 
+                                                 class="w-24 h-24 rounded-full object-cover border-4 border-purple-200">
+                                        <?php else: ?>
+                                            <div id="profile-preview" class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200" style="background-color: #8D4887;">
+                                                <?= strtoupper(substr($user_data['first_name'], 0, 1)) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div>
+                                        <input type="file" name="profile_photo" id="profile_photo" accept="image/*" 
+                                               class="hidden" onchange="previewPhoto(this)">
+                                        <label for="profile_photo" 
+                                               class="cursor-pointer bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700 inline-block">
+                                            <i class="fas fa-camera mr-2"></i>Change Photo
+                                        </label>
+                                        <p class="text-xs text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                                 <input type="text" name="first_name" 
@@ -216,5 +278,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php include '../includes/footer.php'; ?>
 
+<script>
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('profile-preview');
+            if (preview.tagName === 'IMG') {
+                preview.src = e.target.result;
+            } else {
+                const img = document.createElement('img');
+                img.id = 'profile-preview';
+                img.src = e.target.result;
+                img.className = 'w-24 h-24 rounded-full object-cover border-4 border-purple-200';
+                preview.parentNode.replaceChild(img, preview);
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 </body>
 </html>

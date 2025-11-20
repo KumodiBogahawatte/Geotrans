@@ -40,6 +40,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_active = isset($_POST['is_active']) ? 1 : 0;
     $is_verified = isset($_POST['is_verified']) ? 1 : 0;
     $password = $_POST['password'] ?? '';
+    $profile_photo_name = $is_edit ? $user['profile_photo'] : null;
+    
+    // Handle profile photo upload
+    if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+        
+        if (!in_array($_FILES['profile_photo']['type'], $allowed_types)) {
+            $_SESSION['error'] = 'Invalid file type. Only JPG, PNG and GIF allowed';
+        } elseif ($_FILES['profile_photo']['size'] > $max_size) {
+            $_SESSION['error'] = 'File too large. Maximum size is 5MB';
+        } else {
+            $upload_dir = '../assets/images/profiles/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            $file_extension = pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION);
+            $profile_photo_name = 'user_' . ($is_edit ? $user_id : time()) . '_' . time() . '.' . $file_extension;
+            $upload_path = $upload_dir . $profile_photo_name;
+            
+            if (!move_uploaded_file($_FILES['profile_photo']['tmp_name'], $upload_path)) {
+                $_SESSION['error'] = 'Failed to upload profile photo';
+                $profile_photo_name = $is_edit ? $user['profile_photo'] : null;
+            } else {
+                // Delete old photo if exists
+                if ($is_edit && !empty($user['profile_photo']) && file_exists($upload_dir . $user['profile_photo'])) {
+                    unlink($upload_dir . $user['profile_photo']);
+                }
+            }
+        }
+    }
+    
+    // Handle photo removal
+    if (isset($_POST['remove_photo']) && $_POST['remove_photo'] === '1' && $is_edit) {
+        if (!empty($user['profile_photo']) && file_exists('../assets/images/profiles/' . $user['profile_photo'])) {
+            unlink('../assets/images/profiles/' . $user['profile_photo']);
+        }
+        $profile_photo_name = null;
+    }
     
     if ($is_edit) {
         // Update existing user
@@ -48,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         first_name = :first_name,
                         last_name = :last_name,
                         phone = :phone,
+                        profile_photo = :profile_photo,
                         user_type = :user_type,
                         is_active = :is_active,
                         is_verified = :is_verified";
@@ -64,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $update_stmt->bindParam(':first_name', $first_name);
         $update_stmt->bindParam(':last_name', $last_name);
         $update_stmt->bindParam(':phone', $phone);
+        $update_stmt->bindParam(':profile_photo', $profile_photo_name);
         $update_stmt->bindParam(':user_type', $user_type);
         $update_stmt->bindParam(':is_active', $is_active);
         $update_stmt->bindParam(':is_verified', $is_verified);
@@ -90,9 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
             
             $insert_query = "INSERT INTO users 
-                            (email, password_hash, first_name, last_name, phone, user_type, is_active, is_verified, created_at) 
+                            (email, password_hash, first_name, last_name, phone, profile_photo, user_type, is_active, is_verified, created_at) 
                             VALUES 
-                            (:email, :password_hash, :first_name, :last_name, :phone, :user_type, :is_active, :is_verified, NOW())";
+                            (:email, :password_hash, :first_name, :last_name, :phone, :profile_photo, :user_type, :is_active, :is_verified, NOW())";
             
             $insert_stmt = $conn->prepare($insert_query);
             $insert_stmt->bindParam(':email', $email);
@@ -100,6 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $insert_stmt->bindParam(':first_name', $first_name);
             $insert_stmt->bindParam(':last_name', $last_name);
             $insert_stmt->bindParam(':phone', $phone);
+            $insert_stmt->bindParam(':profile_photo', $profile_photo_name);
             $insert_stmt->bindParam(':user_type', $user_type);
             $insert_stmt->bindParam(':is_active', $is_active);
             $insert_stmt->bindParam(':is_verified', $is_verified);
@@ -135,7 +178,41 @@ include 'includes/header.php';
             </div>
             <?php endif; ?>
 
-            <form method="POST" class="space-y-6">
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <!-- Profile Photo -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                    <div class="flex items-center gap-6">
+                        <div class="relative">
+                            <?php if ($is_edit && !empty($user['profile_photo']) && file_exists('../assets/images/profiles/' . $user['profile_photo'])): ?>
+                                <img id="profile-preview" src="../assets/images/profiles/<?= htmlspecialchars($user['profile_photo']) ?>" 
+                                     alt="Profile" 
+                                     class="w-24 h-24 rounded-full object-cover border-4 border-purple-200">
+                            <?php else: ?>
+                                <div id="profile-preview" class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200" style="background-color: #8D4887;">
+                                    <?= $is_edit ? strtoupper(substr($user['first_name'], 0, 1)) : '?' ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div>
+                            <input type="file" name="profile_photo" id="profile_photo" accept="image/*" 
+                                   class="hidden" onchange="previewPhoto(this)">
+                            <label for="profile_photo" 
+                                   class="cursor-pointer bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700 inline-block">
+                                <i class="fas fa-camera mr-2"></i><?= $is_edit ? 'Change Photo' : 'Upload Photo' ?>
+                            </label>
+                            <?php if ($is_edit && !empty($user['profile_photo'])): ?>
+                                <button type="button" onclick="removePhoto()" 
+                                        class="ml-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                                    <i class="fas fa-trash mr-2"></i>Remove
+                                </button>
+                                <input type="hidden" name="remove_photo" id="remove_photo" value="0">
+                            <?php endif; ?>
+                            <p class="text-xs text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB</p>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
@@ -215,5 +292,43 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('profile-preview');
+            if (preview.tagName === 'IMG') {
+                preview.src = e.target.result;
+            } else {
+                const img = document.createElement('img');
+                img.id = 'profile-preview';
+                img.src = e.target.result;
+                img.className = 'w-24 h-24 rounded-full object-cover border-4 border-purple-200';
+                preview.parentNode.replaceChild(img, preview);
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removePhoto() {
+    if (confirm('Are you sure you want to remove the profile photo?')) {
+        document.getElementById('remove_photo').value = '1';
+        const preview = document.getElementById('profile-preview');
+        if (preview.tagName === 'IMG') {
+            const div = document.createElement('div');
+            div.id = 'profile-preview';
+            div.className = 'w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200';
+            div.style.backgroundColor = '#8D4887';
+            div.textContent = '?';
+            preview.parentNode.replaceChild(div, preview);
+        }
+        // Hide the remove button
+        event.target.style.display = 'none';
+    }
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>

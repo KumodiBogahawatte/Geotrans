@@ -6,12 +6,13 @@ header('Content-Type: application/json');
 
 $product = new Product();
 $search_term = isset($_GET['q']) ? sanitizeInput($_GET['q']) : '';
+$category_id = isset($_GET['category']) ? intval($_GET['category']) : 0;
 
 if (strlen($search_term) < 2) {
     jsonResponse(['success' => false, 'message' => 'Search term too short'], 400);
 }
 
-$results = $product->search($search_term, 10);
+$results = $product->search($search_term, 10, $category_id);
 
 $formatted_results = array_map(function($item) {
     $imagePath = !empty($item['main_image']) 

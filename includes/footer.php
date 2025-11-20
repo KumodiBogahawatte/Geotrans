@@ -108,7 +108,7 @@ if (!isset($base_url)) {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs md:text-sm font-semibold text-gray-800">FREE SHIPPING OVER $99</p>
+                        <p class="text-xs md:text-sm font-semibold text-gray-800">FREE SHIPPING OVER Rs.50 000</p>
                     </div>
                 </div>
 
@@ -208,16 +208,15 @@ if (!isset($base_url)) {
                 <div class="text-center sm:text-left">
                     <h4 class="font-bold mb-4" style="color: #8D4887;">Top Categories</h4>
                     <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-[#8D4887]">TV/Televisions</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Computers</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Laptops</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Mobiles & Tablets</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Audios</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Cameras</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Gadget</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Sport Equipments</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Office</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Smart Home</a></li>
+                        <li><a href="<?= $base_url ?>products.php" class="hover:text-[#8D4887]">All Products</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=laptops" class="hover:text-[#8D4887]">Laptops</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=monitors" class="hover:text-[#8D4887]">Monitors</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=printers" class="hover:text-[#8D4887]">Printers</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=keyboards" class="hover:text-[#8D4887]">Keyboards</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=headphones" class="hover:text-[#8D4887]">Headphones</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=cameras" class="hover:text-[#8D4887]">Cameras</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=accessories" class="hover:text-[#8D4887]">Accessories</a></li>
+                        <li><a href="<?= $base_url ?>category.php" class="hover:text-[#8D4887]">View All Categories</a></li>
                     </ul>
                 </div>
 
@@ -225,12 +224,11 @@ if (!isset($base_url)) {
                 <div class="text-center sm:text-left">
                     <h4 class="font-bold mb-4" style="color: #8D4887;">Company</h4>
                     <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-[#8D4887]">About GeoTrans</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Contact</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Career</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Blog</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Sitemap</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Store Locations</a></li>
+                        <li><a href="<?= $base_url ?>about.php" class="hover:text-[#8D4887]">About GeoTrans</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Contact</a></li>
+                        <li><a href="<?= $base_url ?>products.php" class="hover:text-[#8D4887]">Products</a></li>
+                        <li><a href="<?= $base_url ?>category.php" class="hover:text-[#8D4887]">Categories</a></li>
+                        <li><a href="<?= $base_url ?>index.php" class="hover:text-[#8D4887]">Home</a></li>
                     </ul>
                 </div>
 
@@ -238,12 +236,13 @@ if (!isset($base_url)) {
                 <div class="text-center sm:text-left">
                     <h4 class="font-bold mb-4" style="color: #8D4887;">Help Center</h4>
                     <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-[#8D4887]">Customer Service</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Customer Service</a></li>
+                        <li><a href="<?= $base_url ?>submit-feedback.php" class="hover:text-[#8D4887]">Submit Feedback</a></li>
                         <li><a href="#" class="hover:text-[#8D4887]">Policy</a></li>
                         <li><a href="#" class="hover:text-[#8D4887]">Terms & Conditions</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Track Order</a></li>
+                        <li><a href="<?= $base_url ?>order-tracking.php" class="hover:text-[#8D4887]">Track Order</a></li>
                         <li><a href="#" class="hover:text-[#8D4887]">FAQs</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">My Account</a></li>
+                        <li><a href="<?= $base_url ?>account/profile.php" class="hover:text-[#8D4887]">My Account</a></li>
                         <li><a href="#" class="hover:text-[#8D4887]">Product Support</a></li>
                     </ul>
                 </div>
@@ -252,10 +251,10 @@ if (!isset($base_url)) {
                 <div class="text-center sm:text-left">
                     <h4 class="font-bold mb-4" style="color: #8D4887;">Partner</h4>
                     <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-[#8D4887]">Become Seller</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Affiliate</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Advertise</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Partnership</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Become Seller</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Affiliate</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Advertise</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Partnership</a></li>
                     </ul>
                 </div>
             </div>

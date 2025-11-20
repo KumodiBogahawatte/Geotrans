@@ -163,6 +163,10 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
 
                 <!-- Action Buttons -->
                 <div class="flex gap-4 mb-6">
+                    <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold transition"
+                            onclick="buyNow()">
+                        <i class="fas fa-credit-card mr-2"></i>Buy Now
+                    </button>
                     <button class="add-to-cart-btn flex-1 bg-purple-custom hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition"
                             data-product-id="<?php echo $productData['product_id']; ?>"
                             onclick="addToCartWithQty()">
@@ -381,6 +385,44 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
             }
         }
 
+        // Buy Now - Add to cart and redirect to checkout
+        function buyNow() {
+            const productId = <?php echo $productData['product_id']; ?>;
+            const quantity = document.getElementById('quantity').value;
+
+            // Add to cart via API
+            const formData = new FormData();
+            formData.append('action', 'add');
+            formData.append('product_id', productId);
+            formData.append('quantity', quantity);
+
+            fetch('api/cart.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to checkout page
+                    window.location.href = 'checkout.php';
+                } else {
+                    if (window.cartManager) {
+                        window.cartManager.showNotification(data.message || 'Failed to add product', 'error');
+                    } else {
+                        alert(data.message || 'Failed to add product');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (window.cartManager) {
+                    window.cartManager.showNotification('An error occurred', 'error');
+                } else {
+                    alert('An error occurred');
+                }
+            });
+        }
+
         // Review Form - Star Rating
         document.querySelectorAll('.rating-star').forEach(star => {
             star.addEventListener('click', function() {
@@ -442,7 +484,7 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
             submitBtn.textContent = 'Submitting...';
             
             try {
-                const response = await fetch('/SLTDS/Geotrans/api/submit-review.php', {
+                const response = await fetch('api/submit-review.php', {
                     method: 'POST',
                     body: formData
                 });

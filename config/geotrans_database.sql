@@ -293,3 +293,36 @@ CREATE TABLE IF NOT EXISTS site_settings (
     INDEX idx_key (setting_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Add testimonials table to database
+CREATE TABLE IF NOT EXISTS `testimonials` (
+  `testimonial_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_name` varchar(100) NOT NULL,
+  `customer_role` varchar(100) NOT NULL,
+  `customer_image` varchar(255) DEFAULT NULL,
+  `rating` int(1) NOT NULL DEFAULT 5,
+  `feedback_text` text NOT NULL,
+  `feedback_date` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `display_order` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`testimonial_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Add profile_photo column to users table
+ALTER TABLE `users` ADD COLUMN `profile_photo` VARCHAR(255) DEFAULT NULL AFTER `last_name`;
+
+-- Update testimonials table to link with users and remove customer_image
+ALTER TABLE `testimonials` 
+ADD COLUMN `user_id` INT DEFAULT NULL AFTER `testimonial_id`,
+ADD COLUMN `is_verified` TINYINT(1) DEFAULT 0 AFTER `is_active`,
+ADD COLUMN `admin_notes` TEXT DEFAULT NULL AFTER `is_verified`,
+ADD INDEX `idx_user_id` (`user_id`);
+
+-- Keep customer_name and customer_role for non-registered users or manual entries
+-- But we'll prioritize user_id when available
+
+-- Optional: Add foreign key constraint if needed
+-- ALTER TABLE `testimonials` 
+-- ADD CONSTRAINT `fk_testimonial_user` 
+-- FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL;

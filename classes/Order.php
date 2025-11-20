@@ -146,7 +146,10 @@ class Order {
 
     // Get order items
     public function getOrderItems($order_id) {
-        $query = "SELECT * FROM order_items WHERE order_id = :order_id";
+        $query = "SELECT oi.*, p.main_image 
+                  FROM order_items oi
+                  LEFT JOIN products p ON oi.product_id = p.product_id
+                  WHERE oi.order_id = :order_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':order_id', $order_id, PDO::PARAM_INT);
         $stmt->execute();

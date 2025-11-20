@@ -11,10 +11,10 @@ class User {
     }
 
     // Register new user
-    public function register($email, $password, $first_name, $last_name, $phone = null) {
+    public function register($email, $password, $first_name, $last_name, $phone = null, $profile_photo = null) {
         $query = "INSERT INTO " . $this->table . " 
-                  (email, password_hash, first_name, last_name, phone) 
-                  VALUES (:email, :password, :first_name, :last_name, :phone)";
+                  (email, password_hash, first_name, last_name, phone, profile_photo) 
+                  VALUES (:email, :password, :first_name, :last_name, :phone, :profile_photo)";
         
         $stmt = $this->conn->prepare($query);
         
@@ -25,6 +25,7 @@ class User {
         $stmt->bindParam(':first_name', $first_name);
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':profile_photo', $profile_photo);
         
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -62,7 +63,7 @@ class User {
 
     // Get user by ID
     public function getById($user_id) {
-        $query = "SELECT user_id, email, first_name, last_name, phone, user_type, 
+        $query = "SELECT user_id, email, first_name, last_name, phone, profile_photo, user_type, 
                   is_verified, created_at, last_login 
                   FROM " . $this->table . " 
                   WHERE user_id = :user_id AND is_active = 1";
@@ -76,7 +77,7 @@ class User {
 
     // Get user by ID with password hash (for password verification)
     public function getByIdWithPassword($user_id) {
-        $query = "SELECT user_id, email, first_name, last_name, phone, user_type, 
+        $query = "SELECT user_id, email, first_name, last_name, phone, profile_photo, user_type, 
                   password_hash, is_verified, created_at, last_login 
                   FROM " . $this->table . " 
                   WHERE user_id = :user_id AND is_active = 1";

@@ -139,13 +139,17 @@ function removeFromWishlist(productId) {
             card.style.opacity = '0';
             setTimeout(() => {
                 card.remove();
-                // Update wishlist count in header
-                const countElement = document.querySelector('.wishlist-count');
-                if (countElement) {
-                    const currentCount = parseInt(countElement.textContent);
-                    const newCount = currentCount - 1;
-                    countElement.textContent = newCount;
-                    if (newCount === 0) {
+                // Update wishlist count in header using the count from API
+                if (data.wishlist_count !== undefined) {
+                    const wishlistCounts = document.querySelectorAll('.wishlist-count');
+                    wishlistCounts.forEach(element => {
+                        element.textContent = data.wishlist_count;
+                        if (data.wishlist_count === 0) {
+                            element.classList.add('hidden');
+                        }
+                    });
+                    
+                    if (data.wishlist_count === 0) {
                         location.reload(); // Reload to show empty state
                     }
                 }

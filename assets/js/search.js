@@ -2,9 +2,10 @@
 class SearchManager {
     constructor() {
         this.searchInput = document.getElementById('search-input');
+        this.categorySelect = document.getElementById('category-select');
         this.searchResults = document.getElementById('search-results');
         this.searchDebounce = null;
-        this.baseUrl = '/SLTDS/Geotrans/';
+        this.baseUrl = '/Geotrans/';
         this.init();
     }
 
@@ -25,6 +26,16 @@ class SearchManager {
             }, 300);
         });
 
+        // Update search when category changes
+        if (this.categorySelect) {
+            this.categorySelect.addEventListener('change', () => {
+                const query = this.searchInput.value.trim();
+                if (query.length >= 2) {
+                    this.search(query);
+                }
+            });
+        }
+
         // Close search results when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-container')) {
@@ -42,7 +53,14 @@ class SearchManager {
 
     async search(query) {
         try {
-            const response = await fetch(`${this.baseUrl}api/search.php?q=${encodeURIComponent(query)}`);
+            const category = this.categorySelect ? this.categorySelect.value : '';
+            let url = `${this.baseUrl}api/search.php?q=${encodeURIComponent(query)}`;
+            
+            if (category) {
+                url += `&category=${encodeURIComponent(category)}`;
+            }
+            
+            const response = await fetch(url);
             const data = await response.json();
 
             if (data.success && data.results) {

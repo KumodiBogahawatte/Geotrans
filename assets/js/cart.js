@@ -2,7 +2,7 @@
 class CartManager {
     constructor() {
         this.cartCountElement = document.getElementById('cart-count');
-        this.baseUrl = '/SLTDS/Geotrans/';
+        this.baseUrl = '/Geotrans/';
         this.init();
     }
 
@@ -97,12 +97,22 @@ class CartManager {
 
     async updateCartCount() {
         try {
-            const response = await fetch(this.baseUrl + 'api/cart.php?action=get');
+            const response = await fetch(this.baseUrl + 'api/cart.php?action=count');
             const data = await response.json();
 
-            if (data.success && this.cartCountElement) {
-                this.cartCountElement.textContent = data.cart_count;
-                this.cartCountElement.style.display = data.cart_count > 0 ? 'inline-block' : 'none';
+            if (data.success) {
+                // Update both desktop and mobile cart counts
+                const cartCounts = document.querySelectorAll('#cart-count, #mobile-cart-count');
+                cartCounts.forEach(element => {
+                    element.textContent = data.count;
+                    if (data.count > 0) {
+                        element.classList.remove('hidden');
+                        element.style.display = 'flex';
+                    } else {
+                        element.classList.add('hidden');
+                        element.style.display = 'none';
+                    }
+                });
             }
         } catch (error) {
             console.error('Error updating cart count:', error);
@@ -157,10 +167,19 @@ class CartManager {
             if (data.success) {
                 this.showNotification('Item removed', 'success');
                 
-                // Update cart count
-                if (this.cartCountElement && data.cart_count !== undefined) {
-                    this.cartCountElement.textContent = data.cart_count;
-                    this.cartCountElement.style.display = data.cart_count > 0 ? 'inline-block' : 'none';
+                // Update all cart count elements
+                if (data.cart_count !== undefined) {
+                    const cartCounts = document.querySelectorAll('#cart-count, #mobile-cart-count');
+                    cartCounts.forEach(element => {
+                        element.textContent = data.cart_count;
+                        if (data.cart_count > 0) {
+                            element.classList.remove('hidden');
+                            element.style.display = 'flex';
+                        } else {
+                            element.classList.add('hidden');
+                            element.style.display = 'none';
+                        }
+                    });
                 }
 
                 return data;
