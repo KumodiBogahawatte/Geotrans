@@ -315,4 +315,4 @@ This is an academic project. For suggestions or issues, please contact the devel
 
 ---
 
-**Built with ❤️ for SLTDS**
+**Built SLTDS**
