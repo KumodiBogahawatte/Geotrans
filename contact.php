@@ -121,44 +121,44 @@
                 </form>
 
                 <script>
-                document.getElementById('contact-form').addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    const submitBtn = document.getElementById('submit-btn');
-                    const messageDiv = document.getElementById('contact-message');
-                    const formData = new FormData(this);
-                    
-                    // Disable button
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = 'SENDING...';
-                    
-                    try {
-                        const response = await fetch('api/contact.php', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        
-                        const data = await response.json();
-                        
-                        messageDiv.className = data.success 
-                            ? 'mb-4 p-4 rounded-lg bg-green-100 border border-green-400 text-green-700'
-                            : 'mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700';
-                        messageDiv.textContent = data.message;
-                        messageDiv.classList.remove('hidden');
-                        
-                        if (data.success) {
-                            this.reset();
+                    document.getElementById('contact-form').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+
+                        const submitBtn = document.getElementById('submit-btn');
+                        const messageDiv = document.getElementById('contact-message');
+                        const formData = new FormData(this);
+
+                        // Disable button
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'SENDING...';
+
+                        try {
+                            const response = await fetch('api/contact.php', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            const data = await response.json();
+
+                            messageDiv.className = data.success ?
+                                'mb-4 p-4 rounded-lg bg-green-100 border border-green-400 text-green-700' :
+                                'mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700';
+                            messageDiv.textContent = data.message;
+                            messageDiv.classList.remove('hidden');
+
+                            if (data.success) {
+                                this.reset();
+                            }
+
+                        } catch (error) {
+                            messageDiv.className = 'mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700';
+                            messageDiv.textContent = 'An error occurred. Please try again.';
+                            messageDiv.classList.remove('hidden');
+                        } finally {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'SEND MESSAGE';
                         }
-                        
-                    } catch (error) {
-                        messageDiv.className = 'mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700';
-                        messageDiv.textContent = 'An error occurred. Please try again.';
-                        messageDiv.classList.remove('hidden');
-                    } finally {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'SEND MESSAGE';
-                    }
-                });
+                    });
                 </script>
             </div>
 
@@ -218,15 +218,13 @@
         <div class="mt-6 sm:mt-8 rounded-2xl p-4 sm:p-6">
             <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">FIND US ON GOOGLE MAP</h3>
             <div class="w-full h-64 sm:h-80 md:h-96 bg-gray-200 rounded-xl overflow-hidden">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7922.186266583775!2d79.86807673414613!3d6.87944512038463!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae25bc8492ac43d%3A0xaeeb9222da3fda81!2s68%20Peterson%20Ln%2C%20Colombo!5e0!3m2!1sen!2slk!4v1763089774279!5m2!1sen!2slk"
-                    width="100%"
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.0803868729354!2d79.86091627478677!3d6.880973118906459!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae25bd74363a335%3A0x45af5cc98c2f874e!2sGeotrans%20Pvt%20Ltd!5e0!3m2!1sen!2slk!4v1772176435936!5m2!1sen!2slk" width="100%"
                     height="100%"
                     style="border:0;"
                     allowfullscreen=""
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
-                    class="rounded-lg">
-                </iframe>
+                    class="rounded-lg"></iframe>
             </div>
         </div>
 
