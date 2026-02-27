@@ -68,18 +68,18 @@ $base_url = '/Geotrans/';
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
-        .border-purple-custom { border-color: #8D4887; }
-        .focus\:ring-purple-custom:focus { --tw-ring-color: #8D4887; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .border-purple-custom { border-color: #7D1074; }
+        .focus\:ring-purple-custom:focus { --tw-ring-color: #7D1074; }
     </style>
 </head>
 <body class="bg-gray-50">
     <?php include 'includes/header.php'; ?>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="max-w-7xl mx-auto">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-full mx-auto">
             <!-- Header -->
             <div class="text-center mb-8">
                 <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Share Your Experience</h1>

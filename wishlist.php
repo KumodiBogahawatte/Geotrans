@@ -26,7 +26,7 @@ $items = $wishlist->getItems($_SESSION['user_id']);
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#8D4887',
+                        'purple-custom': '#7D1074',
                     }
                 }
             }
@@ -39,7 +39,7 @@ $items = $wishlist->getItems($_SESSION['user_id']);
 
 <main class="min-h-screen bg-gray-50 py-8">
     <div class="container mx-auto px-4">
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-full mx-auto">
             <h1 class="text-3xl font-bold text-gray-900 mb-8">My Wishlist</h1>
 
         <?php if (empty($items)): ?>

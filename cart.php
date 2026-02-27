@@ -20,16 +20,16 @@ $cartCount = $cart->getCount($user_id, $session_id);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
     </style>
 </head>
 <body class="bg-gray-50">
 
     <?php include 'includes/header.php'; ?>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-full mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-8">Shopping Cart (<?php echo $cartCount; ?> items)</h1>
 
         <?php if (empty($cartItems)): ?>
@@ -121,10 +121,10 @@ $cartCount = $cart->getCount($user_id, $session_id);
                                 <span class="text-gray-600">Subtotal:</span>
                                 <span class="font-semibold" id="cart-subtotal"><?php echo formatPrice($cartTotal); ?></span>
                             </div>
-                            <div class="flex justify-between">
+                            <!-- <div class="flex justify-between">
                                 <span class="text-gray-600">Shipping:</span>
                                 <span class="font-semibold">Rs500.00</span>
-                            </div>
+                            </div> -->
                             <div class="border-t pt-3 flex justify-between text-lg">
                                 <span class="font-bold">Total:</span>
                                 <span class="font-bold text-purple-custom" id="cart-total"><?php echo formatPrice($cartTotal + 500); ?></span>

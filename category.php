@@ -58,11 +58,11 @@ $popularBrands = $brandModel->getPopular(6);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
-        .hover\:text-purple-custom:hover { color: #8D4887; }
-        .border-purple-custom { border-color: #8D4887; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .hover\:text-purple-custom:hover { color: #7D1074; }
+        .border-purple-custom { border-color: #7D1074; }
         
         .line-clamp-2 {
             overflow: hidden;
@@ -82,7 +82,7 @@ $popularBrands = $brandModel->getPopular(6);
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-r from-purple-900 via-pink-800 to-blue-900 text-white overflow-hidden" style="background-image: url('assets/images/pages/asuz-banner.jpg'); background-size: cover; background-position: center;">
         <div class="absolute inset-0 bg-black opacity-40"></div>
-        <div class="relative max-w-7xl mx-auto px-4 py-10 sm:py-16 text-center">
+        <div class="relative max-w-full mx-auto px-4 py-10 sm:py-16 text-center">
             <h1 class="text-3xl md:text-5xl font-bold mb-4">
                 <?= $currentCategory ? htmlspecialchars($currentCategory['category_name']) : 'All Products' ?>
             </h1>
@@ -103,9 +103,9 @@ $popularBrands = $brandModel->getPopular(6);
         <?php endforeach; ?>
     </div>
 
-    <hr class="max-w-7xl mx-auto">
+    <hr class="max-w-full mx-auto">
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-full mx-auto px-4 py-8">
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Sidebar Filters -->
             <aside id="sidebarFilters" class="hidden md:block w-64 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">

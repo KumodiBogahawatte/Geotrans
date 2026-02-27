@@ -1,3 +1,21 @@
+// Laptop brands submenu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    var showBrandsBtn = document.getElementById('show-brands-btn');
+    var brandsMenu = document.getElementById('laptop-brands-menu');
+    if (showBrandsBtn && brandsMenu) {
+        showBrandsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            brandsMenu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function(e) {
+            if (!brandsMenu.contains(e.target) && !showBrandsBtn.contains(e.target)) {
+                brandsMenu.classList.add('hidden');
+            }
+        });
+    }
+});
+// Category dropdown toggle
+// Removed duplicate All Categories dropdown toggle logic (handled in header.php)
 // Search functionality
 class SearchManager {
     constructor() {

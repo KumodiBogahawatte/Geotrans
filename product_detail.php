@@ -52,10 +52,10 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
-        .border-purple-custom { border-color: #8D4887; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .border-purple-custom { border-color: #7D1074; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -63,7 +63,7 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
     <?php include 'includes/header.php'; ?>
 
     <!-- Breadcrumb -->
-    <div class="max-w-7xl mx-auto px-4 py-4">
+    <div class="max-w-full mx-auto px-4 py-4">
         <nav class="text-sm">
             <a href="index.php" class="text-gray-500 hover:text-purple-custom">Home</a>
             <span class="mx-2 text-gray-400">/</span>
@@ -74,7 +74,7 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
     </div>
 
     <!-- Product Details -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-full mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             
             <!-- Product Images -->

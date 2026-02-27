@@ -13,7 +13,7 @@
             width: 2rem;
             height: 2rem;
             border-radius: 50%;
-            background-color: #8D4887;
+            background-color: #7D1074;
             /* brand color */
         }
     </style>
@@ -25,7 +25,7 @@
     <?php include 'includes/header.php'; ?>
 
     <header class="bg-gray-100 pb-8 sm:pb-12 relative overflow-hidden" style="background-image: linear-gradient(to right, #FFFACD, #D8BFD8, #FFFDD0, #D8BFD8);">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-12 sm:pt-16 md:pt-20 lg:pt-24 xl:pt-32 pb-8 sm:pb-12 text-left">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-12 sm:pt-16 md:pt-20 lg:pt-24 xl:pt-32 pb-8 sm:pb-12 text-left">
             <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-gray-900 leading-tight">
                 Best experience <br class="hidden sm:block"> 
                 <span class="sm:hidden">always wins</span>
@@ -46,12 +46,12 @@
     </header>
 
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div class="flex flex-col lg:flex-row justify-between items-center text-center lg:text-left space-y-8 lg:space-y-0">
             <div class="lg:mb-0">
                 <h3 class="text-xs tracking-widest uppercase text-gray-500">OUR PURPOSE IS TO</h3>
                 <p class="text-lg sm:text-xl font-semibold text-gray-900">
-                    <span class="text-[#8D4887]"> ENRICH AND ENHANCE LIVES </span> 
+                    <span class="text-[#7D1074]"> ENRICH AND ENHANCE LIVES </span> 
                     <br>THROUGH TECHNOLOGY
                 </p>
             </div>
@@ -73,9 +73,9 @@
         </div>
     </section>
 
-    <hr class="max-w-7xl mx-auto">
+    <hr class="max-w-full mx-auto">
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div class="flex flex-col lg:flex-row bg-gray-50 rounded-lg overflow-hidden">
             <div class="lg:w-1/2 order-2 lg:order-1">
                 <img src="assets/images/about/close-up-man-shopping-with-laptop 1.png" alt="Man working on a laptop" class="w-full h-64 sm:h-80 lg:h-full object-cover">
@@ -87,7 +87,7 @@
                     <p class="text-gray-600 mb-6 text-sm leading-relaxed">
                         Our primary objective is to provide the latest Office automation products to our clients. We have an extensive collection and affordable supply of all types of Office automation products... (Rest of the introductory text)
                     </p>
-                    <a href="#" class="inline-block px-6 py-3 bg-[#8D4887] text-white font-semibold text-sm rounded-full hover:bg-[#7a3a6f] transition duration-300">
+                    <a href="#" class="inline-block px-6 py-3 bg-[#7D1074] text-white font-semibold text-sm rounded-full hover:bg-[#7a3a6f] transition duration-300">
                         FIND OUT MORE
                     </a>
                 </div>
@@ -95,12 +95,12 @@
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 
             <div class="text-center md:text-left p-4">
                 <div class="flex justify-center md:justify-start items-center mb-4">
-                    <div class="dot-marker bg-[#8D4887] flex items-center justify-center flex-shrink-0">
+                    <div class="dot-marker bg-[#7D1074] flex items-center justify-center flex-shrink-0">
                         <!-- Shield/Check icon (white) -->
                         <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 00-1.414-1.414L8 11.177 4.71 7.887a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8z" clip-rule="evenodd" />
@@ -115,7 +115,7 @@
 
             <div class="text-center md:text-left p-4">
                 <div class="flex justify-center md:justify-start items-center mb-4">
-                    <div class="dot-marker bg-[#8D4887] flex items-center justify-center flex-shrink-0">
+                    <div class="dot-marker bg-[#7D1074] flex items-center justify-center flex-shrink-0">
                         <!-- Lightning icon (white) -->
                         <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path d="M11.3 1L1 11h6v8l10-10h-6L11.3 1z" />
@@ -130,7 +130,7 @@
 
             <div class="text-center md:text-left p-4">
                 <div class="flex justify-center md:justify-start items-center mb-4">
-                    <div class="dot-marker bg-[#8D4887] flex items-center justify-center flex-shrink-0">
+                    <div class="dot-marker bg-[#7D1074] flex items-center justify-center flex-shrink-0">
                         <!-- Tag icon (white) -->
                         <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path d="M7 3a2 2 0 00-2 2v4.586a2 2 0 00.586 1.414l6 6A2 2 0 0014.586 18H18a2 2 0 002-2v-3.414a2 2 0 00-.586-1.414l-6-6A2 2 0 007 3H7zm3 5a1 1 0 110-2 1 1 0 010 2z" />
@@ -145,9 +145,9 @@
         </div>
     </section>
 
-    <hr class="max-w-7xl mx-auto">
+    <hr class="max-w-full mx-auto">
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h2 class="text-lg sm:text-xl font-bold mb-4">OUR MISSION AND VISION</h2>
         <p class="text-sm text-gray-600 leading-relaxed mb-6 sm:mb-8">
             <!-- <span class="italic">PHP Placeholder: Fetch/Display Mission & Vision text</span> -->
@@ -158,8 +158,8 @@
             <img src="assets/images/about/about3.png.png" alt="Modern cityscape with abstract building" class="w-full h-full object-cover">
         </div>
     </section>
-    <hr class="max-w-7xl mx-auto">
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <hr class="max-w-full mx-auto">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h2 class="text-lg sm:text-xl font-bold mb-6 sm:mb-8">FROM A RETAIL STORE TO THE GLOBAL CHAIN OF STORES</h2>
         <p class="text-sm text-gray-600 leading-relaxed mb-6 sm:mb-8">
             Pellentesque eget justo nec ex sodales euismod. Aliquat et tortor. Maecenas nec ultricies ex, at auctor purus. Maecenas in consectetur erat.
@@ -211,11 +211,11 @@
 
     </section>
 
-    <hr class="max-w-7xl mx-auto">
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <hr class="max-w-full mx-auto">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div class="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8">
             <h2 class="text-lg sm:text-xl font-bold mb-4 sm:mb-0">LEADERSHIPS</h2>
-            <a href="#" class="text-[#8D4887] font-semibold text-sm hover:underline">View All &rarr;</a>
+            <a href="#" class="text-[#7D1074] font-semibold text-sm hover:underline">View All &rarr;</a>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">

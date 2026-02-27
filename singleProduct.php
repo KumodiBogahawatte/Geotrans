@@ -31,13 +31,13 @@
     <!-- Hero Banner -->
     <div class="relative h-48 bg-gradient-to-r from-blue-900 via-purple-900 to-pink-900 overflow-hidden">
         <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=1200" alt="Laptop" class="absolute inset-0 w-full h-full object-cover opacity-40">
-    <div class="relative z-10 max-w-7xl mx-auto px-4 h-full flex flex-col justify-center">
+    <div class="relative z-10 max-w-full mx-auto px-4 h-full flex flex-col justify-center">
             <h1 class="text-white text-4xl font-bold mb-2">In Search of Incredible.</h1>
             <p class="text-gray-200 text-lg">Pushing the boundaries of innovation since 1989</p>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-full mx-auto px-4 py-8">
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Sidebar -->
             <aside class="lg:w-64 flex-shrink-0">
@@ -161,7 +161,7 @@
                                 <span class="text-2xl font-bold text-green-600">Rs799.99</span>
                                 <span class="text-gray-400 line-through ml-2">Rs999.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -189,7 +189,7 @@
                                 <span class="text-2xl font-bold text-green-600">Rs1,299.99</span>
                                 <span class="text-gray-400 line-through ml-2">Rs1,599.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -217,7 +217,7 @@
                                 <span class="text-2xl font-bold text-green-600">Rs1,799.99</span>
                                 <span class="text-gray-400 line-through ml-2">Rs2,199.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -245,7 +245,7 @@
                                 <span class="text-2xl font-bold text-green-600">Rs1,099.99</span>
                                 <span class="text-gray-400 line-through ml-2">Rs1,399.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -271,7 +271,7 @@
                             <div class="mb-3">
                                 <span class="text-2xl font-bold text-green-600">Rs599.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -299,7 +299,7 @@
                                 <span class="text-2xl font-bold text-green-600">Rs2,499.99</span>
                                 <span class="text-gray-400 line-through ml-2">Rs2,999.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -325,7 +325,7 @@
                             <div class="mb-3">
                                 <span class="text-2xl font-bold text-green-600">Rs699.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -353,7 +353,7 @@
                                 <span class="text-2xl font-bold text-green-600">Rs2,999.99</span>
                                 <span class="text-gray-400 line-through ml-2">Rs3,499.99</span>
                             </div>
-                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #8D4887;">
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" style="background-color: #7D1074;">
                                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                             </button>
                         </div>
@@ -365,7 +365,7 @@
                     <button class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded" style="background-color: #8D4887;">1</button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded" style="background-color: #7D1074;">1</button>
                     <button class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">2</button>
                     <button class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">3</button>
                     <button class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">...</button>

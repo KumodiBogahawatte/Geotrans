@@ -127,6 +127,20 @@
                     </svg>
                     Testimonials
                 </a>
+                <a href="banners.php" class="flex items-center px-6 py-3 hover:bg-gray-800 <?= (basename($_SERVER['PHP_SELF']) == 'banners.php' || basename($_SERVER['PHP_SELF']) == 'banner-edit.php') ? 'bg-gray-800 border-l-4 border-purple-custom' : '' ?>">
+                                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 17v-6m0 0l-3 3m3-3l3 3" />
+                                                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none" />
+                                                    </svg>
+                    Banners
+                </a>
+                <a href="settings.php" class="flex items-center px-6 py-3 hover:bg-gray-800 <?= (basename($_SERVER['PHP_SELF']) == 'settings.php' || basename($_SERVER['PHP_SELF']) == 'setting-edit.php') ? 'bg-gray-800 border-l-4 border-purple-custom' : '' ?>">
+                                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    </svg>
+                    Settings
+                </a>
                 
                 <a href="contact-messages.php" class="flex items-center px-6 py-3 hover:bg-gray-800 <?= basename($_SERVER['PHP_SELF']) == 'contact-messages.php' ? 'bg-gray-800 border-l-4 border-purple-custom' : '' ?>">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +196,7 @@
                         echo $page_titles[basename($_SERVER['PHP_SELF'])] ?? 'Admin Panel';
                         ?>
                     </h2>
-                    <a href="../index.php" target="_blank" class="text-purple-custom hover:underline text-xs lg:text-sm">
+                    <a href="../index.php" target="_blank" class="bg-purple-custom text-white px-4 py-2 rounded-lg text-xs lg:text-sm font-semibold hover:bg-purple-700 transition">
                         View Website →
                     </a>
                 </div>

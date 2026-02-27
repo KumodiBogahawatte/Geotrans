@@ -56,7 +56,7 @@ $testimonials = $testimonial->getAll($status_filter, $search);
 <body class="bg-gray-100">
     <?php include 'includes/header.php'; ?>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <div>

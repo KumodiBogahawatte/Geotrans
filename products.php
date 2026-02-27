@@ -11,7 +11,18 @@ $brandModel = new Brand();
 // Get filter parameters
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $per_page = 20;
-$category_id = isset($_GET['category']) ? intval($_GET['category']) : null;
+$category_id = null;
+$category_param = isset($_GET['category']) ? $_GET['category'] : null;
+if ($category_param) {
+    if (is_numeric($category_param)) {
+        $category_id = intval($category_param);
+    } else {
+        $cat = $categoryModel->getById($category_param);
+        if ($cat && isset($cat['category_id'])) {
+            $category_id = $cat['category_id'];
+        }
+    }
+}
 $brand_id = isset($_GET['brand']) ? intval($_GET['brand']) : null;
 $min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : null;
 $max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : null;
@@ -48,11 +59,11 @@ $brands = $brandModel->getAll();
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
-        .hover\:text-purple-custom:hover { color: #8D4887; }
-        .border-purple-custom { border-color: #8D4887; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .hover\:text-purple-custom:hover { color: #7D1074; }
+        .border-purple-custom { border-color: #7D1074; }
         
         .line-clamp-2 {
             overflow: hidden;
@@ -69,7 +80,7 @@ $brands = $brandModel->getAll();
     <!-- Include Header -->
     <?php include 'includes/header.php'; ?>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <!-- Breadcrumb -->
         <nav class="flex mb-6 text-sm text-gray-600">
             <a href="index.php" class="hover:text-purple-custom">Home</a>
@@ -192,6 +203,34 @@ $brands = $brandModel->getAll();
                         </li>
                         <?php endforeach; ?>
                     </ul>
+                </div>
+
+                <!-- Product Page Banners -->
+                <?php
+                // Fetch banners for product page
+                require_once 'config/database.php';
+                $bannerDb = new Database();
+                $bannerConn = $bannerDb->getConnection();
+                $stmt = $bannerConn->prepare("SELECT * FROM banners WHERE banner_type='product' ORDER BY banner_order ASC, updated_at DESC LIMIT 2");
+                $stmt->execute();
+                $productBanners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <div class="space-y-6 mt-8">
+                    <?php foreach ($productBanners as $banner): ?>
+                        <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center" style="height: 320px;">
+                            <?php if (preg_match('/\.(mp4|webm|ogg)$/i', $banner['banner_media'])): ?>
+                                <video src="<?= $banner['banner_media'] ?>" controls class="w-full h-full object-cover mb-3"></video>
+                            <?php else: ?>
+                                <img src="<?= $banner['banner_media'] ?>" alt="Banner" class="w-full h-full object-cover mb-3">
+                            <?php endif; ?>
+                            <div class="text-center">
+                                <div class="font-semibold text-lg mb-1"><?= htmlspecialchars($banner['banner_title']) ?></div>
+                                <?php if ($banner['banner_link']): ?>
+                                <a href="<?= htmlspecialchars($banner['banner_link']) ?>" class="text-purple-custom hover:underline text-sm">Visit Link</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <?php if ($category_id || $brand_id || $min_price || $max_price): ?>

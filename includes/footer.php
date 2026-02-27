@@ -23,8 +23,8 @@ if (!isset($base_url)) {
 <body class="bg-gray-50">
 
     <!-- Newsletter Section -->
-    <section class="relative py-8 md:py-16" style="background-color: #8D4887;">
-        <div class="max-w-7xl mx-auto px-4 relative z-10">
+    <section class="relative py-8 md:py-16" style="background-color: #7D1074;">
+        <div class="max-w-full mx-auto px-4 relative z-10">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
                 <!-- Text and Offer -->
                 <div class="flex flex-col sm:flex-row lg:flex-row items-center text-center lg:text-left gap-2 lg:gap-2">
@@ -51,7 +51,7 @@ if (!isset($base_url)) {
         </div>
 
         <!-- Centered Decorative Plane -->
-        <img src="<?= $base_url ?>assets/images/home/plane.png" alt="Decorative paper plane" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 md:w-96 h-auto opacity-80 pointer-events-none" />
+        <img src="<?= $base_url ?>assets/images/home/plane.png" alt="Decorative paper plane" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 md:w-[32rem] h-auto opacity-90 pointer-events-none" />
     </section>
 
     <script>
@@ -97,54 +97,54 @@ if (!isset($base_url)) {
     </section>
 
     <!-- Features Section -->
-    <section class="bg-white border-b py-4 md:py-6">
-        <div class="max-w-7xl mx-auto px-4">
+    <section class="bg-black border-b py-4 md:py-6">
+        <div class="w-full px-6 lg:px-12">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 <!-- Free Shipping -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #8D4887;">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #B61AA8;">
                         <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs md:text-sm font-semibold text-gray-800">FREE SHIPPING OVER Rs.50 000</p>
+                        <p class="text-xs md:text-sm font-semibold text-white">FREE SHIPPING OVER Rs.50 000</p>
                     </div>
                 </div>
 
                 <!-- Money Back -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #8D4887;">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #B61AA8;">
                         <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs md:text-sm font-semibold text-gray-800">30 DAYS MONEY BACK</p>
+                        <p class="text-xs md:text-sm font-semibold text-white">30 DAYS MONEY BACK</p>
                     </div>
                 </div>
 
                 <!-- Secure Payment -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #8D4887;">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #B61AA8;">
                         <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs md:text-sm font-semibold text-gray-800">100% SECURE PAYMENT</p>
+                        <p class="text-xs md:text-sm font-semibold text-white">100% SECURE PAYMENT</p>
                     </div>
                 </div>
 
                 <!-- Support -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #8D4887;">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #B61AA8;">
                         <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs md:text-sm font-semibold text-gray-800">24/7 DEDICATED SUPPORT</p>
+                        <p class="text-xs md:text-sm font-semibold text-white">24/7 DEDICATED SUPPORT</p>
                     </div>
                 </div>
             </div>
@@ -152,8 +152,8 @@ if (!isset($base_url)) {
     </section>
 
     <!-- Main Footer -->
-    <footer class="bg-white py-8 md:py-12">
-        <div class="max-w-7xl mx-auto px-4">
+    <footer class="bg-black relative py-4 md:py-8">
+        <div class="w-full px-6 lg:px-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
 
                 <!-- Company Info -->
@@ -166,21 +166,21 @@ if (!isset($base_url)) {
                     </div>
                     <br>
                     <!-- <h3 class="font-bold mb-4" style="color: #8D4887;">Geotrans (PVT) LTD</h3> -->
-                    <div class="space-y-2 text-sm text-gray-600 text-center sm:text-left">
+                    <div class="space-y-2 text-sm text-white text-center sm:text-left">
                         <p class="text-xs text-gray-500 uppercase">Hotline 24/7</p>
-                        <p class="font-bold text-lg" style="color: #8D4887;">071 3757555</p>
+                        <p class="font-bold text-lg" style="color: #B61AA8;">+94 71 375 7555</p>
                         <p class="mt-4">No 60 Dhamma Road<br>NY 10092</p>
                         <p>infogeotrans1@gmail.com</p>
                     </div>
 
                     <!-- Social Icons -->
                     <div class="flex space-x-3 mt-6 justify-center sm:justify-start">
-                        <a href="#" class="w-8 h-8 bg-gray-100 rounded flex items-center justify-center hover:bg-[#8D4887] hover:text-white transition-colors">
+                        <a href="#" class="w-8 h-8 bg-gray-100 rounded flex items-center justify-center hover:bg-[#B61AA8] hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
                             </svg>
                         </a>
-                        <a href="#" class="w-8 h-8 bg-gray-100 rounded flex items-center justify-center hover:bg-[#8D4887] hover:text-white transition-colors">
+                        <a href="#" class="w-8 h-8 bg-gray-100 rounded flex items-center justify-center hover:bg-[#B61AA8] hover:text-white transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
                             </svg>
@@ -206,54 +206,54 @@ if (!isset($base_url)) {
 
                 <!-- Top Categories -->
                 <div class="text-center sm:text-left">
-                    <h4 class="font-bold mb-4" style="color: #8D4887;">Top Categories</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="<?= $base_url ?>products.php" class="hover:text-[#8D4887]">All Products</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=laptops" class="hover:text-[#8D4887]">Laptops</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=monitors" class="hover:text-[#8D4887]">Monitors</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=printers" class="hover:text-[#8D4887]">Printers</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=keyboards" class="hover:text-[#8D4887]">Keyboards</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=headphones" class="hover:text-[#8D4887]">Headphones</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=cameras" class="hover:text-[#8D4887]">Cameras</a></li>
-                        <li><a href="<?= $base_url ?>products.php?category=accessories" class="hover:text-[#8D4887]">Accessories</a></li>
-                        <li><a href="<?= $base_url ?>category.php" class="hover:text-[#8D4887]">View All Categories</a></li>
+                    <h4 class="font-bold mb-4" style="color: #B61AA8;font-size:larger">Top Categories</h4>
+                    <ul class="space-y-2 text-sm text-white">
+                        <li><a href="<?= $base_url ?>products.php" class="hover:text-[#B61AA8]">All Products</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=laptops" class="hover:text-[#B61AA8]">Laptops</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=monitors" class="hover:text-[#B61AA8]">Monitors</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=printers" class="hover:text-[#B61AA8]">Printers</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=keyboards" class="hover:text-[#B61AA8]">Keyboards</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=headphones" class="hover:text-[#B61AA8]">Headphones</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=cameras" class="hover:text-[#B61AA8]">Cameras</a></li>
+                        <li><a href="<?= $base_url ?>products.php?category=accessories" class="hover:text-[#B61AA8]">Accessories</a></li>
+                        <li><a href="<?= $base_url ?>category.php" class="hover:text-[#B61AA8]">View All Categories</a></li>
                     </ul>
                 </div>
 
                 <!-- Company -->
                 <div class="text-center sm:text-left">
-                    <h4 class="font-bold mb-4" style="color: #8D4887;">Company</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="<?= $base_url ?>about.php" class="hover:text-[#8D4887]">About GeoTrans</a></li>
-                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Contact</a></li>
-                        <li><a href="<?= $base_url ?>products.php" class="hover:text-[#8D4887]">Products</a></li>
-                        <li><a href="<?= $base_url ?>category.php" class="hover:text-[#8D4887]">Categories</a></li>
-                        <li><a href="<?= $base_url ?>index.php" class="hover:text-[#8D4887]">Home</a></li>
+                    <h4 class="font-bold mb-4" style="color: #B61AA8;font-size:larger">Company</h4>
+                    <ul class="space-y-2 text-sm text-white">
+                        <li><a href="<?= $base_url ?>about.php" class="hover:text-[#B61AA8]">About GeoTrans</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#B61AA8]">Contact</a></li>
+                        <li><a href="<?= $base_url ?>products.php" class="hover:text-[#B61AA8]">Products</a></li>
+                        <li><a href="<?= $base_url ?>category.php" class="hover:text-[#B61AA8]">Categories</a></li>
+                        <li><a href="<?= $base_url ?>index.php" class="hover:text-[#B61AA8]">Home</a></li>
                     </ul>
                 </div>
 
                 <!-- Help Center -->
                 <div class="text-center sm:text-left">
-                    <h4 class="font-bold mb-4" style="color: #8D4887;">Help Center</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Customer Service</a></li>
-                        <li><a href="<?= $base_url ?>submit-feedback.php" class="hover:text-[#8D4887]">Submit Feedback</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Policy</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Terms & Conditions</a></li>
-                        <li><a href="<?= $base_url ?>order-tracking.php" class="hover:text-[#8D4887]">Track Order</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">FAQs</a></li>
-                        <li><a href="<?= $base_url ?>account/profile.php" class="hover:text-[#8D4887]">My Account</a></li>
-                        <li><a href="#" class="hover:text-[#8D4887]">Product Support</a></li>
+                    <h4 class="font-bold mb-4" style="color: #B61AA8;font-size:larger">Help Center</h4>
+                    <ul class="space-y-2 text-sm text-white">
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#B61AA8]">Customer Service</a></li>
+                        <li><a href="<?= $base_url ?>submit-feedback.php" class="hover:text-[#B61AA8]">Submit Feedback</a></li>
+                        <li><a href="#" class="hover:text-[#B61AA8]">Policy</a></li>
+                        <li><a href="#" class="hover:text-[#B61AA8]">Terms & Conditions</a></li>
+                        <li><a href="<?= $base_url ?>order-tracking.php" class="hover:text-[#B61AA8]">Track Order</a></li>
+                        <li><a href="#" class="hover:text-[#B61AA8]">FAQs</a></li>
+                        <li><a href="<?= $base_url ?>account/profile.php" class="hover:text-[#B61AA8]">My Account</a></li>
+                        <li><a href="#" class="hover:text-[#B61AA8]">Product Support</a></li>
                     </ul>
                 </div>
 
                 <!-- Partner -->
                 <div class="text-center sm:text-left">
-                    <h4 class="font-bold mb-4" style="color: #8D4887;">Partner</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Become Seller</a></li>
-                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Affiliate</a></li>
-                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Advertise</a></li>
+                    <h4 class="font-bold mb-4" style="color: #B61AA8;font-size:larger">Partner</h4>
+                    <ul class="space-y-2 text-sm text-white">
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#B61AA8]">Become Seller</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#B61AA8]">Affiliate</a></li>
+                        <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#B61AA8]">Advertise</a></li>
                         <li><a href="<?= $base_url ?>contact.php" class="hover:text-[#8D4887]">Partnership</a></li>
                     </ul>
                 </div>
@@ -263,10 +263,10 @@ if (!isset($base_url)) {
 
 
     <!-- Bottom Footer -->
-    <div class="bg-gray-100 py-4 border-t">
-        <div class="max-w-7xl mx-auto px-4">
+    <div class="py-4 border-t" style="background: linear-gradient(90deg, #7B0370 0%, #9D0B91 100%);">
+        <div class="max-w-full mx-auto px-4">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0">
-                <div class="text-xs md:text-sm text-gray-600 text-center lg:text-left">
+                <div class="text-xs md:text-sm text-white text-center lg:text-left">
                     © 2025 SLTDS. All Rights Reserved.
                 </div>
 
@@ -294,7 +294,7 @@ if (!isset($base_url)) {
     </div>
 
     <!-- Scroll to Top Button -->
-    <button id="scroll-to-top" class="fixed bottom-8 right-8 bg-purple-custom text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 opacity-0 invisible z-50" style="background-color: #8D4887;">
+    <button id="scroll-to-top" class="fixed bottom-8 right-8 bg-purple-custom text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 opacity-0 invisible z-50" style="background-color: #B61AA8;">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
         </svg>

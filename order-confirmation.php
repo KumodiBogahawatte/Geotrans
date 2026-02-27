@@ -33,16 +33,16 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
     </style>
 </head>
 <body class="bg-gray-50">
 
 <?php include 'includes/header.php'; ?>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+<div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
     <div class="max-w-3xl mx-auto">
     <!-- Success Message -->
         <div class="bg-white rounded-lg shadow-md p-8 text-center mb-6">
@@ -115,10 +115,6 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
                 <div class="flex justify-between text-gray-700">
                     <span>Subtotal</span>
                     <span>Rs<?= number_format($order_data['subtotal'], 2) ?></span>
-                </div>
-                <div class="flex justify-between text-gray-700">
-                    <span>Shipping</span>
-                    <span><?= $order_data['shipping_cost'] == 0 ? 'FREE' : 'Rs' . number_format($order_data['shipping_cost'], 2) ?></span>
                 </div>
                 <?php if ($order_data['tax_amount'] > 0): ?>
                 <div class="flex justify-between text-gray-700">

@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $auto_load) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .purple-custom { background-color: #8D4887; }
+        .purple-custom { background-color: #7D1074; }
         .purple-custom:hover { background-color: #6d3667; }
     </style>
     <style>
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $auto_load) {
 
 <?php include 'includes/header.php'; ?>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+<div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
     <h1 class="text-3xl font-bold text-gray-900 mb-6">Track Your Order</h1>
     
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
