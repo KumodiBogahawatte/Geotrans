@@ -172,7 +172,7 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
                             onclick="addToCartWithQty()">
                         <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                     </button>
-                    <button class="wishlist-btn border-2 border-purple-custom text-purple-custom hover:bg-purple-custom hover:text-white py-3 px-6 rounded-lg transition"
+                    <button class="wishlist-btn border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white py-3 px-6 rounded-lg transition"
                             data-product-id="<?php echo $productData['product_id']; ?>">
                         <i class="far fa-heart"></i>
                     </button>
@@ -307,28 +307,50 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
         <?php if (!empty($relatedProducts)): ?>
         <div class="mb-12">
             <h2 class="text-2xl font-bold mb-6">Related Products</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <?php foreach ($relatedProducts as $relatedProduct): ?>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+                <?php foreach ($relatedProducts as $p): ?>
                 <?php
-                $relatedPrice = getProductPrice($relatedProduct);
-                $relatedDiscount = calculateDiscount($relatedProduct['price'], $relatedProduct['sale_price']);
+                $relatedPrice = getProductPrice($p);
+                $relatedDiscount = calculateDiscount($p['price'], $p['sale_price']);
                 ?>
-                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition p-4">
-                    <a href="product_detail.php?slug=<?php echo $relatedProduct['product_slug']; ?>">
-                        <img src="assets/images/products/<?php echo htmlspecialchars($relatedProduct['main_image']); ?>" 
-                             alt="<?php echo htmlspecialchars($relatedProduct['product_name']); ?>" 
-                             class="w-full h-48 object-cover rounded mb-3">
-                    </a>
-                    <div class="text-xs text-gray-500 mb-1"><?php echo htmlspecialchars($relatedProduct['brand_name']); ?></div>
-                    <a href="product_detail.php?slug=<?php echo $relatedProduct['product_slug']; ?>" 
-                       class="text-sm font-medium text-gray-900 hover:text-purple-custom line-clamp-2 mb-2">
-                        <?php echo htmlspecialchars($relatedProduct['product_name']); ?>
-                    </a>
-                    <div class="text-lg font-bold text-purple-custom"><?php echo formatPrice($relatedPrice); ?></div>
-                    <button class="add-to-cart-btn w-full mt-3 bg-purple-custom hover:bg-purple-700 text-white py-2 px-4 rounded transition" 
-                            data-product-id="<?php echo $relatedProduct['product_id']; ?>">
-                        <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                <div class="bg-white rounded-2xl p-5 relative shadow-sm hover:shadow-lg transition-shadow group flex flex-col h-full">
+                    <button onclick="addToWishlist(<?= $p['product_id'] ?>)"
+                        class="absolute top-3 right-3 w-8 h-8 bg-white border border-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors z-10">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
                     </button>
+                    <a href="product_detail.php?slug=<?= $p['product_slug'] ?>" class="flex flex-col flex-grow">
+                        <div class="flex items-center justify-center h-48 mb-4">
+                            <?php
+                            $mainImage = !empty($p['main_image']) ? 'assets/images/products/' . $p['main_image'] : 'assets/images/categories/default.png';
+                            ?>
+                            <img src="<?= $mainImage ?>" alt="<?= htmlspecialchars($p['product_name']) ?>" class="max-h-full object-contain">
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
+                            <?= htmlspecialchars($p['product_name']) ?>
+                        </h3>
+                        <div class="flex items-baseline flex-wrap gap-2 mb-3">
+                            <?php if (!empty($p['sale_price']) && $p['sale_price'] < $p['price']): ?>
+                                <span class="text-purple-custom font-bold text-lg">
+                                    Rs<?= number_format($p['sale_price'], 2) ?>
+                                </span>
+                                <span class="text-gray-400 text-sm line-through">
+                                    Rs<?= number_format($p['price'], 2) ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="text-purple-custom font-bold text-lg">
+                                    Rs<?= number_format($p['price'], 2) ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="mt-auto">
+                            <button class="add-to-cart-btn w-full bg-purple-custom hover:bg-purple-700 text-white py-2 px-4 rounded transition" 
+                                    data-product-id="<?= $p['product_id'] ?>">
+                                <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </a>
                 </div>
                 <?php endforeach; ?>
             </div>

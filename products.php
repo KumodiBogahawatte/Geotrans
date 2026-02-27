@@ -353,11 +353,11 @@ $brands = $brandModel->getAll();
                         <!-- Action Buttons - Pushed to bottom -->
                         <div class="flex gap-2 mt-auto">
                             <button onclick="buyNowFromList(<?= $p['product_id'] ?>)" 
-                                    class="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 text-sm font-semibold transition-colors">
+                                    class="flex-1 bg-purple-custom text-white py-2 rounded-lg hover:bg-purple-700 text-sm font-semibold transition-colors">
                                 <i class="fas fa-credit-card mr-2"></i>Buy Now
                             </button>
                             <button onclick="addToCart(<?= $p['product_id'] ?>)" 
-                                    class="bg-purple-custom text-white p-2 rounded-lg hover:bg-purple-700 transition-colors"
+                                    class="bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-700 transition-colors"
                                     title="Add to Cart">
                                 <i class="fas fa-shopping-cart"></i>
                             </button>
