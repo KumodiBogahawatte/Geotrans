@@ -27,32 +27,32 @@ $brands = $brand->getPopular(6);
     <style>
         /* Custom purple color definition */
         .text-purple-custom {
-            color: #8D4887;
+            color: #680e68;
         }
 
         .bg-purple-custom {
-            background-color: #8D4887;
+            background-color: #680e68;
         }
 
         .hover\:bg-purple-custom:hover {
-            background-color: #8D4887;
+            background-color: #680e68;
         }
 
         .hover\:text-purple-custom:hover {
-            color: #8D4887;
+            color: #680e68;
         }
 
         .border-purple-custom {
-            border-color: #8D4887;
+            border-color: #680e68;
         }
 
         .from-purple-custom {
-            --tw-gradient-from: #8D4887;
+            --tw-gradient-from: #680e68;
             --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(141, 72, 135, 0));
         }
 
         .to-purple-custom {
-            --tw-gradient-to: #8D4887;
+            --tw-gradient-to: #680e68;
         }
 
         /* Custom scrollbar */
@@ -273,7 +273,7 @@ $brands = $brand->getPopular(6);
                         5% Installment
                     </span>
                     <button
-                        class="absolute top-2 sm:top-3 right-2 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-2 sm:top-3 right-2 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
@@ -318,7 +318,7 @@ $brands = $brand->getPopular(6);
                         0% Installment
                     </span>
                     <button
-                        class="absolute top-2 sm:top-3 right-2 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-2 sm:top-3 right-2 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
@@ -365,7 +365,7 @@ $brands = $brand->getPopular(6);
                         0% Installment
                     </span>
                     <button
-                        class="absolute top-2 sm:top-3 right-2 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-2 sm:top-3 right-2 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
@@ -411,7 +411,7 @@ $brands = $brand->getPopular(6);
                         0% Installment
                     </span>
                     <button
-                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
@@ -455,7 +455,7 @@ $brands = $brand->getPopular(6);
                         0% Installment
                     </span>
                     <button
-                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
@@ -499,7 +499,7 @@ $brands = $brand->getPopular(6);
                         0% Installment
                     </span>
                     <button
-                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
@@ -539,7 +539,7 @@ $brands = $brand->getPopular(6);
                 <!-- Product 7: PC Case -->
                 <div class="bg-white rounded-2xl p-5 relative shadow-sm hover:shadow-md transition-shadow">
                     <button
-                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-purple-700">
+                        class="absolute top-3 right-3 w-8 h-8 bg-purple-custom text-white rounded-full flex items-center justify-center hover:bg-[#4f0a4f]">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">

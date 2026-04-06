@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#7C3AED',
+                        'purple-custom': '#680e68',
                     }
                 }
             }
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <button type="submit" 
-                            class="w-full bg-purple-custom text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                            class="w-full bg-purple-custom text-white py-3 rounded-lg font-semibold hover:bg-[#4f0a4f] transition-colors">
                         Sign In
                     </button>
                 </form>

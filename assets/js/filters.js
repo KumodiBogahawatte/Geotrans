@@ -138,7 +138,7 @@ class ProductFilter {
                         <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded mb-3">
                     </a>
                     <div class="text-xs text-gray-500 mb-1">${product.brand}</div>
-                    <a href="product_detail.php?slug=${product.slug}" class="text-sm font-medium text-gray-900 hover:text-purple-600 line-clamp-2 mb-2">
+                    <a href="product_detail.php?slug=${product.slug}" class="text-sm font-medium text-gray-900 hover:text-[#680e68] line-clamp-2 mb-2">
                         ${product.name}
                     </a>
                     <div class="flex items-center mb-2">
@@ -148,7 +148,7 @@ class ProductFilter {
                         <span class="text-xs text-gray-500 ml-2">(${product.rating})</span>
                     </div>
                     ${priceDisplay}
-                    <button class="add-to-cart-btn w-full mt-3 bg-purple-custom hover:bg-purple-700 text-white py-2 px-4 rounded transition" data-product-id="${product.id}">
+                    <button class="add-to-cart-btn w-full mt-3 bg-purple-custom hover:bg-[#4f0a4f] text-white py-2 px-4 rounded transition" data-product-id="${product.id}">
                         <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                     </button>
                 </div>
@@ -226,7 +226,7 @@ class ProductFilter {
     showLoading() {
         this.productsContainer.innerHTML = `
             <div class="col-span-full text-center py-12">
-                <i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i>
+                <i class="fas fa-spinner fa-spin text-4xl text-[#680e68]"></i>
                 <p class="text-gray-500 mt-4">Loading products...</p>
             </div>
         `;

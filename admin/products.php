@@ -1,15 +1,17 @@
 <?php
+
 session_start();
 require_once '../config/database.php';
 
-// Check admin authentication
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: index.php');
-    exit;
-}
-
+// Database connection (must be before any use of $conn)
 $database = new Database();
 $conn = $database->getConnection();
+
+// Get filters (must be before any use)
+$category_filter = isset($_GET['category']) ? $_GET['category'] : '';
+$brand_filter = isset($_GET['brand']) ? $_GET['brand'] : '';
+$status_filter = isset($_GET['status']) ? $_GET['status'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Handle delete
 if (isset($_GET['delete'])) {
@@ -37,13 +39,48 @@ if (isset($_GET['activate'])) {
     exit;
 }
 
-// Get filters
-$category_filter = $_GET['category'] ?? '';
-$brand_filter = $_GET['brand'] ?? '';
-$status_filter = $_GET['status'] ?? '';
-$search = $_GET['search'] ?? '';
 
-// Get products with filters
+// Pagination setup
+$per_page = 20;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $per_page;
+
+// Count total products for pagination
+$count_query = "SELECT COUNT(*) FROM products p 
+    LEFT JOIN categories c ON p.category_id = c.category_id 
+    LEFT JOIN brands b ON p.brand_id = b.brand_id 
+    WHERE 1=1";
+if ($category_filter) {
+    $count_query .= " AND p.category_id = :category";
+}
+if ($brand_filter) {
+    $count_query .= " AND p.brand_id = :brand";
+}
+if ($status_filter !== '') {
+    $count_query .= " AND p.is_active = :status";
+}
+if ($search) {
+    $count_query .= " AND (p.product_name LIKE :search OR p.sku LIKE :search OR p.description LIKE :search)";
+}
+$count_stmt = $conn->prepare($count_query);
+if ($category_filter) {
+    $count_stmt->bindParam(':category', $category_filter);
+}
+if ($brand_filter) {
+    $count_stmt->bindParam(':brand', $brand_filter);
+}
+if ($status_filter !== '') {
+    $count_stmt->bindParam(':status', $status_filter);
+}
+if ($search) {
+    $search_param = "%$search%";
+    $count_stmt->bindParam(':search', $search_param);
+}
+$count_stmt->execute();
+$total_products = $count_stmt->fetchColumn();
+$total_pages = ceil($total_products / $per_page);
+
+// Get products with filters and pagination
 $query = "SELECT p.*, 
           c.category_name, 
           b.brand_name 
@@ -51,7 +88,6 @@ $query = "SELECT p.*,
           LEFT JOIN categories c ON p.category_id = c.category_id 
           LEFT JOIN brands b ON p.brand_id = b.brand_id 
           WHERE 1=1";
-
 if ($category_filter) {
     $query .= " AND p.category_id = :category";
 }
@@ -64,11 +100,9 @@ if ($status_filter !== '') {
 if ($search) {
     $query .= " AND (p.product_name LIKE :search OR p.sku LIKE :search OR p.description LIKE :search)";
 }
-
-$query .= " ORDER BY p.created_at DESC LIMIT 100";
+$query .= " ORDER BY p.created_at DESC LIMIT :per_page OFFSET :offset";
 
 $stmt = $conn->prepare($query);
-
 if ($category_filter) {
     $stmt->bindParam(':category', $category_filter);
 }
@@ -79,9 +113,10 @@ if ($status_filter !== '') {
     $stmt->bindParam(':status', $status_filter);
 }
 if ($search) {
-    $search_param = "%$search%";
     $stmt->bindParam(':search', $search_param);
 }
+$stmt->bindValue(':per_page', (int)$per_page, PDO::PARAM_INT);
+$stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
 
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -107,7 +142,7 @@ include 'includes/header.php';
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Products Management</h1>
-        <a href="product-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+        <a href="product-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
             Add New Product
         </a>
     </div>
@@ -152,7 +187,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-2">
-                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                     Filter
                 </button>
                 <a href="products.php" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 text-center">
@@ -269,7 +304,7 @@ include 'includes/header.php';
             </div>
             <div class="flex gap-2 mt-3 pt-3 border-t">
                 <a href="product-edit.php?id=<?= $product['product_id'] ?>" 
-                   class="flex-1 text-center bg-purple-custom text-white px-3 py-2 rounded text-sm hover:bg-purple-700">
+                   class="flex-1 text-center bg-purple-custom text-white px-3 py-2 rounded text-sm hover:bg-[#4f0a4f]">
                     Edit
                 </a>
                 <?php if ($product['is_active']): ?>
@@ -291,8 +326,26 @@ include 'includes/header.php';
     </div>
 
     <div class="mt-4 text-sm text-gray-600">
-        Showing <?= count($products) ?> product(s)
+        Showing <?= count($products) ?> of <?= $total_products ?> product(s)
     </div>
+
+    <!-- Pagination Controls -->
+    <?php if ($total_pages > 1): ?>
+    <div class="mt-4 flex justify-center gap-2">
+        <?php if ($page > 1): ?>
+            <a href="<?= htmlspecialchars(preg_replace('/([&?])page=\d+/', '$1', $_SERVER['REQUEST_URI'])) . (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?') . 'page=' . ($page - 1) ?>" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">&laquo; Prev</a>
+        <?php endif; ?>
+        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+            <a href="<?= htmlspecialchars(preg_replace('/([&?])page=\d+/', '$1', $_SERVER['REQUEST_URI'])) . (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?') . 'page=' . $i ?>"
+               class="px-3 py-1 rounded <?= $i == $page ? 'bg-purple-custom text-white' : 'bg-gray-200 hover:bg-gray-300' ?>">
+                <?= $i ?>
+            </a>
+        <?php endfor; ?>
+        <?php if ($page < $total_pages): ?>
+            <a href="<?= htmlspecialchars(preg_replace('/([&?])page=\d+/', '$1', $_SERVER['REQUEST_URI'])) . (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?') . 'page=' . ($page + 1) ?>" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next &raquo;</a>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
 </div>
 
 <?php include 'includes/footer.php'; ?>

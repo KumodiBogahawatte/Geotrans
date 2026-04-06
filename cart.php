@@ -20,9 +20,9 @@ $cartCount = $cart->getCount($user_id, $session_id);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #7D1074; }
-        .bg-purple-custom { background-color: #7D1074; }
-        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -38,7 +38,7 @@ $cartCount = $cart->getCount($user_id, $session_id);
                 <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
                 <h2 class="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
                 <p class="text-gray-500 mb-6">Add some products to get started!</p>
-                <a href="products.php" class="inline-block bg-purple-custom hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition">
+                <a href="products.php" class="inline-block bg-purple-custom hover:bg-[#4f0a4f] text-white px-8 py-3 rounded-lg font-semibold transition">
                     Continue Shopping
                 </a>
             </div>
@@ -131,7 +131,7 @@ $cartCount = $cart->getCount($user_id, $session_id);
                             </div>
                         </div>
 
-                        <a href="checkout.php" class="block w-full bg-purple-custom hover:bg-purple-700 text-white text-center py-3 rounded-lg font-semibold transition mb-3">
+                        <a href="checkout.php" class="block w-full bg-purple-custom hover:bg-[#4f0a4f] text-white text-center py-3 rounded-lg font-semibold transition mb-3">
                             Proceed to Checkout
                         </a>
                         

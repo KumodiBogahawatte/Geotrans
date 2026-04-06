@@ -49,9 +49,7 @@ if ($count == 0) {
         // Social Media
         ['facebook_url', '', 'social'],
         ['instagram_url', '', 'social'],
-        ['twitter_url', '', 'social'],
-        ['youtube_url', '', 'social'],
-        ['linkedin_url', '', 'social'],
+        ['tiktok_url', '', 'social'],
         
         // Business Settings
         ['currency_symbol', 'Rs', 'business'],
@@ -80,16 +78,51 @@ if ($count == 0) {
     }
 }
 
+// Ensure tiktok_url exists for existing databases (FB/Instagram already existed).
+$conn->exec("INSERT IGNORE INTO site_settings (setting_key, setting_value, setting_group) VALUES ('tiktok_url', '', 'social')");
+
+// Define which settings belong to which group (for upsert)
+$setting_groups = [
+    // General
+    'site_name' => 'general',
+    'site_tagline' => 'general',
+    'site_email' => 'general',
+    'site_phone' => 'general',
+    'site_address' => 'general',
+    // Social
+    'facebook_url' => 'social',
+    'instagram_url' => 'social',
+    'tiktok_url' => 'social',
+    // Business
+    'currency_symbol' => 'business',
+    'tax_rate' => 'business',
+    'shipping_cost' => 'business',
+    'free_shipping_threshold' => 'business',
+    // Email
+    'smtp_host' => 'email',
+    'smtp_port' => 'email',
+    'smtp_username' => 'email',
+    'smtp_password' => 'email',
+    'smtp_from_email' => 'email',
+    'smtp_from_name' => 'email',
+    // SEO
+    'meta_description' => 'seo',
+    'meta_keywords' => 'seo',
+    'google_analytics_id' => 'seo',
+];
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
+        $upsert = "INSERT INTO site_settings (setting_key, setting_value, setting_group)
+                   VALUES (?, ?, ?)
+                   ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)";
+        $stmt = $conn->prepare($upsert);
+
         foreach ($_POST as $key => $value) {
-            if ($key !== 'submit') {
-                $update = "UPDATE site_settings SET setting_value = :value WHERE setting_key = :key";
-                $stmt = $conn->prepare($update);
-                $stmt->bindParam(':value', $value);
-                $stmt->bindParam(':key', $key);
-                $stmt->execute();
+            if ($key !== 'submit' && isset($setting_groups[$key])) {
+                $group = $setting_groups[$key];
+                $stmt->execute([$key, $value, $group]);
             }
         }
         setFlashMessage('success', 'Settings updated successfully');
@@ -195,29 +228,11 @@ include 'includes/header.php';
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fab fa-twitter text-blue-400 mr-1"></i>Twitter/X URL
+                        <i class="fab fa-tiktok text-black mr-1"></i>TikTok URL
                     </label>
-                    <input type="url" name="twitter_url" value="<?= htmlspecialchars($settings['social']['twitter_url'] ?? '') ?>"
+                    <input type="url" name="tiktok_url" value="<?= htmlspecialchars($settings['social']['tiktok_url'] ?? '') ?>"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                           placeholder="https://twitter.com/yourpage">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fab fa-youtube text-red-600 mr-1"></i>YouTube URL
-                    </label>
-                    <input type="url" name="youtube_url" value="<?= htmlspecialchars($settings['social']['youtube_url'] ?? '') ?>"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                           placeholder="https://youtube.com/yourchannel">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fab fa-linkedin text-blue-700 mr-1"></i>LinkedIn URL
-                    </label>
-                    <input type="url" name="linkedin_url" value="<?= htmlspecialchars($settings['social']['linkedin_url'] ?? '') ?>"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                           placeholder="https://linkedin.com/company/yourcompany">
+                           placeholder="https://www.tiktok.com/@youraccount">
                 </div>
             </div>
         </div>

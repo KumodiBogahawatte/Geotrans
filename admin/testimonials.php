@@ -47,10 +47,10 @@ $testimonials = $testimonial->getAll($status_filter, $search);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
-        .border-purple-custom { border-color: #8D4887; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
+        .border-purple-custom { border-color: #680e68; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -63,7 +63,7 @@ $testimonials = $testimonial->getAll($status_filter, $search);
                 <h1 class="text-3xl font-bold text-gray-900">Customer Testimonials</h1>
                 <p class="text-gray-600 mt-1">Manage customer feedback and reviews</p>
             </div>
-            <a href="testimonial-edit.php" class="mt-4 sm:mt-0 bg-purple-custom hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold inline-flex items-center">
+            <a href="testimonial-edit.php" class="mt-4 sm:mt-0 bg-purple-custom hover:bg-[#4f0a4f] text-white px-6 py-2 rounded-lg font-semibold inline-flex items-center">
                 <i class="fas fa-plus mr-2"></i>
                 Add New Testimonial
             </a>

@@ -136,4 +136,34 @@ function jsonResponse($data, $status = 200) {
     echo json_encode($data);
     exit();
 }
+
+/** Use Swiper image if present under project root, else fallback (homepage carousel stacks). */
+function swiperAsset($preferredPath, $fallbackPath) {
+    $full = __DIR__ . '/../' . $preferredPath;
+    return file_exists($full) ? $preferredPath : $fallbackPath;
+}
+
+/**
+ * Web URL for banner media stored as a project-relative path (e.g. assets/images/banners/foo.jpg).
+ * Uses $GLOBALS['base_url'] when set (see includes/header.php), else /Geotrans/.
+ */
+function bannerMediaUrl($path) {
+    if ($path === null || $path === '') {
+        return '';
+    }
+    $path = str_replace('\\', '/', trim((string) $path));
+    if ($path === '') {
+        return '';
+    }
+    if (preg_match('#^https?://#i', $path)) {
+        return $path;
+    }
+    $path = ltrim($path, '/');
+    $base = '/Geotrans/';
+    global $base_url;
+    if (!empty($base_url)) {
+        $base = (string) $base_url;
+    }
+    return rtrim($base, '/') . '/' . $path;
+}
 ?>

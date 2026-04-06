@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#8D4887',
+                        'purple-custom': '#680e68',
                     }
                 }
             }
@@ -200,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                  alt="Profile" 
                                                  class="w-24 h-24 rounded-full object-cover border-4 border-purple-200">
                                         <?php else: ?>
-                                            <div id="profile-preview" class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200" style="background-color: #8D4887;">
+                                            <div id="profile-preview" class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200" style="background-color: #680e68;">
                                                 <?= strtoupper(substr($user_data['first_name'], 0, 1)) ?>
                                             </div>
                                         <?php endif; ?>
@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <input type="file" name="profile_photo" id="profile_photo" accept="image/*" 
                                                class="hidden" onchange="previewPhoto(this)">
                                         <label for="profile_photo" 
-                                               class="cursor-pointer bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700 inline-block">
+                                               class="cursor-pointer bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f] inline-block">
                                             <i class="fas fa-camera mr-2"></i>Change Photo
                                         </label>
                                         <p class="text-xs text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB</p>
@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             
                             <button type="submit" 
-                                    class="bg-purple-custom text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700">
+                                    class="bg-purple-custom text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#4f0a4f]">
                                 Save Changes
                             </button>
                         </form>

@@ -65,7 +65,7 @@ $addresses = $stmt->fetchAll(PDO::FETCH_ASSOC);
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#8D4887',
+                        'purple-custom': '#680e68',
                     }
                 }
             }
@@ -108,7 +108,7 @@ $addresses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-xl font-bold text-gray-900">Saved Addresses</h2>
                             <button onclick="document.getElementById('addAddressModal').classList.remove('hidden')"
-                                    class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                                    class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                                 + Add New Address
                             </button>
                         </div>
@@ -219,7 +219,7 @@ $addresses = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             
             <button type="submit" name="add_address"
-                    class="w-full bg-purple-custom text-white py-3 rounded-lg hover:bg-purple-700">
+                    class="w-full bg-purple-custom text-white py-3 rounded-lg hover:bg-[#4f0a4f]">
                 Save Address
             </button>
         </form>

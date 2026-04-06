@@ -33,9 +33,9 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #7D1074; }
-        .bg-purple-custom { background-color: #7D1074; }
-        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -131,7 +131,7 @@ if (isset($_SESSION['user_id']) && $order_data['user_id'] != $_SESSION['user_id'
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row gap-4">
-            <a href="index.php" class="flex-1 text-center bg-purple-custom text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+            <a href="index.php" class="flex-1 text-center bg-purple-custom text-white py-3 rounded-lg font-semibold hover:bg-[#4f0a4f] transition-colors">
                 Continue Shopping
             </a>
             <?php if (isset($_SESSION['user_id'])): ?>

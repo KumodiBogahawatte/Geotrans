@@ -102,7 +102,7 @@ include 'includes/header.php';
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Users Management</h1>
-        <a href="user-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+        <a href="user-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
             Add New User
         </a>
     </div>
@@ -134,7 +134,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-2">
-                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                     Filter
                 </button>
                 <a href="users.php" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 text-center">
@@ -285,7 +285,7 @@ include 'includes/header.php';
             
             <div class="flex gap-2 pt-3 border-t">
                 <a href="user-view.php?id=<?= $user['user_id'] ?>" 
-                   class="flex-1 text-center bg-purple-custom text-white px-3 py-2 rounded text-sm hover:bg-purple-700">
+                   class="flex-1 text-center bg-purple-custom text-white px-3 py-2 rounded text-sm hover:bg-[#4f0a4f]">
                     View
                 </a>
                 <a href="user-edit.php?id=<?= $user['user_id'] ?>" 

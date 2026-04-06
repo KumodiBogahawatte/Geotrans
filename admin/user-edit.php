@@ -189,7 +189,7 @@ include 'includes/header.php';
                                      alt="Profile" 
                                      class="w-24 h-24 rounded-full object-cover border-4 border-purple-200">
                             <?php else: ?>
-                                <div id="profile-preview" class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200" style="background-color: #8D4887;">
+                                <div id="profile-preview" class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200" style="background-color: #680e68;">
                                     <?= $is_edit ? strtoupper(substr($user['first_name'], 0, 1)) : '?' ?>
                                 </div>
                             <?php endif; ?>
@@ -198,7 +198,7 @@ include 'includes/header.php';
                             <input type="file" name="profile_photo" id="profile_photo" accept="image/*" 
                                    class="hidden" onchange="previewPhoto(this)">
                             <label for="profile_photo" 
-                                   class="cursor-pointer bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700 inline-block">
+                                   class="cursor-pointer bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f] inline-block">
                                 <i class="fas fa-camera mr-2"></i><?= $is_edit ? 'Change Photo' : 'Upload Photo' ?>
                             </label>
                             <?php if ($is_edit && !empty($user['profile_photo'])): ?>
@@ -281,7 +281,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="flex gap-4">
-                    <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                    <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                         <?= $is_edit ? 'Update User' : 'Add User' ?>
                     </button>
                     <a href="users.php" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">
@@ -321,7 +321,7 @@ function removePhoto() {
             const div = document.createElement('div');
             div.id = 'profile-preview';
             div.className = 'w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl border-4 border-purple-200';
-            div.style.backgroundColor = '#8D4887';
+            div.style.backgroundColor = '#680e68';
             div.textContent = '?';
             preview.parentNode.replaceChild(div, preview);
         }

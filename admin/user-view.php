@@ -76,7 +76,7 @@ include 'includes/header.php';
             </div>
             <div class="flex gap-2">
                 <a href="user-edit.php?id=<?= $user['user_id'] ?>" 
-                   class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                   class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                     Edit User
                 </a>
             </div>

@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'] ?? '';
     $is_active = isset($_POST['is_active']) ? 1 : 0;
     $image = $category['category_image'] ?? 'default.png';
+    $recommendedImageSize = 1200;
     
     // Generate slug from category name
     $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $category_name)));
@@ -49,13 +50,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         if (in_array($file_ext, $allowed_types)) {
-            $new_filename = uniqid() . '-' . preg_replace('/[^a-zA-Z0-9._-]/', '', $file_name);
-            $upload_path = $upload_dir . $new_filename;
-            
-            if (move_uploaded_file($file_tmp, $upload_path)) {
-                $image = $new_filename;
+            $image_info = @getimagesize($file_tmp);
+            if (!$image_info) {
+                $error = 'Invalid image file';
             } else {
-                $error = 'Failed to upload image';
+                $img_width = (int)($image_info[0] ?? 0);
+                $img_height = (int)($image_info[1] ?? 0);
+
+                // Homepage category photos are circular; square uploads keep framing consistent.
+                if ($img_width !== $img_height) {
+                    $error = 'Please upload a square image (1:1 ratio) for best category circle display.';
+                } elseif ($img_width < $recommendedImageSize || $img_height < $recommendedImageSize) {
+                    $error = 'Image is too small. Recommended minimum size is 1200 x 1200 px.';
+                } else {
+                    $new_filename = uniqid() . '-' . preg_replace('/[^a-zA-Z0-9._-]/', '', $file_name);
+                    $upload_path = $upload_dir . $new_filename;
+
+                    if (move_uploaded_file($file_tmp, $upload_path)) {
+                        $image = $new_filename;
+                    } else {
+                        $error = 'Failed to upload image';
+                    }
+                }
             }
         } else {
             $error = 'Invalid file type. Only JPG, PNG, GIF, WEBP allowed';
@@ -151,6 +167,7 @@ include 'includes/header.php';
                     <input type="file" name="image_file" accept="image/*"
                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-custom">
                     <p class="text-xs text-gray-500 mt-1">Allowed: JPG, PNG, GIF, WEBP (Max 5MB)</p>
+                    <p class="text-xs text-gray-500 mt-1">Recommended: square image 1200 x 1200 px (required ratio: 1:1)</p>
                 </div>
 
                 <?php if ($is_edit && $category['category_image']): ?>
@@ -171,7 +188,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="flex gap-4">
-                    <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                    <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                         <?= $is_edit ? 'Update Category' : 'Add Category' ?>
                     </button>
                     <a href="categories.php" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">

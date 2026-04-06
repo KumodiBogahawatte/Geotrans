@@ -31,19 +31,19 @@ class CountdownTimer {
         this.element.innerHTML = `
             <div class="flex gap-2 sm:gap-4">
                 <div class="text-center">
-                    <div class="bg-white text-purple-600 font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(days)}</div>
+                    <div class="bg-white text-[#680e68] font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(days)}</div>
                     <div class="text-xs mt-1">DAYS</div>
                 </div>
                 <div class="text-center">
-                    <div class="bg-white text-purple-600 font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(hours)}</div>
+                    <div class="bg-white text-[#680e68] font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(hours)}</div>
                     <div class="text-xs mt-1">HRS</div>
                 </div>
                 <div class="text-center">
-                    <div class="bg-white text-purple-600 font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(minutes)}</div>
+                    <div class="bg-white text-[#680e68] font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(minutes)}</div>
                     <div class="text-xs mt-1">MINS</div>
                 </div>
                 <div class="text-center">
-                    <div class="bg-white text-purple-600 font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(seconds)}</div>
+                    <div class="bg-white text-[#680e68] font-bold text-lg sm:text-2xl px-2 sm:px-3 py-1 sm:py-2 rounded">${this.pad(seconds)}</div>
                     <div class="text-xs mt-1">SECS</div>
                 </div>
             </div>

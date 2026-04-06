@@ -335,9 +335,9 @@ class Product {
     public function create($data) {
         $query = "INSERT INTO " . $this->table . " 
                   (product_name, product_slug, category_id, brand_id, sku, description, 
-                   short_description, price, sale_price, stock_quantity, main_image)
+                   short_description, price, sale_price, stock_quantity, main_image, product_pdf)
                   VALUES (:name, :slug, :category_id, :brand_id, :sku, :description, 
-                   :short_description, :price, :sale_price, :stock, :image)";
+                   :short_description, :price, :sale_price, :stock, :image, :product_pdf)";
         
         $stmt = $this->conn->prepare($query);
         
@@ -352,6 +352,7 @@ class Product {
         $stmt->bindParam(':sale_price', $data['sale_price']);
         $stmt->bindParam(':stock', $data['stock_quantity']);
         $stmt->bindParam(':image', $data['main_image']);
+        $stmt->bindParam(':product_pdf', $data['product_pdf']);
         
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -366,7 +367,7 @@ class Product {
                       brand_id = :brand_id, sku = :sku, description = :description, 
                       short_description = :short_description, price = :price, 
                       sale_price = :sale_price, stock_quantity = :stock, 
-                      main_image = :image, updated_at = CURRENT_TIMESTAMP
+                      main_image = :image, product_pdf = :product_pdf, updated_at = CURRENT_TIMESTAMP
                   WHERE product_id = :product_id";
         
         $stmt = $this->conn->prepare($query);
@@ -383,6 +384,7 @@ class Product {
         $stmt->bindParam(':sale_price', $data['sale_price']);
         $stmt->bindParam(':stock', $data['stock_quantity']);
         $stmt->bindParam(':image', $data['main_image']);
+        $stmt->bindParam(':product_pdf', $data['product_pdf']);
         
         return $stmt->execute();
     }

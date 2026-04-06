@@ -99,7 +99,7 @@ include 'includes/header.php';
                    placeholder="Search messages..."
                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
             
-            <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+            <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                 Filter
             </button>
         </form>
@@ -223,7 +223,7 @@ function viewMessage(messageId) {
             
             <div class="flex gap-3 pt-4">
                 <a href="mailto:${message.email}?subject=Re: ${message.subject || 'Your Inquiry'}" 
-                   class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                   class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                     Reply via Email
                 </a>
                 ${!message.is_read ? `

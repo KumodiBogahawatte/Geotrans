@@ -1,4 +1,10 @@
 <?php
+
+// Enable error reporting for debugging (remove or comment out in production)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 if (!isset($_SESSION['admin_id'])) {
     header('Location: index.php');
@@ -21,28 +27,34 @@ if (!$order_id) {
 
 // Handle status update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
-    $new_status = $_POST['order_status'];
-    $comment = $_POST['comment'] ?? 'Status updated by admin';
-    
-    $update_query = "UPDATE orders SET order_status = :status WHERE order_id = :id";
-    $update_stmt = $conn->prepare($update_query);
-    $update_stmt->bindParam(':status', $new_status);
-    $update_stmt->bindParam(':id', $order_id);
-    $update_stmt->execute();
-    
-    // Add to history
-    $history_query = "INSERT INTO order_status_history (order_id, new_status, comment, changed_by) 
-                     VALUES (:id, :status, :comment, :admin_id)";
-    $history_stmt = $conn->prepare($history_query);
-    $history_stmt->bindParam(':id', $order_id);
-    $history_stmt->bindParam(':status', $new_status);
-    $history_stmt->bindParam(':comment', $comment);
-    $history_stmt->bindParam(':admin_id', $_SESSION['admin_id']);
-    $history_stmt->execute();
-    
-    $_SESSION['success'] = 'Order status updated successfully';
-    header("Location: order-detail.php?id=$order_id");
-    exit;
+    try {
+        $new_status = $_POST['order_status'];
+        $comment = $_POST['comment'] ?? 'Status updated by admin';
+
+        $update_query = "UPDATE orders SET order_status = :status WHERE order_id = :id";
+        $update_stmt = $conn->prepare($update_query);
+        $update_stmt->bindParam(':status', $new_status);
+        $update_stmt->bindParam(':id', $order_id);
+        $update_stmt->execute();
+
+        // Add to history
+        $history_query = "INSERT INTO order_status_history (order_id, new_status, comment, changed_by) 
+                         VALUES (:id, :status, :comment, :admin_id)";
+        $history_stmt = $conn->prepare($history_query);
+        $history_stmt->bindParam(':id', $order_id);
+        $history_stmt->bindParam(':status', $new_status);
+        $history_stmt->bindParam(':comment', $comment);
+        $history_stmt->bindParam(':admin_id', $_SESSION['admin_id']);
+        $history_stmt->execute();
+
+        $_SESSION['success'] = 'Order status updated successfully';
+        header("Location: order-detail.php?id=$order_id");
+        exit;
+    } catch (Exception $e) {
+        echo '<div style="color:red; padding:10px;">Error: ' . htmlspecialchars($e->getMessage()) . '</div>';
+        // Optionally log error to a file
+        // error_log($e->getMessage());
+    }
 }
 
 // Get order details
@@ -130,7 +142,7 @@ include 'includes/header.php';
                 </div>
             </div>
             <input type="hidden" name="update_status" value="1">
-            <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+            <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                 Update Status
             </button>
         </form>
@@ -174,10 +186,10 @@ include 'includes/header.php';
                         <span>-Rs<?= number_format($order['discount_amount'], 2) ?></span>
                     </div>
                     <?php endif; ?>
-                    <div class="flex justify-between text-sm mb-2">
-                        <span class="text-gray-600">Shipping</span>
-                        <span class="font-semibold">Rs<?= number_format($order['shipping_cost'], 2) ?></span>
-                    </div>
+                    <!--<div class="flex justify-between text-sm mb-2">-->
+                    <!--    <span class="text-gray-600">Shipping</span>-->
+                    <!--    <span class="font-semibold">Rs<?= number_format($order['shipping_cost'], 2) ?></span>-->
+                    <!--</div>-->
                     <div class="flex justify-between text-lg font-bold border-t pt-2 mt-2">
                         <span>Total</span>
                         <span class="text-purple-custom">Rs<?= number_format($order['total_amount'], 2) ?></span>

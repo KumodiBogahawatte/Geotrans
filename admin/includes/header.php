@@ -12,7 +12,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#7C3AED',
+                        'purple-custom': '#680e68',
                     }
                 }
             }
@@ -196,7 +196,7 @@
                         echo $page_titles[basename($_SERVER['PHP_SELF'])] ?? 'Admin Panel';
                         ?>
                     </h2>
-                    <a href="../index.php" target="_blank" class="bg-purple-custom text-white px-4 py-2 rounded-lg text-xs lg:text-sm font-semibold hover:bg-purple-700 transition">
+                    <a href="../index.php" target="_blank" class="bg-purple-custom text-white px-4 py-2 rounded-lg text-xs lg:text-sm font-semibold hover:bg-[#4f0a4f] transition">
                         View Website →
                     </a>
                 </div>

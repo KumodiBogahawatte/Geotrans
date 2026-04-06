@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #8D4887; }
-        .bg-purple-custom { background-color: #8D4887; }
-        .hover\:bg-purple-custom:hover { background-color: #8D4887; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <button type="submit" 
-                            class="w-full bg-purple-custom hover:bg-purple-700 text-white py-3 rounded-lg font-semibold transition">
+                            class="w-full bg-purple-custom hover:bg-[#4f0a4f] text-white py-3 rounded-lg font-semibold transition">
                         Sign In
                     </button>
                 </form>

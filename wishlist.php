@@ -26,7 +26,7 @@ $items = $wishlist->getItems($_SESSION['user_id']);
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#7D1074',
+                        'purple-custom': '#680e68',
                     }
                 }
             }
@@ -49,7 +49,7 @@ $items = $wishlist->getItems($_SESSION['user_id']);
             </svg>
             <h2 class="text-2xl font-bold text-gray-900 mb-2">Your wishlist is empty</h2>
             <p class="text-gray-600 mb-6">Save items you love for later</p>
-            <a href="products.php" class="bg-purple-custom text-white px-8 py-3 rounded-lg hover:bg-purple-700 inline-block">
+            <a href="products.php" class="bg-purple-custom text-white px-8 py-3 rounded-lg hover:bg-[#4f0a4f] inline-block">
                 Continue Shopping
             </a>
         </div>
@@ -107,7 +107,7 @@ $items = $wishlist->getItems($_SESSION['user_id']);
                 </a>
 
                 <button onclick="addToCart(<?= $item['product_id'] ?>)" 
-                        class="w-full bg-purple-custom text-white py-2 rounded-lg hover:bg-purple-700 text-sm font-semibold">
+                        class="w-full bg-purple-custom text-white py-2 rounded-lg hover:bg-[#4f0a4f] text-sm font-semibold">
                     Add to Cart
                 </button>
             </div>

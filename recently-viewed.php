@@ -28,7 +28,7 @@ include 'includes/header.php';
         <i class="fas fa-eye-slash text-6xl text-gray-300 mb-4"></i>
         <h2 class="text-xl font-semibold text-gray-700 mb-2">No Recently Viewed Products</h2>
         <p class="text-gray-500 mb-6">Start browsing our products to see your viewing history here</p>
-        <a href="products.php" class="inline-block bg-purple-custom text-white px-6 py-3 rounded-lg hover:bg-purple-700">
+        <a href="products.php" class="inline-block bg-purple-custom text-white px-6 py-3 rounded-lg hover:bg-[#4f0a4f]">
             Browse Products
         </a>
     </div>
@@ -74,7 +74,7 @@ include 'includes/header.php';
             </a>
             
             <button onclick="addToCart(<?= $product['product_id'] ?>)" 
-                    class="w-full mt-4 bg-purple-custom text-white py-2 rounded-lg hover:bg-purple-700 text-sm font-semibold transition-colors">
+                    class="w-full mt-4 bg-purple-custom text-white py-2 rounded-lg hover:bg-[#4f0a4f] text-sm font-semibold transition-colors">
                 <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
             </button>
         </div>

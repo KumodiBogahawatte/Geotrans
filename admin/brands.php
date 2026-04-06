@@ -55,7 +55,7 @@ if ($search) {
     $query .= " AND (b.brand_name LIKE :search OR b.description LIKE :search)";
 }
 
-$query .= " GROUP BY b.brand_id ORDER BY b.brand_name ASC";
+$query .= " GROUP BY b.brand_id ORDER BY b.brand_name ASC LIMIT 18446744073709551615";
 
 $stmt = $conn->prepare($query);
 
@@ -83,7 +83,7 @@ include 'includes/header.php';
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Brands Management</h1>
-        <a href="brand-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+        <a href="brand-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
             Add New Brand
         </a>
     </div>
@@ -106,7 +106,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-2">
-                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                     Filter
                 </button>
                 <a href="brands.php" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 text-center">
@@ -125,7 +125,7 @@ include 'includes/header.php';
         <?php else: ?>
         <?php foreach ($brands as $brand): ?>
         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="aspect-square bg-gray-100 flex items-center justify-center p-4">
+            <div class="aspect-square bg-gray-100 flex items-center justify-center p-4 border border-gray-200">
                 <img src="../assets/images/brands/<?= htmlspecialchars($brand['brand_logo']) ?>" 
                      alt="<?= htmlspecialchars($brand['brand_name']) ?>"
                      class="max-w-full max-h-full object-contain"

@@ -98,7 +98,7 @@ include 'includes/header.php';
                    placeholder="Search orders..."
                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
             
-            <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+            <button type="submit" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                 Filter
             </button>
         </form>
@@ -227,7 +227,7 @@ include 'includes/header.php';
             
             <div class="flex gap-2 pt-3 border-t">
                 <a href="order-detail.php?id=<?= $order['order_id'] ?>"
-                   class="flex-1 text-center bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm">
+                   class="flex-1 text-center bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f] text-sm">
                     View Details
                 </a>
             </div>

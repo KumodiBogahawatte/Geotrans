@@ -47,5 +47,22 @@ class Brand {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Get all active brands that have active products in a category
+    public function getByCategory($category_id) {
+        $query = "SELECT b.*, COUNT(p.product_id) AS product_count
+                  FROM " . $this->table . " b
+                  INNER JOIN products p ON b.brand_id = p.brand_id
+                  WHERE b.is_active = 1
+                    AND p.is_active = 1
+                    AND p.category_id = :category_id
+                  GROUP BY b.brand_id
+                  ORDER BY b.brand_name ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

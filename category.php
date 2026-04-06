@@ -45,7 +45,7 @@ $total_pages = $result['total_pages'];
 // Get all categories and brands for filters
 $categories = $categoryModel->getAll();
 $brands = $brandModel->getAll();
-$popularBrands = $brandModel->getPopular(6);
+$categoryBrands = $category_id ? $brandModel->getByCategory($category_id) : $brandModel->getPopular(10);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,11 +58,11 @@ $popularBrands = $brandModel->getPopular(6);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #7D1074; }
-        .bg-purple-custom { background-color: #7D1074; }
-        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
-        .hover\:text-purple-custom:hover { color: #7D1074; }
-        .border-purple-custom { border-color: #7D1074; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
+        .hover\:text-purple-custom:hover { color: #680e68; }
+        .border-purple-custom { border-color: #680e68; }
         
         .line-clamp-2 {
             overflow: hidden;
@@ -70,6 +70,16 @@ $popularBrands = $brandModel->getPopular(6);
             -webkit-box-orient: vertical;
             line-clamp: 2;
             -webkit-line-clamp: 2;
+        }
+
+        @keyframes brand-marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .brand-marquee-track {
+            animation: brand-marquee 18s linear infinite;
+            will-change: transform;
         }
     </style>
 </head>
@@ -93,15 +103,21 @@ $popularBrands = $brandModel->getPopular(6);
     </div>
 
     <!-- Brand Logos -->
-    <div class="flex flex-wrap justify-center items-center gap-6 mt-8 px-4">
-        <?php foreach ($popularBrands as $b): ?>
-        <a href="?id=<?= $category_id ?>&brand=<?= $b['brand_id'] ?>" class="transform hover:scale-110 transition-transform">
-            <img src="<?= !empty($b['brand_logo']) ? 'assets/images/brands/' . htmlspecialchars($b['brand_logo']) : 'assets/images/home/hp-300x300-1 1.png' ?>" 
-                 alt="<?= htmlspecialchars($b['brand_name']) ?>" 
-                 class="h-20 md:h-32 p-2 rounded">
-        </a>
-        <?php endforeach; ?>
+    <?php if (!empty($categoryBrands)): ?>
+    <div class="mt-8 px-4 overflow-hidden">
+        <div class="brand-marquee-track flex items-center gap-6 w-max">
+            <?php for ($loop = 0; $loop < 2; $loop++): ?>
+                <?php foreach ($categoryBrands as $b): ?>
+                <a href="?id=<?= $category_id ?>&brand=<?= $b['brand_id'] ?>" class="flex h-20 w-28 shrink-0 items-center justify-center md:h-32 md:w-40 transform transition-transform hover:scale-110">
+                    <img src="<?= !empty($b['brand_logo']) ? 'assets/images/brands/' . htmlspecialchars($b['brand_logo']) : 'assets/images/home/hp-300x300-1 1.png' ?>" 
+                         alt="<?= htmlspecialchars($b['brand_name']) ?>" 
+                         class="max-h-full max-w-full object-contain p-2 rounded">
+                </a>
+                <?php endforeach; ?>
+            <?php endfor; ?>
+        </div>
     </div>
+    <?php endif; ?>
 
     <hr class="max-w-full mx-auto">
 
@@ -172,7 +188,7 @@ $popularBrands = $brandModel->getPopular(6);
                                        placeholder="500000" 
                                        class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
                             </div>
-                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-purple-700 text-sm">
+                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-[#4f0a4f] text-sm">
                                 Apply
                             </button>
                         </div>

@@ -83,7 +83,7 @@ include 'includes/header.php';
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Categories Management</h1>
-        <a href="category-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+        <a href="category-edit.php" class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
             Add New Category
         </a>
     </div>
@@ -106,7 +106,7 @@ include 'includes/header.php';
             </div>
             
             <div class="flex gap-2">
-                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                <button type="submit" class="flex-1 bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                     Filter
                 </button>
                 <a href="categories.php" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 text-center">
@@ -125,10 +125,10 @@ include 'includes/header.php';
         <?php else: ?>
         <?php foreach ($categories as $category): ?>
         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="aspect-video bg-gray-200">
+            <div class="aspect-video bg-gray-100 flex items-center justify-center p-4">
                 <img src="../assets/images/categories/<?= htmlspecialchars($category['category_image']) ?>" 
                      alt="<?= htmlspecialchars($category['category_name']) ?>"
-                     class="w-full h-full object-cover"
+                     class="max-h-full max-w-full object-contain"
                      onerror="this.src='../assets/images/default.png'">
             </div>
             

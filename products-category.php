@@ -54,11 +54,11 @@ $total_pages = $result['total_pages'];
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #7D1074; }
-        .bg-purple-custom { background-color: #7D1074; }
-        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
-        .hover\:text-purple-custom:hover { color: #7D1074; }
-        .border-purple-custom { border-color: #7D1074; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
+        .hover\:text-purple-custom:hover { color: #680e68; }
+        .border-purple-custom { border-color: #680e68; }
         .line-clamp-2 {
             overflow: hidden;
             display: -webkit-box;
@@ -105,7 +105,7 @@ $total_pages = $result['total_pages'];
                                 <label class="text-xs text-gray-600">Max Price</label>
                                 <input type="number" name="max_price" value="<?= $max_price ?? '' ?>" placeholder="500000" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
                             </div>
-                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-purple-700 text-sm">Apply</button>
+                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-[#4f0a4f] text-sm">Apply</button>
                         </div>
                     </form>
                 </div>

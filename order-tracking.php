@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $auto_load) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .purple-custom { background-color: #7D1074; }
+        .purple-custom { background-color: #680e68; }
         .purple-custom:hover { background-color: #6d3667; }
     </style>
     <style>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $auto_load) {
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">#</span>
                         <input type="text" name="order_number" required 
                                value="<?= htmlspecialchars($_POST['order_number'] ?? '') ?>"
-                               class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                               class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#680e68] focus:border-transparent"
                                placeholder="e.g., ORD-20240115-001">
                     </div>
                 <?php endif; ?>
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $auto_load) {
                 <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                 <input type="email" name="email" required 
                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#680e68] focus:border-transparent"
                        placeholder="Enter your email address">
             </div>
             

@@ -1,5 +1,6 @@
 -- GeoTrans E-Commerce Database Schema
 -- Created: 2025-11-19
+-- Aligned with app: site_settings includes setting_group (header/footer/admin).
 
 CREATE DATABASE IF NOT EXISTS geotrans_ecommerce CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE geotrans_ecommerce;
@@ -55,6 +56,7 @@ CREATE TABLE IF NOT EXISTS products (
     is_on_sale TINYINT(1) DEFAULT 0,
     discount_percentage INT DEFAULT 0,
     main_image VARCHAR(255),
+    product_pdf VARCHAR(255) DEFAULT NULL,
     rating DECIMAL(3, 2) DEFAULT 0.00,
     review_count INT DEFAULT 0,
     view_count INT DEFAULT 0,
@@ -106,6 +108,7 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
+    profile_photo VARCHAR(255) DEFAULT NULL,
     phone VARCHAR(20),
     is_verified TINYINT(1) DEFAULT 0,
     is_active TINYINT(1) DEFAULT 1,
@@ -283,46 +286,44 @@ CREATE TABLE IF NOT EXISTS contact_messages (
     INDEX idx_read (is_read)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Site Settings Table
+-- Site Settings Table (setting_group used by header.php / footer.php / admin/settings.php)
 CREATE TABLE IF NOT EXISTS site_settings (
     setting_id INT AUTO_INCREMENT PRIMARY KEY,
     setting_key VARCHAR(100) NOT NULL UNIQUE,
     setting_value TEXT,
+    setting_group VARCHAR(50) DEFAULT NULL,
     setting_type VARCHAR(50) DEFAULT 'text',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_key (setting_key)
+    INDEX idx_key (setting_key),
+    INDEX idx_group (setting_group)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Add testimonials table to database
-CREATE TABLE IF NOT EXISTS `testimonials` (
-  `testimonial_id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_name` varchar(100) NOT NULL,
-  `customer_role` varchar(100) NOT NULL,
-  `customer_image` varchar(255) DEFAULT NULL,
-  `rating` int(1) NOT NULL DEFAULT 5,
-  `feedback_text` text NOT NULL,
-  `feedback_date` varchar(50) DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT 1,
-  `display_order` int(11) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`testimonial_id`)
+-- Testimonials
+CREATE TABLE IF NOT EXISTS testimonials (
+    testimonial_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT DEFAULT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_role VARCHAR(100) NOT NULL,
+    customer_image VARCHAR(255) DEFAULT NULL,
+    rating INT NOT NULL DEFAULT 5,
+    feedback_text TEXT NOT NULL,
+    feedback_date VARCHAR(50) DEFAULT NULL,
+    is_active TINYINT(1) DEFAULT 1,
+    is_verified TINYINT(1) DEFAULT 0,
+    admin_notes TEXT DEFAULT NULL,
+    display_order INT DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (testimonial_id),
+    INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Add profile_photo column to users table
-ALTER TABLE `users` ADD COLUMN `profile_photo` VARCHAR(255) DEFAULT NULL AFTER `last_name`;
 
--- Update testimonials table to link with users and remove customer_image
-ALTER TABLE `testimonials` 
-ADD COLUMN `user_id` INT DEFAULT NULL AFTER `testimonial_id`,
-ADD COLUMN `is_verified` TINYINT(1) DEFAULT 0 AFTER `is_active`,
-ADD COLUMN `admin_notes` TEXT DEFAULT NULL AFTER `is_verified`,
-ADD INDEX `idx_user_id` (`user_id`);
-
--- Keep customer_name and customer_role for non-registered users or manual entries
--- But we'll prioritize user_id when available
-
--- Optional: Add foreign key constraint if needed
--- ALTER TABLE `testimonials` 
--- ADD CONSTRAINT `fk_testimonial_user` 
--- FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL;
+-- SKU Generator
+UPDATE products p
+SET p.sku = CONCAT(
+  'GT-',
+  LPAD(p.category_id, 2, '0'), '-',
+  LPAD(IFNULL(p.brand_id, 0), 2, '0'), '-',
+  LPAD(p.product_id, 6, '0')
+);

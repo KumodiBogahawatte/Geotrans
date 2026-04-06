@@ -38,11 +38,11 @@ function sendContactNotification($name, $email, $subject, $message) {
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #8D4887; color: white; padding: 20px; text-align: center; }
+            .header { background-color: #680e68; color: white; padding: 20px; text-align: center; }
             .content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
             .info-row { margin: 10px 0; }
-            .label { font-weight: bold; color: #8D4887; }
-            .message-box { background-color: white; padding: 15px; border-left: 4px solid #8D4887; margin-top: 15px; }
+            .label { font-weight: bold; color: #680e68; }
+            .message-box { background-color: white; padding: 15px; border-left: 4px solid #680e68; margin-top: 15px; }
         </style>
     </head>
     <body>
@@ -86,7 +86,7 @@ function sendContactAutoReply($to_email, $name) {
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #8D4887; color: white; padding: 20px; text-align: center; }
+            .header { background-color: #680e68; color: white; padding: 20px; text-align: center; }
             .content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
         </style>
     </head>
@@ -122,7 +122,7 @@ function sendOrderConfirmation($to_email, $order_number, $order_details) {
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #8D4887; color: white; padding: 20px; text-align: center; }
+            .header { background-color: #680e68; color: white; padding: 20px; text-align: center; }
             .content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
         </style>
     </head>

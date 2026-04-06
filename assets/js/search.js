@@ -113,7 +113,7 @@ class SearchManager {
                         <div class="text-sm font-medium text-gray-900">${product.name}</div>
                         <div class="text-xs text-gray-500">${product.brand} • ${product.category}</div>
                     </div>
-                    <div class="text-sm font-bold text-purple-600">${price}</div>
+                    <div class="text-sm font-bold text-[#680e68]">${price}</div>
                 </a>
             `;
         });

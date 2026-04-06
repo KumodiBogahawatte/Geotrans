@@ -40,6 +40,29 @@ $relatedProducts = $product->getRelated($productData['product_id'], $productData
 
 $currentPrice = getProductPrice($productData);
 $discount = calculateDiscount($productData['price'], $productData['sale_price']);
+
+// Normalize product gallery image URLs for rendering.
+$normalizedImages = [];
+foreach ($images as $img) {
+    $rawUrl = trim($img['image_url'] ?? '');
+    if ($rawUrl === '') {
+        continue;
+    }
+
+    $renderUrl = $rawUrl;
+    if (!preg_match('/^(https?:)?\/\//', $rawUrl) && strpos($rawUrl, 'assets/') !== 0) {
+        $renderUrl = 'assets/images/products/' . ltrim($rawUrl, '/');
+    }
+
+    $normalizedImages[] = [
+        'image_url' => $renderUrl
+    ];
+}
+
+$mainImageUrl = !empty($productData['main_image'])
+    ? 'assets/images/products/' . $productData['main_image']
+    : 'assets/images/default.png';
+$thumbnailCount = max(1, count($normalizedImages) + 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,10 +75,17 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #7D1074; }
-        .bg-purple-custom { background-color: #7D1074; }
-        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
-        .border-purple-custom { border-color: #7D1074; }
+        .text-purple-custom { color: #680e68; }
+        .bg-purple-custom { background-color: #680e68; }
+        .hover\:bg-purple-custom:hover { background-color: #680e68; }
+        .border-purple-custom { border-color: #680e68; }
+        .line-clamp-2 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -79,24 +109,24 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
             
             <!-- Product Images -->
             <div>
-                <div class="bg-white rounded-lg p-4 mb-4">
-                    <img id="main-image" src="assets/images/products/<?php echo htmlspecialchars($productData['main_image']); ?>" 
-                         alt="<?php echo htmlspecialchars($productData['product_name']); ?>" 
-                         class="w-full h-96 object-contain">
-                </div>
-                
-                <?php if (!empty($images)): ?>
-                <div class="grid grid-cols-4 gap-2">
-                    <?php foreach ($images as $img): ?>
-                    <div class="bg-white rounded-lg p-2 cursor-pointer hover:border-2 hover:border-purple-custom" 
-                         onclick="document.getElementById('main-image').src='<?php echo htmlspecialchars($img['image_url']); ?>'">
-                        <img src="<?php echo htmlspecialchars($img['image_url']); ?>" 
-                             alt="Product image" 
-                             class="w-full h-20 object-contain">
+                <div class="flex gap-3">
+                    <div class="flex-1 bg-white rounded-lg p-4 border">
+                        <img id="main-image" src="<?php echo htmlspecialchars($mainImageUrl); ?>" 
+                             alt="<?php echo htmlspecialchars($productData['product_name']); ?>" 
+                             class="w-full h-96 object-contain">
                     </div>
-                    <?php endforeach; ?>
+
+                    <div class="w-24 h-96 grid gap-2" style="grid-template-rows: repeat(<?php echo $thumbnailCount; ?>, minmax(0, 1fr));">
+                        <button type="button" class="h-full w-full bg-white rounded-lg p-2 border hover:border-purple-custom overflow-hidden" onclick="setMainImage('<?php echo htmlspecialchars($mainImageUrl); ?>')">
+                            <img src="<?php echo htmlspecialchars($mainImageUrl); ?>" alt="Main product image" class="w-full h-full object-contain">
+                        </button>
+                        <?php foreach ($normalizedImages as $img): ?>
+                        <button type="button" class="h-full w-full bg-white rounded-lg p-2 border hover:border-purple-custom overflow-hidden" onclick="setMainImage('<?php echo htmlspecialchars($img['image_url']); ?>')">
+                            <img src="<?php echo htmlspecialchars($img['image_url']); ?>" alt="Product gallery image" class="w-full h-full object-contain">
+                        </button>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-                <?php endif; ?>
             </div>
 
             <!-- Product Info -->
@@ -141,6 +171,15 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
                 <!-- Short Description -->
                 <p class="text-gray-600 mb-6"><?php echo htmlspecialchars($productData['short_description']); ?></p>
 
+                <?php if (!empty($productData['product_pdf'])): ?>
+                <div class="mb-6">
+                    <a href="assets/files/products/<?php echo rawurlencode($productData['product_pdf']); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg">
+                        <i class="fas fa-file-pdf text-red-600"></i>
+                        View Full Specifications (PDF)
+                    </a>
+                </div>
+                <?php endif; ?>
+
                 <!-- Stock Status -->
                 <div class="mb-6">
                     <?php if ($productData['stock_quantity'] > 0): ?>
@@ -163,11 +202,11 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
 
                 <!-- Action Buttons -->
                 <div class="flex gap-4 mb-6">
-                    <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold transition"
+                    <button class="flex-1 bg-purple-custom hover:bg-[#4f0a4f] text-white py-3 px-6 rounded-lg font-semibold transition-colors"
                             onclick="buyNow()">
                         <i class="fas fa-credit-card mr-2"></i>Buy Now
                     </button>
-                    <button class="add-to-cart-btn flex-1 bg-purple-custom hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition"
+                    <button class="add-to-cart-btn flex-1 border-2 border-purple-custom bg-transparent text-purple-custom hover:bg-purple-50 py-3 px-6 rounded-lg font-semibold transition-colors"
                             data-product-id="<?php echo $productData['product_id']; ?>"
                             onclick="addToCartWithQty()">
                         <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
@@ -246,7 +285,7 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
                         <div>
                             <label class="block text-sm font-semibold mb-2">Review Title</label>
                             <input type="text" name="review_title" maxlength="255" 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#680e68] focus:border-transparent"
                                    placeholder="Summarize your review in one line">
                         </div>
                         
@@ -254,13 +293,13 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
                         <div>
                             <label class="block text-sm font-semibold mb-2">Your Review *</label>
                             <textarea name="review_text" required rows="5" 
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#680e68] focus:border-transparent"
                                       placeholder="Share your experience with this product..."></textarea>
                         </div>
                         
                         <div id="review-message" class="hidden text-sm"></div>
                         
-                        <button type="submit" id="review-submit-btn" class="bg-purple-custom text-white px-6 py-3 rounded-lg hover:bg-purple-700 font-semibold">
+                        <button type="submit" id="review-submit-btn" class="bg-purple-custom text-white px-6 py-3 rounded-lg hover:bg-[#4f0a4f] font-semibold">
                             Submit Review
                         </button>
                     </form>
@@ -309,48 +348,66 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
             <h2 class="text-2xl font-bold mb-6">Related Products</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
                 <?php foreach ($relatedProducts as $p): ?>
-                <?php
-                $relatedPrice = getProductPrice($p);
-                $relatedDiscount = calculateDiscount($p['price'], $p['sale_price']);
-                ?>
                 <div class="bg-white rounded-2xl p-5 relative shadow-sm hover:shadow-lg transition-shadow group flex flex-col h-full">
-                    <button onclick="addToWishlist(<?= $p['product_id'] ?>)"
-                        class="absolute top-3 right-3 w-8 h-8 bg-white border border-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors z-10">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
+                    <button type="button" class="wishlist-btn absolute top-3 right-3 w-8 h-8 bg-white border border-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-500 transition-colors z-10"
+                            data-product-id="<?= $p['product_id'] ?>">
+                        <i class="far fa-heart"></i>
                     </button>
-                    <a href="product_detail.php?slug=<?= $p['product_slug'] ?>" class="flex flex-col flex-grow">
+                    <a href="product_detail.php?id=<?= $p['product_id'] ?>" class="flex flex-col flex-grow">
                         <div class="flex items-center justify-center h-48 mb-4">
                             <?php
                             $mainImage = !empty($p['main_image']) ? 'assets/images/products/' . $p['main_image'] : 'assets/images/categories/default.png';
                             ?>
                             <img src="<?= $mainImage ?>" alt="<?= htmlspecialchars($p['product_name']) ?>" class="max-h-full object-contain">
                         </div>
+                        <hr>
+                        <div class="h-6 mb-2">
+                            <?php if (!empty($p['discount_percentage']) && $p['discount_percentage'] > 0): ?>
+                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold inline-block">
+                                -<?= (int) $p['discount_percentage'] ?>% OFF
+                            </span>
+                            <?php endif; ?>
+                        </div>
                         <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
                             <?= htmlspecialchars($p['product_name']) ?>
                         </h3>
-                        <div class="flex items-baseline flex-wrap gap-2 mb-3">
+                        <div class="flex items-center mb-3 h-5">
+                            <div class="flex text-yellow-400 text-xs">
+                                <?php
+                                $relRating = floatval($p['avg_rating'] ?? $p['rating'] ?? 0);
+                                for ($i = 1; $i <= 5; $i++) {
+                                    echo $i <= $relRating ? '★' : '☆';
+                                }
+                                ?>
+                            </div>
+                            <span class="text-gray-500 text-xs ml-1">(<?= $p['review_count'] ?? 0 ?>)</span>
+                        </div>
+                        <div class="flex items-baseline flex-wrap gap-2 mb-3 min-h-[1.75rem]">
                             <?php if (!empty($p['sale_price']) && $p['sale_price'] < $p['price']): ?>
                                 <span class="text-purple-custom font-bold text-lg">
-                                    Rs<?= number_format($p['sale_price'], 2) ?>
+                                    Rs. <?= number_format($p['sale_price'], 2) ?>
                                 </span>
                                 <span class="text-gray-400 text-sm line-through">
-                                    Rs<?= number_format($p['price'], 2) ?>
+                                    Rs. <?= number_format($p['price'], 2) ?>
                                 </span>
                             <?php else: ?>
                                 <span class="text-purple-custom font-bold text-lg">
-                                    Rs<?= number_format($p['price'], 2) ?>
+                                    Rs. <?= number_format($p['price'], 2) ?>
                                 </span>
                             <?php endif; ?>
                         </div>
-                        <div class="mt-auto">
-                            <button class="add-to-cart-btn w-full bg-purple-custom hover:bg-purple-700 text-white py-2 px-4 rounded transition" 
-                                    data-product-id="<?= $p['product_id'] ?>">
-                                <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
-                            </button>
-                        </div>
                     </a>
+                    <div class="flex gap-2 mt-auto">
+                        <button type="button" onclick="buyNowFromList(<?= $p['product_id'] ?>)"
+                                class="flex-1 bg-purple-custom text-white py-2 rounded-lg hover:bg-[#680e68] text-sm font-semibold transition-colors">
+                            <i class="fas fa-credit-card mr-2"></i>Buy Now
+                        </button>
+                        <button type="button" onclick="addToCart(<?= $p['product_id'] ?>)"
+                                class="border border-purple-custom text-purple-custom bg-transparent p-2 rounded-lg hover:bg-[#f7e6f6] hover:border-[#680e68] transition-all duration-200"
+                                title="Add to Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -389,6 +446,13 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
             }
         }
 
+        function setMainImage(imageUrl) {
+            const mainImage = document.getElementById('main-image');
+            if (mainImage && imageUrl) {
+                mainImage.src = imageUrl;
+            }
+        }
+
         function decrementQty() {
             const qtyInput = document.getElementById('quantity');
             if (parseInt(qtyInput.value) > 1) {
@@ -405,6 +469,44 @@ $discount = calculateDiscount($productData['price'], $productData['sale_price'])
             if (window.cartManager) {
                 window.cartManager.addToCart(addBtn);
             }
+        }
+
+        function addToCart(productId) {
+            if (window.cartManager) {
+                window.cartManager.addToCart(productId, 1);
+            }
+        }
+
+        function buyNowFromList(productId) {
+            const formData = new FormData();
+            formData.append('action', 'add');
+            formData.append('product_id', productId);
+            formData.append('quantity', 1);
+
+            fetch('api/cart.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = 'checkout.php';
+                } else {
+                    if (window.cartManager) {
+                        window.cartManager.showNotification(data.message || 'Failed to add product', 'error');
+                    } else {
+                        alert(data.message || 'Failed to add product');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (window.cartManager) {
+                    window.cartManager.showNotification('An error occurred', 'error');
+                } else {
+                    alert('An error occurred');
+                }
+            });
         }
 
         // Buy Now - Add to cart and redirect to checkout

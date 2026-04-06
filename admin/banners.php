@@ -28,9 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_id'])) {
     $banner_order = intval($_POST['banner_order'] ?? 0);
     $media_path = '';
     if (isset($_FILES['banner_media']) && $_FILES['banner_media']['error'] === 0) {
+        $bannerDir = __DIR__ . '/../assets/images/banners';
+        if (!is_dir($bannerDir)) {
+            mkdir($bannerDir, 0755, true);
+        }
         $ext = pathinfo($_FILES['banner_media']['name'], PATHINFO_EXTENSION);
         $filename = 'banner_' . time() . '_' . rand(1000,9999) . '.' . $ext;
-        $target = '../assets/images/banners/' . $filename;
+        $target = $bannerDir . '/' . $filename;
         if (move_uploaded_file($_FILES['banner_media']['tmp_name'], $target)) {
             $media_path = 'assets/images/banners/' . $filename;
         }
@@ -94,12 +98,13 @@ include 'includes/header.php';
                 <div>
                     <label class="block text-sm font-medium mb-2">Banner Media (Image/Video)</label>
                     <input type="file" name="banner_media" accept="image/*,video/*" class="w-full">
-                    <?php if ($edit_mode && $edit_banner['banner_media']): ?>
+                    <?php if ($edit_mode && !empty($edit_banner['banner_media'])): ?>
+                        <?php $editMediaUrl = bannerMediaUrl($edit_banner['banner_media']); ?>
                         <div class="mt-2 text-xs text-gray-500">Current:
-                            <?php if (preg_match('/\.(mp4|webm|ogg)$/i', $edit_banner['banner_media'])): ?>
-                                <video src="../<?= $edit_banner['banner_media'] ?>" controls class="w-full h-32 object-cover"></video>
+                            <?php if (preg_match('/\.(mp4|webm|ogg)$/i', (string) $edit_banner['banner_media'])): ?>
+                                <video src="<?= htmlspecialchars($editMediaUrl, ENT_QUOTES, 'UTF-8') ?>" controls class="w-full h-32 object-cover"></video>
                             <?php else: ?>
-                                <img src="../<?= $edit_banner['banner_media'] ?>" alt="Banner" class="w-full h-32 object-cover">
+                                <img src="<?= htmlspecialchars($editMediaUrl, ENT_QUOTES, 'UTF-8') ?>" alt="Banner" class="w-full h-32 object-cover">
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
@@ -119,11 +124,14 @@ include 'includes/header.php';
     </form>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <?php foreach ($banners as $banner): ?>
+        <?php $bannerSrc = !empty($banner['banner_media']) ? bannerMediaUrl($banner['banner_media']) : ''; ?>
         <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-            <?php if (preg_match('/\.(mp4|webm|ogg)$/i', $banner['banner_media'])): ?>
-                <video src="../<?= $banner['banner_media'] ?>" controls class="w-full h-64 object-cover mb-3"></video>
+            <?php if ($bannerSrc && preg_match('/\.(mp4|webm|ogg)$/i', (string) $banner['banner_media'])): ?>
+                <video src="<?= htmlspecialchars($bannerSrc, ENT_QUOTES, 'UTF-8') ?>" controls class="w-full h-64 object-cover mb-3"></video>
+            <?php elseif ($bannerSrc): ?>
+                <img src="<?= htmlspecialchars($bannerSrc, ENT_QUOTES, 'UTF-8') ?>" alt="Banner" class="w-full h-64 object-cover mb-3">
             <?php else: ?>
-                <img src="../<?= $banner['banner_media'] ?>" alt="Banner" class="w-full h-64 object-cover mb-3">
+                <div class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400 text-sm mb-3">No media uploaded</div>
             <?php endif; ?>
             <div class="text-center">
                 <div class="font-semibold text-lg mb-1"><?= htmlspecialchars($banner['banner_title']) ?></div>

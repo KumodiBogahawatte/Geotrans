@@ -25,7 +25,7 @@ $orders = $order->getByUserId($_SESSION['user_id']);
             theme: {
                 extend: {
                     colors: {
-                        'purple-custom': '#8D4887',
+                        'purple-custom': '#680e68',
                     }
                 }
             }
@@ -73,7 +73,7 @@ $orders = $order->getByUserId($_SESSION['user_id']);
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                             <p class="text-gray-600 mb-4">You haven't placed any orders yet</p>
-                            <a href="../products.php" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                            <a href="../products.php" class="bg-purple-custom text-white px-6 py-2 rounded-lg hover:bg-[#4f0a4f]">
                                 Start Shopping
                             </a>
                         </div>
@@ -118,7 +118,7 @@ $orders = $order->getByUserId($_SESSION['user_id']);
                                             Track Order
                                         </a>
                                         <a href="../order-confirmation.php?order=<?= $order['order_id'] ?>" 
-                                           class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                                           class="bg-purple-custom text-white px-4 py-2 rounded-lg hover:bg-[#4f0a4f]">
                                             View Details
                                         </a>
                                     </div>
