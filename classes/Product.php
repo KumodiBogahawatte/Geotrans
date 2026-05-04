@@ -177,7 +177,7 @@ class Product {
 
     // Get product images
     public function getImages($product_id) {
-        $query = "SELECT * FROM product_images WHERE product_id = :product_id ORDER BY display_order";
+        $query = "SELECT * FROM product_images WHERE product_id = :product_id ORDER BY display_order ASC, image_id ASC";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
         $stmt->execute();

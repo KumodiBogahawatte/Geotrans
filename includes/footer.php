@@ -37,19 +37,7 @@ $whatsAppUrl = 'https://wa.me/' . $waDigits;
 // }
 // $selected_currency = CurrencyConverter::getSelectedCurrency();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Footer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-50">
-
-    <!-- Newsletter Section -->
+    <!-- Newsletter Section (included inside parent page — no extra document/tailwind here) -->
     <section class="relative py-8 md:py-16" style="background-color: #680e68;">
         <div class="w-full px-6 lg:px-12 relative z-10">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
@@ -135,7 +123,7 @@ $whatsAppUrl = 'https://wa.me/' . $waDigits;
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs md:text-sm font-semibold" style="color: #680e68;">FREE SHIPPING OVER Rs.50 000</p>
+                        <p class="text-xs md:text-sm font-semibold" style="color: #680e68;">Weekly exclusive deals!</p>
                     </div>
                 </div>
 
@@ -202,24 +190,18 @@ $whatsAppUrl = 'https://wa.me/' . $waDigits;
 
                     <!-- Social Icons (FB, Instagram, TikTok from admin settings) -->
                     <div class="flex space-x-3 mt-6 justify-center sm:justify-start">
-                        <?php if (!empty($footer_social['facebook_url'])): ?>
-                        <a href="<?= htmlspecialchars($footer_social['facebook_url']) ?>" target="_blank" rel="noopener noreferrer"
+                        <a href="<?= htmlspecialchars(!empty($footer_social['facebook_url']) ? $footer_social['facebook_url'] : 'https://www.facebook.com/geotransofficial') ?>" target="_blank" rel="noopener noreferrer"
                             class="w-8 h-8 bg-gray-100 border border-purple-400 rounded flex items-center justify-center hover:bg-[#680e68] hover:text-white transition-colors">
                             <i class="fab fa-facebook-f text-sm"></i>
                         </a>
-                        <?php endif; ?>
-                        <?php if (!empty($footer_social['instagram_url'])): ?>
-                        <a href="<?= htmlspecialchars($footer_social['instagram_url']) ?>" target="_blank" rel="noopener noreferrer"
+                        <a href="<?= htmlspecialchars(!empty($footer_social['instagram_url']) ? $footer_social['instagram_url'] : 'https://www.instagram.com/geotranspvtltd/') ?>" target="_blank" rel="noopener noreferrer"
                             class="w-8 h-8 bg-gray-100 border border-purple-400 rounded flex items-center justify-center hover:bg-[#680e68] hover:text-white transition-colors">
                             <i class="fab fa-instagram text-sm"></i>
                         </a>
-                        <?php endif; ?>
-                        <?php if (!empty($footer_social['tiktok_url'])): ?>
-                        <a href="<?= htmlspecialchars($footer_social['tiktok_url']) ?>" target="_blank" rel="noopener noreferrer"
+                        <a href="<?= htmlspecialchars(!empty($footer_social['tiktok_url']) ? $footer_social['tiktok_url'] : 'https://www.tiktok.com/@geotranspvtltd') ?>" target="_blank" rel="noopener noreferrer"
                             class="w-8 h-8 bg-gray-100 border border-purple-400 rounded flex items-center justify-center hover:bg-[#680e68] hover:text-white transition-colors">
                             <i class="fab fa-tiktok text-sm"></i>
                         </a>
-                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -238,6 +220,8 @@ $whatsAppUrl = 'https://wa.me/' . $waDigits;
                         <li><a href="<?= $base_url ?>category.php" class="hover:text-[#680e68]">View All Categories</a></li>
                     </ul>
                 </div>
+
+                
 
                 <!-- Company -->
                 <div class="text-center sm:text-left">
@@ -312,15 +296,164 @@ $whatsAppUrl = 'https://wa.me/' . $waDigits;
         </div>
     </div>
 
+    <!-- Floating Social Share Sidebar -->
+    <style>
+        .social-sidebar {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .social-sidebar-btn {
+            width: 3rem;
+            height: 3.5rem;
+            background-color: #680e68;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .social-sidebar-btn:hover {
+            background-color: #4f0a4f;
+            box-shadow: 0 6px 16px rgba(104, 14, 104, 0.3);
+        }
+
+        .social-icons-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-icons-wrapper.active {
+            max-height: 500px;
+        }
+
+        .social-icon-btn {
+            width: 3rem;
+            height: 3.5rem;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .social-icon-btn:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-icon-btn.facebook {
+            background: linear-gradient(90deg, #1877f2 0%, #0a66c2 100%);
+        }
+
+        .social-icon-btn.facebook:hover {
+            background: linear-gradient(90deg, #165ec4 0%, #0a5a9f 100%);
+        }
+
+        .social-icon-btn.instagram {
+            background: linear-gradient(135deg, #405de6 0%, #833ab4 50%, #fd1d1d 100%);
+        }
+
+        .social-icon-btn.instagram:hover {
+            background: linear-gradient(135deg, #3650d4 0%, #6b2d8d 50%, #e01b1b 100%);
+        }
+
+        .social-icon-btn.tiktok {
+            background: #000000;
+            border-bottom-right-radius: 5px;
+        }
+
+        .social-icon-btn.tiktok:hover {
+            background: #222222;
+        }
+    </style>
+
+    <div class="social-sidebar" id="socialSidebar">
+        <button class="social-sidebar-btn" id="socialSidebarBtn" title="Share with us" aria-label="Open social media menu">
+            <i class="fas fa-share"></i>
+        </button>
+
+        <div class="social-icons-wrapper" id="socialIconsWrapper">
+            <a href="https://www.facebook.com/geotransofficial" target="_blank" rel="noopener noreferrer" 
+               class="social-icon-btn facebook" title="Follow us on Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            
+            <a href="https://www.instagram.com/geotranspvtltd/" target="_blank" rel="noopener noreferrer" 
+               class="social-icon-btn instagram" title="Follow us on Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            
+            <a href="https://www.tiktok.com/@geotranspvtltd" target="_blank" rel="noopener noreferrer" 
+               class="social-icon-btn tiktok" title="Follow us on TikTok">
+                <i class="fab fa-tiktok"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const sidebar = document.getElementById('socialSidebar');
+            const btn = document.getElementById('socialSidebarBtn');
+            const iconWrapper = document.getElementById('socialIconsWrapper');
+
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                iconWrapper.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!sidebar.contains(e.target)) {
+                    iconWrapper.classList.remove('active');
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    iconWrapper.classList.remove('active');
+                }
+            });
+        })();
+    </script>
+
     <!-- Floating WhatsApp Button -->
     <a href="<?= htmlspecialchars($whatsAppUrl, ENT_QUOTES, 'UTF-8') ?>"
         target="_blank"
         rel="noopener noreferrer"
-        class="fixed right-0 top-1/2 -translate-y-1/2 z-50 inline-flex flex-col items-center justify-center gap-2 w-10 h-36 shadow-lg transition-transform duration-200 hover:scale-105"
+        class="fixed right-0 top-1/2 -translate-y-1/2 z-50 inline-flex flex-col items-center justify-center gap-2 w-8 h-32 shadow-lg transition-colors duration-200"
         style="background-color:#25D366;"
         aria-label="Chat on WhatsApp">
         <span class="text-white text-[10px] md:text-xs font-semibold uppercase tracking-wider [writing-mode:vertical-rl] rotate-180">WhatsApp</span>
         <i class="fab fa-whatsapp text-white text-2xl transform -rotate-90"></i>
+        <style>
+            a[aria-label="Chat on WhatsApp"]:hover {
+                background-color: #1da851 !important;
+            }
+        </style>
     </a>
 
     <!-- Scroll to Top Button -->
@@ -373,7 +506,3 @@ $whatsAppUrl = 'https://wa.me/' . $waDigits;
         .catch(error => console.error('Currency change error:', error));
     });
     </script> -->
-
-</body>
-
-</html>

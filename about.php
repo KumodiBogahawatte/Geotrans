@@ -1,339 +1,367 @@
-<!DOCTYPE html>
+<?php require_once __DIR__ . '/includes/helpers.php'; ?><!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | GeoTrans</title>
-    <meta name="description" content="Learn about GeoTrans — your trusted electronics and technology marketplace in Colombo, Sri Lanka.">
+    <title>About Us | Geotrans</title>
+    <meta name="description" content="Geotrans (PVT) LTD — office automation and IT solutions in Sri Lanka since 2006.">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #680e68; }
-        .bg-purple-custom { background-color: #680e68; }
-        .border-purple-custom { border-color: #680e68; }
-        .ring-purple-custom { --tw-ring-color: #680e68; }
-
-        .about-hero-gradient {
-            background: linear-gradient(135deg, #faf5fc 0%, #f3e8f6 45%, #fefce8 100%);
+        :root {
+            --brand: #680e68;
+            --brand-dark: #4f0a4f;
+            --brand-soft: rgba(104, 14, 104, 0.08);
+            --surface: #f1f5f9;
+            --ink: #0f172a;
+            --muted: #64748b;
         }
 
+        .about-font {
+            font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+        }
+
+        .text-purple-custom { color: var(--brand); }
+        .bg-purple-custom { background-color: var(--brand); }
+        .border-purple-custom { border-color: var(--brand); }
+        .ring-purple-custom { --tw-ring-color: var(--brand); }
+
+        .about-hero {
+            background-color: #f4eef8;
+            background-image:
+                linear-gradient(115deg, rgba(255, 255, 255, 0.97) 0%, rgba(250, 248, 252, 0.9) 38%, rgba(248, 250, 252, 0.55) 58%, rgba(248, 250, 252, 0.25) 100%),
+                radial-gradient(1000px 600px at 100% 40%, rgba(104, 14, 104, 0.12), transparent 55%),
+                url("assets/images/about/Geo\ Trans\ Hero\ 1.png");
+            background-size: auto, auto, cover;
+            background-position: 0 0, 0 0, center right;
+            background-repeat: no-repeat;
+        }
+
+        .about-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23680e68' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .about-kicker {
+            letter-spacing: 0.22em;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--brand);
+        }
+
+        .about-card {
+            border-radius: 1.25rem;
+            box-shadow:
+                0 1px 2px rgba(15, 23, 42, 0.04),
+                0 12px 40px -12px rgba(15, 23, 42, 0.08);
+        }
+
+        .about-service-tile {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        @media (hover: hover) {
+            .about-service-tile:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 16px 40px -16px rgba(104, 14, 104, 0.15);
+                border-color: rgba(104, 14, 104, 0.22);
+            }
+        }
+
+        .about-section-title {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+        }
+
+        .about-gradient-border {
+            background: linear-gradient(135deg, rgba(104, 14, 104, 0.15), rgba(251, 191, 36, 0.12));
+            padding: 1px;
+            border-radius: 1.25rem;
+        }
+
+        .about-mission-quote {
+            border-left: 3px solid var(--brand);
+        }
+
+        /* Vision card: deep slate + soft brand glows (avoids flat “purple wall”) */
+        .about-vision-surface {
+            background-color: #0f172a;
+            background-image:
+                radial-gradient(120% 100% at 100% -30%, rgba(104, 14, 104, 0.38), transparent 52%),
+                radial-gradient(90% 70% at -15% 100%, rgba(104, 14, 104, 0.22), transparent 48%),
+                linear-gradient(165deg, #1e293b 0%, #0f172a 45%, #0c1222 100%);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .about-service-tile { transition: none; }
+            .about-service-tile:hover { transform: none; }
+        }
     </style>
 </head>
 
-<body class="font-sans bg-gray-50 text-gray-800 antialiased">
+<body class="about-font bg-slate-100 text-slate-800 antialiased">
 
     <?php include 'includes/header.php'; ?>
 
-    <!-- Hero -->
-    <header class="about-hero-gradient relative overflow-hidden border-b border-gray-100">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-14">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[320px] sm:min-h-[380px] lg:min-h-[440px] py-8 sm:py-12 lg:py-16">
-                <div class="relative z-10 text-center lg:text-left order-2 lg:order-1">
-                    <p class="text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase text-purple-custom mb-3">
-                        Colombo, Sri Lanka
-                    </p>
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold tracking-tight text-gray-900 leading-[1.1]">
-                        The best experience
-                        <span class="text-purple-custom block sm:inline sm:ml-2">always wins</span>
+    <header class="about-hero relative min-h-[320px] overflow-hidden border-b border-slate-200/80 sm:min-h-[380px]">
+        <div class="relative z-10 max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center py-12 sm:py-16 lg:py-20">
+                <div class="lg:col-span-6 text-center lg:text-left order-2 lg:order-1">
+                    <p class="about-kicker mb-4">About us</p>
+                    <h1 class="text-[clamp(1.875rem,4.5vw,3.25rem)] font-extrabold tracking-tight text-slate-900 leading-[1.08]">
+                        Office automation &amp; IT solutions for
+                        <span class="text-purple-custom">Sri Lankan businesses</span>
                     </h1>
-                    <p class="mt-5 sm:mt-6 text-base sm:text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                        We are an online marketplace for electronics and technology—curated products, trusted brands, and support that puts customers first.
+                    <p class="mt-6 text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        Geotrans (PVT) LTD delivers reliable, innovative technology that helps you work smarter—from printers and copiers to full workplace IT.
                     </p>
-                    <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:justify-start">
-                        <a href="products.php" class="inline-flex items-center justify-center gap-2 rounded-full bg-purple-custom px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#4f0a4f] focus:outline-none focus:ring-2 focus:ring-purple-custom focus:ring-offset-2">
-                            <span>Shop products</span>
-                            <i class="fas fa-arrow-right text-xs opacity-90"></i>
+                    
+                    <div class="mt-10 flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:justify-start">
+                        <a href="products.php" class="inline-flex items-center justify-center gap-2 rounded-full bg-purple-custom px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-purple-custom/25 transition hover:bg-[#4f0a4f] focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-custom focus-visible:ring-offset-2">
+                            Browse products
+                            <i class="fas fa-arrow-right text-xs opacity-90" aria-hidden="true"></i>
                         </a>
-                        <a href="contact.php" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-800 transition hover:border-purple-custom hover:text-purple-custom focus:outline-none focus:ring-2 focus:ring-purple-custom focus:ring-offset-2">
+                        <a href="contact.php" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-7 py-3.5 text-sm font-semibold text-slate-800 backdrop-blur-sm transition hover:border-purple-custom hover:text-purple-custom focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-custom focus-visible:ring-offset-2">
                             Contact us
                         </a>
-                    </div>
-                </div>
-                <div class="relative flex justify-center lg:justify-end order-1 lg:order-2">
-                    <div class="relative w-full max-w-md lg:max-w-lg">
-                        <div class="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-purple-custom/10 to-amber-100/40 blur-2xl lg:block" aria-hidden="true"></div>
-                        <img src="assets/images/about/about-banner-removebg-preview.png" alt="Illustration representing GeoTrans technology marketplace"
-                            class="relative w-full h-auto max-h-[280px] sm:max-h-[340px] lg:max-h-[400px] object-contain object-center drop-shadow-xl mx-auto"
-                            width="600" height="400" loading="eager">
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main>
-        <!-- Breadcrumb -->
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-            <nav class="text-sm text-gray-500" aria-label="Breadcrumb">
-                <a href="index.php" class="hover:text-purple-custom transition-colors">Home</a>
-                <span class="mx-2 text-gray-300">/</span>
-                <span class="text-gray-900 font-medium">About</span>
-            </nav>
-        </div>
+    <main class="pb-8 sm:pb-12">
 
-        <!-- Stats -->
-        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" aria-labelledby="about-stats-heading">
-            <h2 id="about-stats-heading" class="sr-only">Company highlights</h2>
-            <div class="rounded-2xl bg-white p-6 sm:p-8 lg:p-10 shadow-sm ring-1 ring-gray-100">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10 lg:gap-12">
-                    <div class="text-center lg:text-left max-w-md mx-auto lg:mx-0">
-                        <p class="text-xs font-semibold tracking-widest uppercase text-gray-500">Our purpose</p>
-                        <p class="mt-3 text-xl sm:text-2xl font-bold text-gray-900 leading-snug">
-                            <span class="text-purple-custom">Enrich and enhance lives</span>
-                            through technology
-                        </p>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-0 sm:divide-x divide-gray-100 w-full lg:max-w-3xl">
-                        <div class="text-center sm:px-6 lg:px-8 py-2">
-                            <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tabular-nums">Rs. 12.5M+</p>
-                            <p class="mt-2 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">Revenue<br class="hidden sm:inline"> <span class="sm:hidden">·</span> 2021–2025</p>
-                        </div>
-                        <div class="text-center sm:px-6 lg:px-8 py-2 border-t sm:border-t-0 border-gray-100 pt-6 sm:pt-2">
-                            <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tabular-nums">12K+</p>
-                            <p class="mt-2 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">Happy<br class="hidden sm:inline"> customers</p>
-                        </div>
-                        <div class="text-center sm:px-6 lg:px-8 py-2 border-t sm:border-t-0 border-gray-100 pt-6 sm:pt-2">
-                            <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tabular-nums">725+</p>
-                            <p class="mt-2 text-xs sm:text-sm font-medium uppercase tracking-wide text-gray-500">Certified<br class="hidden sm:inline"> partners</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Story -->
-        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-            <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
-                <div class="grid grid-cols-1 lg:grid-cols-2">
-                    <div class="relative h-64 sm:h-80 lg:h-auto lg:min-h-[420px]">
-                        <img src="assets/images/about/close-up-man-shopping-with-laptop 1.png" alt="Customer shopping for technology online"
-                            class="absolute inset-0 h-full w-full object-cover"
-                            loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent lg:hidden" aria-hidden="true"></div>
-                    </div>
-                    <div class="flex flex-col justify-center p-6 sm:p-10 lg:p-12 xl:p-14">
-                        <p class="text-xs font-semibold tracking-widest uppercase text-purple-custom">Who we are</p>
-                        <h2 class="mt-3 text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-                            Deotrans Pvt Ltd
-                        </h2>
-                        <p class="mt-4 text-gray-600 leading-relaxed text-sm sm:text-base">
-                            Founded in 2008, we specialize in IT solutions and office automation. Our focus is simple: bring the latest hardware and accessories to businesses and consumers with clear pricing, genuine products, and dependable fulfilment.
-                        </p>
-                        <p class="mt-4 text-gray-600 leading-relaxed text-sm sm:text-base">
-                            Today, GeoTrans extends that mission online—so you can discover, compare, and order technology from anywhere in Sri Lanka with confidence.
-                        </p>
-                        <div class="mt-8">
-                            <a href="products.php" class="inline-flex items-center gap-2 rounded-full bg-purple-custom px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#4f0a4f] focus:outline-none focus:ring-2 focus:ring-purple-custom focus:ring-offset-2">
-                                Browse catalogue
-                                <i class="fas fa-chevron-right text-xs"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Shop CTA — after story, light card (no full-width purple bar) -->
-        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12" aria-labelledby="about-cta-heading">
-            <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 sm:p-10 lg:p-12 shadow-sm ring-1 ring-gray-100">
-                <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-purple-custom/10 blur-3xl" aria-hidden="true"></div>
-                <div class="pointer-events-none absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-amber-100/40 blur-3xl" aria-hidden="true"></div>
-                <div class="relative mx-auto max-w-2xl text-center">
-                    <h2 id="about-cta-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
-                        Ready to upgrade your setup?
-                    </h2>
-                    <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">
-                        Explore the latest devices, accessories, and deals—all in one place.
-                    </p>
-                    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
-                        <a href="products.php" class="inline-flex items-center justify-center gap-2 rounded-full bg-purple-custom px-8 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#4f0a4f] focus:outline-none focus:ring-2 focus:ring-purple-custom focus:ring-offset-2">
-                            View all products
-                            <i class="fas fa-arrow-right text-xs opacity-90"></i>
-                        </a>
-                        <a href="index.php" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-300 bg-gray-50 px-8 py-3.5 text-sm font-semibold text-gray-800 transition hover:border-purple-custom hover:bg-white hover:text-purple-custom focus:outline-none focus:ring-2 focus:ring-purple-custom focus:ring-offset-2">
-                            Return home
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pillars -->
-        <section class="bg-white border-y border-gray-100 py-8 sm:py-12 lg:py-16">
-            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="mx-auto max-w-2xl text-center mb-10 sm:mb-14">
-                    <p class="text-xs font-semibold tracking-widest uppercase text-gray-500">Why shop with us</p>
-                    <h2 class="mt-3 text-2xl sm:text-3xl font-bold text-gray-900">Built on trust and speed</h2>
-                    <p class="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed">
-                        Three principles guide every order: authenticity, delivery you can count on, and fair pricing.
-                    </p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                    <article class="group rounded-2xl border border-gray-100 bg-gray-50/80 p-6 sm:p-8 transition hover:border-purple-custom/30 hover:shadow-md hover:bg-white">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-custom text-white shadow-sm">
-                            <i class="fas fa-shield-halved text-lg" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="mt-5 text-lg font-bold text-gray-900">100% authentic products</h3>
-                        <p class="mt-3 text-sm text-gray-600 leading-relaxed">
-                            We work with authorized distributors so you receive genuine items with valid warranty support wherever applicable.
-                        </p>
-                    </article>
-                    <article class="group rounded-2xl border border-gray-100 bg-gray-50/80 p-6 sm:p-8 transition hover:border-purple-custom/30 hover:shadow-md hover:bg-white">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-custom text-white shadow-sm">
-                            <i class="fas fa-bolt text-lg" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="mt-5 text-lg font-bold text-gray-900">Fast delivery</h3>
-                        <p class="mt-3 text-sm text-gray-600 leading-relaxed">
-                            Streamlined logistics and clear tracking help your order reach you on time, with careful packaging every step of the way.
-                        </p>
-                    </article>
-                    <article class="group rounded-2xl border border-gray-100 bg-gray-50/80 p-6 sm:p-8 transition hover:border-purple-custom/30 hover:shadow-md hover:bg-white">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-custom text-white shadow-sm">
-                            <i class="fas fa-tags text-lg" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="mt-5 text-lg font-bold text-gray-900">Fair, competitive prices</h3>
-                        <p class="mt-3 text-sm text-gray-600 leading-relaxed">
-                            Transparent pricing and regular promotions mean better value on the devices and accessories you rely on.
-                        </p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mission & Vision -->
-        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                <div>
-                    <p class="text-xs font-semibold tracking-widest uppercase text-gray-500">Direction</p>
-                    <h2 class="mt-3 text-2xl sm:text-3xl font-bold text-gray-900">Mission &amp; vision</h2>
-                    <div class="mt-8 grid gap-4 sm:gap-6">
-                        <div class="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 shadow-sm">
-                            <div class="flex items-center gap-3 text-purple-custom">
-                                <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-custom/10">
-                                    <i class="fas fa-bullseye" aria-hidden="true"></i>
-                                </span>
-                                <h3 class="text-lg font-bold text-gray-900">Mission</h3>
-                            </div>
-                            <p class="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed">
-                                To make quality electronics and IT solutions accessible across Sri Lanka—through honest service, expert guidance, and a storefront that is easy to use on any device.
-                            </p>
-                        </div>
-                        <div class="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 shadow-sm">
-                            <div class="flex items-center gap-3 text-purple-custom">
-                                <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-custom/10">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                </span>
-                                <h3 class="text-lg font-bold text-gray-900">Vision</h3>
-                            </div>
-                            <p class="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed">
-                                To be the region’s most trusted technology marketplace—where businesses and individuals choose GeoTrans first for selection, after-sales care, and long-term partnership.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="rounded-2xl overflow-hidden shadow-lg ring-1 ring-gray-200 aspect-[4/3] sm:aspect-auto sm:min-h-[320px] lg:min-h-full lg:sticky lg:top-24">
-                    <img src="assets/images/about/about3.png.png" alt="City skyline representing growth and innovation"
-                        class="h-full w-full object-cover"
-                        loading="lazy">
-                </div>
-            </div>
-        </section>
-
-        <!-- Timeline -->
-        <section class="bg-gray-100/80 border-y border-gray-200/80 py-8 sm:py-12 lg:py-16">
-            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="max-w-2xl mb-10 sm:mb-14">
-                    <p class="text-xs font-semibold tracking-widest uppercase text-gray-500">Our journey</p>
-                    <h2 class="mt-3 text-2xl sm:text-3xl font-bold text-gray-900">From retail to a digital storefront</h2>
-                    <p class="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed">
-                        Decades of experience on the shop floor now power a modern e-commerce experience—same standards, wider reach.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-                    <ul class="relative ml-1 sm:ml-2 border-l-2 border-purple-custom/25 pl-8 sm:pl-10 space-y-0" role="list">
-                        <?php
-                        $milestonesLeft = [
-                            ['year' => '1997', 'text' => 'Opened our first retail location, focused on office equipment and consumer electronics.'],
-                            ['year' => '1998', 'text' => 'Expanded supplier partnerships to offer wider brand coverage and spare-part support.'],
-                            ['year' => '2000', 'text' => 'Launched corporate sales and on-site installation for small and medium businesses.'],
-                            ['year' => '2004', 'text' => 'Invested in inventory systems and after-sales service to shorten repair turnaround.'],
-                            ['year' => '2006', 'text' => 'Opened additional branches to serve growing demand across the western province.'],
-                            ['year' => '2010', 'text' => 'Formalized training for staff on emerging categories: networking, storage, and peripherals.'],
-                        ];
-                        foreach ($milestonesLeft as $m):
-                        ?>
-                        <li class="relative pb-8 last:pb-0">
-                            <span class="absolute -left-[1.15rem] sm:-left-[1.35rem] top-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full border-2 border-white bg-purple-custom shadow ring-2 ring-purple-custom/15" aria-hidden="true"></span>
-                            <time class="text-sm font-bold text-purple-custom tabular-nums"><?= htmlspecialchars($m['year']) ?></time>
-                            <p class="mt-1 text-sm text-gray-600 leading-relaxed"><?= htmlspecialchars($m['text']) ?></p>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <ul class="relative ml-1 sm:ml-2 border-l-2 border-purple-custom/25 pl-8 sm:pl-10 space-y-0" role="list">
-                        <?php
-                        $milestonesRight = [
-                            ['year' => '2016', 'text' => 'Merged retail operations under Deotrans Pvt Ltd with a unified quality and returns policy.'],
-                            ['year' => '2018', 'text' => 'Rolled out same-day dispatch for in-stock items across key Colombo postcodes.'],
-                            ['year' => '2019', 'text' => 'Added dedicated B2B quoting and volume pricing for schools and enterprises.'],
-                            ['year' => '2020', 'text' => 'Strengthened remote support and contactless pickup during changing market conditions.'],
-                            ['year' => '2021', 'text' => 'Upgraded warehousing and QC checks to reduce defects and improve pack accuracy.'],
-                            ['year' => '2022', 'text' => 'Launched GeoTrans online to bring the full catalogue to customers nationwide.'],
-                        ];
-                        foreach ($milestonesRight as $m):
-                        ?>
-                        <li class="relative pb-8 last:pb-0">
-                            <span class="absolute -left-[1.15rem] sm:-left-[1.35rem] top-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full border-2 border-white bg-purple-custom shadow ring-2 ring-purple-custom/15" aria-hidden="true"></span>
-                            <time class="text-sm font-bold text-purple-custom tabular-nums"><?= htmlspecialchars($m['year']) ?></time>
-                            <p class="mt-1 text-sm text-gray-600 leading-relaxed"><?= htmlspecialchars($m['text']) ?></p>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Leadership -->
-        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-12">
-                <div>
-                    <p class="text-xs font-semibold tracking-widest uppercase text-gray-500">Team</p>
-                    <h2 class="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">Leadership</h2>
-                    <p class="mt-3 text-sm text-gray-600 max-w-xl leading-relaxed">
-                        People behind the strategy that keeps GeoTrans moving forward.
-                    </p>
-                </div>
-                <a href="index.php" class="inline-flex items-center gap-2 text-sm font-semibold text-purple-custom hover:underline shrink-0">
-                    Back to home
-                    <i class="fas fa-arrow-right text-xs"></i>
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 sm:gap-8">
-                <?php
-                $leaders = [
-                    ['img' => 'assets/images/about/L1.png', 'name' => 'Henry Avery', 'role' => 'Director'],
-                    ['img' => 'assets/images/about/L2.png', 'name' => 'Michael Edward', 'role' => 'Executive'],
-                    ['img' => 'assets/images/about/L3.png', 'name' => 'Eden Hazard', 'role' => 'Chairman'],
-                    ['img' => 'assets/images/about/L4.png', 'name' => 'Robert Downey Jr', 'role' => 'Executive'],
-                    ['img' => 'assets/images/about/L5.png', 'name' => 'Nathan Drake', 'role' => 'Chairman'],
-                ];
-                foreach ($leaders as $L):
-                ?>
-                <article class="group text-center">
-                    <div class="overflow-hidden rounded-2xl bg-gray-100 shadow-sm ring-1 ring-gray-100 transition group-hover:shadow-md group-hover:ring-purple-custom/20">
-                        <div class="aspect-[3/4] sm:aspect-[4/5] overflow-hidden">
-                            <img src="<?= htmlspecialchars($L['img']) ?>" alt="<?= htmlspecialchars($L['name']) ?>"
-                                class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+        <!-- Who we are -->
+        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12" aria-labelledby="about-who">
+            <div class="about-gradient-border">
+                <div class="overflow-hidden rounded-[1.24rem] bg-slate-50 about-card ring-1 ring-slate-200/90">
+                    <div class="grid grid-cols-1 lg:grid-cols-2">
+                        <div class="relative min-h-[280px] sm:min-h-[380px] lg:min-h-[420px] order-2 lg:order-1">
+                            <img src="assets/images/about/close-up-man-shopping-with-laptop 1.png" alt=""
+                                class="absolute inset-0 h-full w-full object-cover"
                                 loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/35 to-slate-900/10"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
+                                <p class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-white/80">Geotrans</p>
+                                <p class="mt-2 text-xl sm:text-2xl font-bold leading-tight tracking-tight">Built on trust, built for productivity</p>
+                            </div>
+                        </div>
+                        <div class="order-1 lg:order-2 p-8 sm:p-10 lg:p-12 flex flex-col justify-center bg-gradient-to-br from-slate-50 to-white">
+                            <p class="about-kicker text-[10px] sm:text-xs">Identity</p>
+                            <h2 id="about-who" class="about-section-title mt-2">Who we are</h2>
+                            <p class="mt-5 text-slate-600 leading-relaxed text-sm sm:text-base">
+                                Geotrans (PVT) LTD is a trusted provider of office automation and IT solutions in Sri Lanka. Established in 2006 and incorporated on March 31, 2007, we have built a strong reputation for delivering reliable, high-quality technology solutions to businesses across the country.
+                            </p>
+                            <blockquote class="about-mission-quote mt-8 pl-5 py-1 text-slate-700 text-sm sm:text-base leading-relaxed bg-purple-custom/[0.04] rounded-r-xl">
+                                <strong class="text-purple-custom font-semibold">Our mission</strong> — to provide <span class="font-semibold text-slate-900">efficient, innovative, and dependable office automation products</span> that enhance productivity and streamline business operations.
+                            </blockquote>
                         </div>
                     </div>
-                    <h3 class="mt-4 text-sm font-bold text-gray-900"><?= htmlspecialchars($L['name']) ?></h3>
-                    <p class="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500"><?= htmlspecialchars($L['role']) ?></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- What we do -->
+        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12" aria-labelledby="about-services">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+                <div class="min-w-0 flex-1">
+                    <p class="about-kicker text-[10px] sm:text-xs">Capabilities</p>
+                    <h2 id="about-services" class="about-section-title mt-1">What we do</h2>
+                    <p class="mt-3 w-full max-w-full text-sm sm:text-base text-slate-600 leading-relaxed whitespace-nowrap overflow-x-auto overscroll-x-contain [scrollbar-width:thin]">
+                        We offer a comprehensive range of office automation and IT solutions, making us a <span class="font-semibold text-slate-900">one-stop destination for modern workplaces:</span>
+                    </p>
+                </div>
+                <div class="hidden sm:block h-px flex-1 max-w-xs bg-gradient-to-r from-purple-custom/30 to-transparent ml-8 mb-2" aria-hidden="true"></div>
+            </div>
+
+            <div class="rounded-3xl bg-white p-6 sm:p-8 lg:p-10 about-card ring-1 ring-slate-200/90">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
+                    <?php
+                    $services = [
+                        ['icon' => 'fa-print', 'label' => 'Photocopiers & Printers'],
+                        ['icon' => 'fa-copy', 'label' => 'Digital Duplicators'],
+                        ['icon' => 'fa-barcode', 'label' => 'Scanners'],
+                        ['icon' => 'fa-video', 'label' => 'Multimedia Projectors'],
+                        ['icon' => 'fa-laptop', 'label' => 'Desktop & Laptop Computers'],
+                        ['icon' => 'fa-chalkboard', 'label' => 'Interactive Smart Boards'],
+                        ['icon' => 'fa-cash-register', 'label' => 'POS Solutions'],
+                        ['icon' => 'fa-drafting-compass', 'label' => 'Plotters'],
+                        ['icon' => 'fa-battery-full', 'label' => 'UPS Systems'],
+                        ['icon' => 'fa-coins', 'label' => 'Cash Counters'],
+                        ['icon' => 'fa-desktop', 'label' => 'Monitors'],
+                        ['icon' => 'fa-layer-group', 'label' => 'Laminators'],
+                        ['icon' => 'fa-cut', 'label' => 'Paper Shredders'],
+                        ['icon' => 'fa-fill-drip', 'label' => 'Toners, Ribbons & Cartridges'],
+                        ['icon' => 'fa-keyboard', 'label' => 'All Computer Accessories'],
+                        ['icon' => 'fa-briefcase', 'label' => 'Business Software Solutions'],
+                    ];
+                    foreach ($services as $s):
+                    ?>
+                    <div class="about-service-tile flex items-center gap-3 rounded-2xl border border-slate-200/90 bg-slate-50/80 px-4 py-3.5 text-sm font-medium text-slate-700">
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-purple-custom ring-1 ring-slate-200/80 shadow-sm">
+                            <i class="fas <?= htmlspecialchars($s['icon']) ?>" aria-hidden="true"></i>
+                        </span>
+                        <span><?= htmlspecialchars($s['label']) ?></span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <figure class="group relative overflow-hidden rounded-2xl ring-1 ring-slate-200 aspect-[4/3] sm:aspect-auto sm:h-48">
+                        <img src="assets/images/about/44400a4882241d8412a5c1f4b0a9fc7ee567462d (1).png" alt="Office solutions" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                        <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent p-4 pt-12 text-xs font-semibold text-white">Solutions</figcaption>
+                    </figure>
+                    <figure class="group relative overflow-hidden rounded-2xl ring-1 ring-slate-200 aspect-[4/3] sm:aspect-auto sm:h-48">
+                        <img src="assets/images/about/about3.png.png" alt="Technology and service" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                        <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent p-4 pt-12 text-xs font-semibold text-white">Scale</figcaption>
+                    </figure>
+                    <figure class="group relative overflow-hidden rounded-2xl ring-1 ring-slate-200 aspect-[4/3] sm:aspect-auto sm:h-48">
+                        <img src="assets/images/about/close-up-man-shopping-with-laptop 1.png" alt="Business technology" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                        <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent p-4 pt-12 text-xs font-semibold text-white">Partnership</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise + Team (dark band) -->
+        <section class="mt-8 sm:mt-12 relative overflow-hidden bg-slate-900 text-slate-100" aria-labelledby="about-expertise">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(104,14,104,0.35),transparent)] pointer-events-none" aria-hidden="true"></div>
+            <div class="absolute inset-0 opacity-[0.07] bg-[url('data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 40L40 0H20L0 20M40 40V20L20 40\' fill=\'%23fff\' fill-opacity=\'1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E')]" aria-hidden="true"></div>
+            <div class="relative max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+                    <article class="flex h-full min-h-0 flex-col rounded-3xl border border-white/10 bg-white/[0.06] p-8 sm:p-10 backdrop-blur-md">
+                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-purple-300">Depth</p>
+                        <h2 id="about-expertise" class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Our expertise</h2>
+                        <p class="mt-5 text-slate-300 leading-relaxed text-sm sm:text-base">
+                            With years of industry experience, Geotrans (PVT) LTD combines <span class="font-semibold text-white">technical knowledge with practical business understanding</span> to deliver solutions that meet today’s demanding office environments.
+                        </p>
+                        <ul class="mt-auto space-y-4 pt-8">
+                            <li class="flex gap-4">
+                                <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-custom/30 text-purple-200"><i class="fas fa-circle-check text-sm" aria-hidden="true"></i></span>
+                                <span class="text-sm sm:text-base text-slate-200 leading-relaxed">Providing reliable and efficient technology</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-custom/30 text-purple-200"><i class="fas fa-circle-check text-sm" aria-hidden="true"></i></span>
+                                <span class="text-sm sm:text-base text-slate-200 leading-relaxed">Supporting businesses with scalable solutions</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-custom/30 text-purple-200"><i class="fas fa-circle-check text-sm" aria-hidden="true"></i></span>
+                                <span class="text-sm sm:text-base text-slate-200 leading-relaxed">Ensuring long-term value for our customers</span>
+                            </li>
+                        </ul>
+                    </article>
+                    <article class="flex h-full min-h-0 flex-col rounded-3xl border border-white/10 bg-white/[0.06] p-8 sm:p-10 backdrop-blur-md">
+                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-purple-300">People</p>
+                        <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Our team</h2>
+                        <p class="mt-5 text-slate-300 leading-relaxed text-sm sm:text-base">
+                            Our team consists of <span class="font-semibold text-white">qualified, skilled, and innovative professionals</span> who are dedicated to meeting the evolving needs of modern businesses.
+                        </p>
+                        <p class="mt-auto inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-custom/25 px-5 py-2.5 text-sm text-white/95">
+                            <i class="fas fa-star text-amber-300" aria-hidden="true"></i>
+                            <span class="font-bold text-white tracking-tight">Exceeding customer satisfaction at every step</span>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision + Values (vision first on small screens so it stays visible) -->
+        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" aria-labelledby="about-values">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10">
+                <article id="about-vision" class="about-vision-surface lg:col-span-2 order-1 lg:order-2 flex min-h-[260px] flex-col justify-between rounded-3xl p-8 text-white about-card ring-1 ring-slate-600/40 shadow-xl shadow-slate-950/40 sm:min-h-[300px] sm:p-10">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-purple-300 sm:text-xs">Geotrans</p>
+                        <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-white drop-shadow-sm">Our vision</h2>
+                        <p class="mt-5 text-sm leading-relaxed text-slate-200 sm:text-base">
+                            To become the <span class="font-semibold text-white">leading office automation supplier in Sri Lanka</span>, recognized for delivering <span class="font-semibold text-white">quality products and exceptional service.</span>
+                        </p>
+                    </div>
+                    <p class="mt-8 border-t border-white/15 pt-6 text-xs leading-relaxed text-slate-300 sm:text-sm">
+                        We align every solution with long-term business performance, service quality, and customer trust.
+                    </p>
                 </article>
-                <?php endforeach; ?>
+                <article class="lg:col-span-3 order-2 lg:order-1 rounded-3xl bg-white p-8 sm:p-10 about-card ring-1 ring-slate-200/90">
+                    <p class="about-kicker text-[10px] sm:text-xs">Geotrans</p>
+                    <h2 id="about-values" class="about-section-title mt-1">Our values</h2>
+                    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+                        <?php
+                        $values = [
+                            ['t' => 'Commitment', 'd' => 'Delivering dependable service'],
+                            ['t' => 'Customer value', 'd' => 'Putting customers first'],
+                            ['t' => 'Teamwork', 'd' => 'Working together for excellence'],
+                            ['t' => 'Professionalism', 'd' => 'Maintaining high standards'],
+                            ['t' => 'Flexibility & adaptability', 'd' => 'Embracing change'],
+                            ['t' => 'Social responsibility', 'd' => 'Acting responsibly in society'],
+                        ];
+                        foreach ($values as $v):
+                        ?>
+                        <li class="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 transition hover:border-purple-custom/20 hover:bg-purple-custom/[0.03]">
+                            <p class="text-sm font-bold text-slate-900"><?= htmlspecialchars($v['t']) ?></p>
+                            <p class="mt-1 text-xs sm:text-sm text-slate-600 leading-relaxed"><?= htmlspecialchars($v['d']) ?></p>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- Why choose + Commitment -->
+        <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" aria-labelledby="about-why">
+            <div class="overflow-hidden rounded-3xl bg-slate-50 about-card ring-1 ring-slate-200/90">
+                <div class="grid grid-cols-1 lg:grid-cols-12">
+                    <div class="lg:col-span-5 relative min-h-[220px] lg:min-h-0">
+                        <img src="assets/images/about/about3.png.png" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/70 to-slate-900/20 lg:from-slate-950/95 lg:via-slate-900/50 lg:to-transparent"></div>
+                        <div class="relative h-full flex flex-col justify-end p-8 lg:p-10 text-white">
+                            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">Why Geotrans</p>
+                            <p class="mt-2 text-lg font-bold leading-snug">The partner businesses choose for dependable office technology.</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-7 p-8 sm:p-10 lg:p-12">
+                        <h2 id="about-why" class="about-section-title">Why choose Geotrans (PVT) LTD</h2>
+                        <ul class="mt-8 grid gap-3 sm:grid-cols-2">
+                            <li class="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 text-sm text-slate-700">
+                                <i class="fas fa-layer-group mt-0.5 text-purple-custom shrink-0" aria-hidden="true"></i>
+                                <span>Wide range of office automation and IT products</span>
+                            </li>
+                            <li class="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 text-sm text-slate-700">
+                                <i class="fas fa-award mt-0.5 text-purple-custom shrink-0" aria-hidden="true"></i>
+                                <span>Trusted experience since 2006</span>
+                            </li>
+                            <li class="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 text-sm text-slate-700">
+                                <i class="fas fa-headset mt-0.5 text-purple-custom shrink-0" aria-hidden="true"></i>
+                                <span>Customer-focused service approach</span>
+                            </li>
+                            <li class="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 text-sm text-slate-700">
+                                <i class="fas fa-shield-halved mt-0.5 text-purple-custom shrink-0" aria-hidden="true"></i>
+                                <span>Reliable, high-quality solutions</span>
+                            </li>
+                            <li class="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 text-sm text-slate-700">
+                                <i class="fas fa-store mt-0.5 text-purple-custom shrink-0" aria-hidden="true"></i>
+                                <span>One-stop solution for business technology needs</span>
+                            </li>
+                        </ul>
+                        <div class="mt-10 rounded-2xl border border-purple-custom/15 bg-purple-custom/[0.06] p-6">
+                            <h3 class="text-base font-bold text-slate-900">Our commitment</h3>
+                            <p class="mt-2 text-sm sm:text-base text-slate-600 leading-relaxed">
+                                At Geotrans (PVT) LTD, we are committed to helping businesses grow by providing <span class="font-semibold text-slate-900">smart, reliable, and future-ready technology solutions</span> tailored to their needs.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

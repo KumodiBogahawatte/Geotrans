@@ -37,9 +37,8 @@ $items = $wishlist->getItems($_SESSION['user_id']);
 <body>
 <?php include 'includes/header.php'; ?>
 
-<main class="min-h-screen bg-gray-50 py-8">
-    <div class="container mx-auto px-4">
-        <div class="max-w-full mx-auto">
+<main class="min-h-screen bg-gray-50">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-8">My Wishlist</h1>
 
         <?php if (empty($items)): ?>
@@ -73,6 +72,7 @@ $items = $wishlist->getItems($_SESSION['user_id']);
                              alt="<?= htmlspecialchars($item['product_name']) ?>"
                              class="max-h-full object-contain">
                     </div>
+                    <hr class="border-0 border-t border-gray-200"><br>
 
                     <?php if ($item['discount_percentage'] > 0): ?>
                     <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold inline-block mb-2">

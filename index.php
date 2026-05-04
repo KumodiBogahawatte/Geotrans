@@ -3,7 +3,6 @@ require_once 'includes/helpers.php';
 require_once 'config/database.php';
 require_once 'classes/Product.php';
 require_once 'classes/Category.php';
-require_once 'classes/Brand.php';
 require_once 'classes/Testimonial.php';
 
 // ── Single DB connection for the whole page ──
@@ -12,7 +11,6 @@ $db = $database->getConnection();
 
 $product    = new Product();
 $category   = new Category();
-$brand      = new Brand();
 $testimonial = new Testimonial();
 
 // Categories strip — fixed order & labels (see Category::getHomeCategoriesDisplay)
@@ -21,8 +19,8 @@ $categoryProductCounts = $category->getProductCountsByCategoryIds(array_column($
 $featuredProducts = $product->getFeatured(6);
 $bestsellers     = $product->getBestsellers(20);
 $newArrivals     = $product->getNewArrivals(20);
-$brands          = $brand->getPopular(6);
 $testimonials    = $testimonial->getActive();
+$wishlistIdSet   = getWishlistProductIdSet();
 
 /** Optional full-bleed backgrounds per hero slide — place files in assets/images/home/ */
 $heroBgFile = static function (array $candidates) {
@@ -45,9 +43,9 @@ $laptopHeroBgUrl = $laptopHeroBgFile ?: 'assets/images/home/hero-background-3.jp
 $tonerHeroBgUrl = $tonerHeroBgFile ?: 'assets/images/home/hero-background-4.jpg';
 
 $preorderBannerBgFile = $heroBgFile([
-    'assets/images/home/Section - Pre Order Banner.png',
+    'assets/images/home/Section - Pre Order Banner.jpg',
 ]);
-$preorderBannerBgUrl = $preorderBannerBgFile ?: 'assets/images/home/Section - Pre Order Banner.png';
+$preorderBannerBgUrl = $preorderBannerBgFile ?: 'assets/images/home/Section - Pre Order Banner.jpg';
 
 // ── FEATURED BANNER PRODUCTS ──
 $bannerStmt = $db->prepare("
@@ -290,7 +288,7 @@ $specStmt = $db->prepare("
         }
 
         .hero-title {
-            font-size: clamp(1.5rem, 5vw, 4.2rem);
+            font-size: 2rem;
             font-weight: 800;
             line-height: 1.40;
             color: #fff;
@@ -338,7 +336,7 @@ $specStmt = $db->prepare("
         }
 
         .price-tag {
-            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-size: 2.25rem;
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.02em;
@@ -411,7 +409,7 @@ $specStmt = $db->prepare("
         }
 
         .hero-title .hl.blue {
-            background: linear-gradient(135deg,rgb(180, 39, 14),rgb(80, 20, 1));
+            background: linear-gradient(135deg, rgb(180, 39, 14), rgb(80, 20, 1));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -433,7 +431,19 @@ $specStmt = $db->prepare("
             width: 100%;
             max-width: 100%;
             margin: 0 auto;
-            height: clamp(420px, 55vw, 600px);
+            height: 480px;
+        }
+
+        @media (min-width: 768px) {
+            .banner-swiper.hero-swiper {
+                height: 540px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .banner-swiper.hero-swiper {
+                height: 600px;
+            }
         }
 
         .banner-swiper.hero-swiper .swiper-slide {
@@ -441,8 +451,9 @@ $specStmt = $db->prepare("
         }
 
         @media (min-width: 1024px) {
+
             /* Extra horizontal inset so hero content (and product stacks) sit off the viewport edge */
-            .banner-swiper.hero-swiper .hero-slide-bg > .max-w-full {
+            .banner-swiper.hero-swiper .hero-slide-bg>.max-w-full {
                 padding-left: 2rem !important;
                 padding-right: 2rem !important;
             }
@@ -578,7 +589,7 @@ $specStmt = $db->prepare("
         .hero-swiper .hero-unified-center .hero-title {
             font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
             font-weight: 800;
-            font-size: clamp(1.05rem, 2.65vw, 2.65rem);
+            font-size: 1.65rem;
             line-height: 1.40;
             white-space: nowrap;
             max-width: 100%;
@@ -588,19 +599,19 @@ $specStmt = $db->prepare("
 
         @media (min-width: 1024px) {
             .hero-swiper .hero-unified-center .hero-title {
-                font-size: clamp(1.35rem, 3.15vw, 3.35rem);
+                font-size: 2.45rem;
                 line-height: 1.28;
             }
         }
 
         @media (min-width: 1280px) {
             .hero-swiper .hero-unified-center .hero-title {
-                font-size: clamp(1.5rem, 3.4vw, 3.65rem);
+                font-size: 2.85rem;
             }
         }
 
         .hero-swiper .hero-unified-center .hero-desc {
-            font-size: clamp(0.8rem, 1.35vw, 1rem);
+            font-size: 0.9rem;
             line-height: 1.65;
             max-width: 100%;
         }
@@ -638,8 +649,7 @@ $specStmt = $db->prepare("
         .hero-unified-center .hero-chip {
             flex: 0 0 auto;
             white-space: nowrap;
-            font-size: clamp(8px, 1.85cqi, 11px);
-            font-size: clamp(8px, 0.72vw, 11px);
+            font-size: 10px;
             font-weight: 600;
             line-height: 1.4;
             letter-spacing: -0.015em;
@@ -647,6 +657,12 @@ $specStmt = $db->prepare("
             color: rgba(255, 255, 255, 0.94);
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.28);
+        }
+
+        @media (min-width: 640px) {
+            .hero-unified-center .hero-chip {
+                font-size: 11px;
+            }
         }
 
         .hero-slide-bg--jk .hero-unified-center .hero-chip.is-lit {
@@ -816,8 +832,7 @@ $specStmt = $db->prepare("
             max-width: 100%;
             white-space: normal;
             line-height: 1.55;
-            font-size: clamp(0.9rem, 2.2cqi, 1.2rem);
-            font-size: clamp(0.9rem, 2.4vw, 1.2rem);
+            font-size: 1.05rem;
         }
 
         .hero-unified-wing .hero-img-stack {
@@ -892,29 +907,33 @@ $specStmt = $db->prepare("
 
         @media (min-width: 1024px) {
             .hero-swiper-nav-desktop {
-                display: flex;
+                display: flex !important;
                 flex-direction: row;
                 justify-content: center;
                 align-items: center;
-                width: 100%;
-                max-width: 100%;
-                margin-top: 6.5rem;
+                position: absolute;
+                left: 50%;
+                top: 90%;
+                /* always lower, all screens */
+                transform: translate(-50%, -50%);
+                width: auto;
+                max-width: none;
+                margin-top: 0;
                 gap: 10px;
-            }
-
-            .banner-swiper.hero-swiper .hero-swiper-nav-desktop .swiper-button-next,
-            .banner-swiper.hero-swiper .hero-swiper-nav-desktop .swiper-button-prev {
-                position: static;
-                margin: 0;
-                top: auto;
-                left: auto;
-                right: auto;
-                bottom: auto;
+                z-index: 20;
+                pointer-events: none;
             }
         }
 
+        .banner-swiper.hero-swiper .hero-swiper-nav-desktop .swiper-button-next,
+        .banner-swiper.hero-swiper .hero-swiper-nav-desktop .swiper-button-prev {
+            position: static;
+            margin: 0;
+            pointer-events: auto;
+        }
+
         /* Inside .hero-slide-bg (mobile) so arrows sit on the hero image, not below the swiper */
-        .banner-swiper.hero-swiper .hero-slide-bg > .hero-swiper-nav-mobile {
+        .banner-swiper.hero-swiper .hero-slide-bg>.hero-swiper-nav-mobile {
             position: absolute;
             top: auto;
             bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
@@ -933,7 +952,7 @@ $specStmt = $db->prepare("
         }
 
         @media (min-width: 1024px) {
-            .banner-swiper.hero-swiper .hero-slide-bg > .hero-swiper-nav-mobile {
+            .banner-swiper.hero-swiper .hero-slide-bg>.hero-swiper-nav-mobile {
                 display: none !important;
             }
         }
@@ -950,8 +969,8 @@ $specStmt = $db->prepare("
             z-index: 14;
         }
 
-        .banner-swiper.hero-swiper .hero-slide-bg > .hero-swiper-nav-mobile .swiper-button-next,
-        .banner-swiper.hero-swiper .hero-slide-bg > .hero-swiper-nav-mobile .swiper-button-prev {
+        .banner-swiper.hero-swiper .hero-slide-bg>.hero-swiper-nav-mobile .swiper-button-next,
+        .banner-swiper.hero-swiper .hero-slide-bg>.hero-swiper-nav-mobile .swiper-button-prev {
             position: static;
             top: auto;
             bottom: auto;
@@ -1042,7 +1061,7 @@ $specStmt = $db->prepare("
         }
 
         .hero-rotator-inner {
-            font-size: clamp(1rem, 2vw, 1.35rem);
+            font-size: 1.2rem;
             font-weight: 700;
             color: #fff;
             line-height: 1.55;
@@ -1176,7 +1195,7 @@ $specStmt = $db->prepare("
 
         /* ── PRE-ORDER BANNER ── */
         .preorder-wrap {
-            --preorder-bg: url('assets/images/home/Section - Pre Order Banner.png');
+            --preorder-bg: url('assets/images/home/Section - Pre Order Banner.jpg');
             background-image:
                 var(--preorder-bg);
             background-size: cover;
@@ -1310,7 +1329,7 @@ $specStmt = $db->prepare("
             font-weight: 700;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color:rgb(255, 255, 255);
+            color: rgb(255, 255, 255);
         }
 
         .po-badge {
@@ -1334,9 +1353,9 @@ $specStmt = $db->prepare("
         }
 
         .po-title {
-            font-size: clamp(1.6rem, 2vw, 1.9rem);
+            font-size: 1.75rem;
             font-weight: 800;
-            color:rgb(255, 255, 255);
+            color: rgb(255, 255, 255);
             letter-spacing: -0.01em;
             line-height: 1.2;
             min-height: 2.4em;
@@ -1351,7 +1370,7 @@ $specStmt = $db->prepare("
         .po-spec {
             font-size: 12px;
             font-weight: 500;
-            color:rgb(255, 255, 255);
+            color: rgb(255, 255, 255);
             line-height: 1.7;
         }
 
@@ -1360,19 +1379,19 @@ $specStmt = $db->prepare("
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color:rgb(255, 255, 255);
+            color: rgb(255, 255, 255);
         }
 
         .po-price {
-            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-size: 1.75rem;
             font-weight: 800;
-            color:rgb(255, 255, 255);
+            color: rgb(255, 255, 255);
             letter-spacing: -0.02em;
         }
 
         .po-label {
             font-size: 13px;
-            color:rgb(255, 255, 255);
+            color: rgb(255, 255, 255);
         }
 
         .po-cta {
@@ -1393,7 +1412,7 @@ $specStmt = $db->prepare("
         }
 
         .po-cta:hover {
-            background:rgb(161, 33, 151);
+            background: rgb(161, 33, 151);
             color: #fff;
             border: 1px solid #8a1280;
             transform: translateY(-1px);
@@ -1476,12 +1495,14 @@ $specStmt = $db->prepare("
         } */
 
         .fb-wrap .fb-name {
+            margin-top: 10px;
             color: #111827 !important;
+            font-size: 16px;
         }
 
         .fb-wrap .fb-brand {
-            color:rgb(85, 89, 97) !important;
-            font-size: 12px;
+            color: rgb(60, 62, 66) !important;
+            font-size: 14px;
         }
 
         /* Fade transition */
@@ -1496,7 +1517,7 @@ $specStmt = $db->prepare("
         /* Product image float animation */
         .fb-img-wrap img {
             animation: fbHover 5s ease-in-out infinite alternate;
-            border: 3px solid rgba(27, 27, 27, 0.55);
+            /* border: 3px solid rgba(27, 27, 27, 0.55); */
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.75);
             padding: 6px;
@@ -1528,11 +1549,11 @@ $specStmt = $db->prepare("
 
         /* Eyebrow label */
         .fb-eyebrow {
-            font-size: 12px;
+            font-size: 20px;
             font-weight: 750;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.05rem;
             text-transform: uppercase;
-            color:rgb(73, 6, 68);
+            color: rgb(73, 6, 68);
         }
 
         /* Discount pill */
@@ -1565,9 +1586,9 @@ $specStmt = $db->prepare("
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.05em;
-            background: transparent;
+            background:rgb(231, 198, 227);
             border: 1px solid rgb(121, 121, 121);
-            color: #111827;
+            color: #8a1280;
             white-space: nowrap;
             transition: border-color 0.2s, color 0.2s, transform 0.2s;
         }
@@ -1593,8 +1614,8 @@ $specStmt = $db->prepare("
                 pointer-events: none;
             }
 
-            .banner-swiper.hero-swiper .hero-slide-bg > .hero-swiper-nav-mobile .swiper-button-next,
-            .banner-swiper.hero-swiper .hero-slide-bg > .hero-swiper-nav-mobile .swiper-button-prev {
+            .banner-swiper.hero-swiper .hero-slide-bg>.hero-swiper-nav-mobile .swiper-button-next,
+            .banner-swiper.hero-swiper .hero-slide-bg>.hero-swiper-nav-mobile .swiper-button-prev {
                 width: 32px;
                 height: 32px;
             }
@@ -1641,8 +1662,11 @@ $specStmt = $db->prepare("
 
             .banner-swiper.hero-swiper .hero-slide-bg {
                 height: auto;
-                min-height: 0;
+                min-height: 520px;
                 overflow: visible;
+                background-size: contain;
+                background-position: top center;
+                background-repeat: no-repeat;
             }
 
             .banner-swiper.hero-swiper .hero-slide-bg>.max-w-full {
@@ -1721,13 +1745,21 @@ $specStmt = $db->prepare("
             }
 
             .banner-swiper.hero-swiper .hero-unified-center .hero-chip {
-                font-size: clamp(10px, 2.8vw, 12px);
+                font-size: 11px;
                 line-height: 1.42;
                 padding: 5px 9px;
             }
 
             .banner-swiper.hero-swiper .hero-unified-center .hero-desc {
                 line-height: 1.72;
+            }
+
+            .banner-swiper.hero-swiper .hero-unified-center .hero-title {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+                line-height: 1.35;
+                font-size: 1.25rem;
             }
 
             .hero-swiper .swiper-hero-grid>div:first-child {
@@ -1833,18 +1865,18 @@ $specStmt = $db->prepare("
             }
 
             .banner-swiper.hero-swiper .hero-unified-center .hero-chip {
-                font-size: clamp(10px, 2.5vw, 11px);
+                font-size: 10px;
                 line-height: 1.42;
                 padding: 4px 8px;
             }
 
             .hero-swiper .hero-unified-center .hero-title {
-                font-size: clamp(0.95rem, 4.2vw, 1.65rem);
+                font-size: 1.35rem;
                 line-height: 1.32;
             }
 
             .hero-wrap .hero-title {
-                font-size: clamp(1.35rem, 7vw, 2.35rem);
+                font-size: 1.85rem;
             }
 
             .hero-wrap .price-note {
@@ -1861,14 +1893,14 @@ $specStmt = $db->prepare("
 
         @media (max-width: 1023px) {
             .hero-wrap {
-                min-height: clamp(520px, 92svh, 760px);
+                min-height: 680px;
                 overflow-x: hidden;
             }
         }
 
         @media (max-width: 639px) {
             .hero-wrap {
-                min-height: clamp(580px, 108svh, 900px);
+                min-height: 640px;
             }
         }
 
@@ -1931,6 +1963,8 @@ $specStmt = $db->prepare("
             border-radius: 50%;
             background: rgb(243 244 246);
             box-shadow: 0 4px 18px rgba(15, 23, 42, 0.1);
+            border: 2px solid transparent;
+            transition: border-color 0.35s ease, box-shadow 0.35s ease;
         }
 
         .home-cat-card .home-cat-img {
@@ -1941,7 +1975,8 @@ $specStmt = $db->prepare("
             height: 100%;
             object-fit: cover;
             object-position: center;
-            transition: transform 0.35s ease;
+            transform: scale(1);
+            transition: transform 0.4s ease;
         }
 
         .home-cat-card:hover {
@@ -1949,7 +1984,12 @@ $specStmt = $db->prepare("
         }
 
         .home-cat-card:hover .home-cat-img {
-            transform: scale(1.1);
+            transform: scale(1.12);
+        }
+
+        .home-cat-card:hover .home-cat-icon-wrap {
+            border-color: #5b0a91;
+            box-shadow: 0 8px 28px rgba(91, 10, 145, 0.22);
         }
 
         .home-cat-title {
@@ -1960,7 +2000,7 @@ $specStmt = $db->prepare("
         }
 
         .home-cat-count {
-            font-size: clamp(0.8125rem, 2vw, 0.9375rem);
+            font-size: 0.875rem;
             font-weight: 500;
             color: rgb(107 114 128);
             line-height: 1.2;
@@ -1997,7 +2037,7 @@ $specStmt = $db->prepare("
             }
 
             .home-cat-count {
-                font-size: clamp(0.875rem, 2.2vw, 1rem);
+                font-size: 0.9375rem;
             }
         }
 
@@ -2042,7 +2082,7 @@ $specStmt = $db->prepare("
             isolation: isolate;
             text-decoration: none;
             color: inherit;
-            background-image:   
+            background-image:
                 var(--promo-bg, linear-gradient(135deg, #1a1025 0%, #0f0a14 100%));
             background-size: cover;
             background-position: 100% center;
@@ -2081,7 +2121,7 @@ $specStmt = $db->prepare("
         }
 
         .promo-title {
-            font-size: clamp(1.2rem, 3.2vw, 1.6rem);
+            font-size: 1.45rem;
             font-weight: 800;
             line-height: 1.2;
             color: #f9fafb;
@@ -2133,249 +2173,268 @@ $specStmt = $db->prepare("
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 page-index">
 
     <!-- Include Header -->
     <?php include 'includes/header.php'; ?>
 
-    <!-- Swiper hero: 4 product slides -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <div class="banner-hero-wrap">
-        <!-- Swiper stack imgs: drop your files as assets/images/home/swiper/slide1-01.jpg … slide4-05.jpg (or edit src below). -->
-        <div class="banner-swiper swiper hero-swiper">
-            <div class="swiper-wrapper">
-                <!-- Slide 1 — John Keells Products -->
-                <div class="swiper-slide">
-                    <div class="hero-slide-bg hero-slide-bg--jk" style="--hero-bg: url('<?= htmlspecialchars($jkHeroBgUrl, ENT_QUOTES, 'UTF-8') ?>');">
-                        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-5 min-h-0 lg:h-full flex items-start lg:items-stretch relative z-10">
-                            <div class="hero-unified-grid w-full">
-                                <div class="hero-unified-wing hero-unified-wing--left anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-01.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-02.jpg', 'assets/images/products/69c0c07700714-Picture68.png')) ?>" alt="" class="stack-img active" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-03.jpg', 'assets/images/products/gallery-69bb8a7f39c4d-Picture69.png')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-04.jpg', 'assets/images/home/banner1.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-05.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="4">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-06.jpg', 'assets/images/home/banner2.jpeg')) ?>" alt="" class="stack-img behind" data-i="5">
-                                    </div>
-                                </div>
-                                <div class="hero-unified-center">
-                                    <div class="tag-pill anim-up">John Keells Products</div>
-                                    <h1 class="hero-title anim-up delay-1 mb-3">
-                                        <span class="hl hl-jk">John Keells</span> <span class="jk-title-rest">Range</span>
-                                    </h1>
-                                    <p class="hero-desc anim-up delay-2 mb-4">
-                                        Projectors, copiers, laptops, desktops &amp; more — hand-picked lines we stand behind.
-                                    </p>
-                                    <div class="hero-chip-row anim-up delay-3" data-hero-chips>
-                                        <span class="hero-chip" data-i="0">ViewSonic PA700W</span>
-                                        <span class="hero-chip is-lit" data-i="1">Toshiba e-STUDIO 2829A</span>
-                                        <span class="hero-chip" data-i="2">ASUS ExpertBook</span>
-                                        <span class="hero-chip" data-i="3">LT65S982EA</span>
-                                        <span class="hero-chip" data-i="4">RISO Digital Duplicator A3 SF9390</span>
-                                        <span class="hero-chip" data-i="5">Cassida ARTEMIS</span>
-                                    </div>
-                                    <div class="hero-rotator-wrap anim-up delay-4">
-                                        <div class="hero-rotator-label">Now showcasing</div>
-                                        <p class="hero-rotator-inner" data-hero-rot>Toshiba e-STUDIO 2829A</p>
-                                    </div>
-                                    <div class="hero-swiper-nav-desktop">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
-                                <div class="hero-unified-wing hero-unified-wing--right anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-02.jpg', 'assets/images/products/69c0c07700714-Picture68.png')) ?>" alt="" class="stack-img behind" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-03.jpg', 'assets/images/products/gallery-69bb8a7f39c4d-Picture69.png')) ?>" alt="" class="stack-img active" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-04.jpg', 'assets/images/home/banner1.jpeg')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-05.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-06.jpg', 'assets/images/home/banner2.jpeg')) ?>" alt="" class="stack-img behind" data-i="4">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide1-01.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="5">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hero-swiper-nav-mobile">
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 2 — Printers & Copiers -->
-                <div class="swiper-slide">
-                    <div class="hero-slide-bg hero-slide-bg--print" style="--hero-bg: url('<?= htmlspecialchars($printHeroBgUrl, ENT_QUOTES, 'UTF-8') ?>');">
-                        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-5 min-h-0 lg:h-full flex items-start lg:items-stretch relative z-10">
-                            <div class="hero-unified-grid w-full">
-                                <div class="hero-unified-wing hero-unified-wing--left anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-01.jpg', 'assets/images/home/banner2.jpeg')) ?>" alt="" class="stack-img active" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-02.jpg', 'assets/images/home/webcam.png')) ?>" alt="" class="stack-img behind" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-03.jpg', 'assets/images/home/banner3.jpeg')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-04.jpg', 'assets/images/home/banner1.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                    </div>
-                                </div>
-                                <div class="hero-unified-center">
-                                    <div class="tag-pill blue anim-up">Printers &amp; Copiers</div>
-                                    <h1 class="hero-title anim-up delay-1 mb-3">
-                                    Premium <span class="hl blue"><br>Printers &amp; Copiers</span>
-                                    </h1>
-                                    <p class="hero-desc anim-up delay-2 mb-4">
-                                        Ink tank, laser, and multifunction devices for home desks and busy offices.
-                                    </p>
-                                    <div class="hero-chip-row anim-up delay-3" data-hero-chips>
-                                        <span class="hero-chip is-lit" data-i="0">HP Smart Tank 580</span>
-                                        <span class="hero-chip" data-i="1">Epson Perfection V39 II</span>
-                                        <span class="hero-chip" data-i="2">Canon imageCLASS MF641Cw</span>
-                                        <span class="hero-chip" data-i="3">HP Color LaserJet Pro 3303sdw</span>
-                                    </div>
-                                    <div class="hero-rotator-wrap anim-up delay-4">
-                                        <div class="hero-rotator-label">Featured</div>
-                                        <p class="hero-rotator-inner" data-hero-rot>HP Smart Tank 580</p>
-                                    </div>
-                                    <div class="hero-swiper-nav-desktop">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
-                                <div class="hero-unified-wing hero-unified-wing--right anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-02.jpg', 'assets/images/home/webcam.png')) ?>" alt="" class="stack-img active" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-03.jpg', 'assets/images/home/banner3.jpeg')) ?>" alt="" class="stack-img behind" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-04.jpg', 'assets/images/home/banner1.jpeg')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide2-01.jpg', 'assets/images/home/banner2.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hero-swiper-nav-mobile">
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 3 — Laptops -->
-                <div class="swiper-slide">
-                    <div class="hero-slide-bg hero-slide-bg--laptop" style="--hero-bg: url('<?= htmlspecialchars($laptopHeroBgUrl, ENT_QUOTES, 'UTF-8') ?>');">
-                        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-5 min-h-0 lg:h-full flex items-start lg:items-stretch relative z-10">
-                            <div class="hero-unified-grid w-full">
-                                <div class="hero-unified-wing hero-unified-wing--left anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-01.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img active" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-02.jpg', 'assets/images/products/69c0c07700714-Picture68.png')) ?>" alt="" class="stack-img behind" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-03.jpg', 'assets/images/products/gallery-69bb8a7f39c4d-Picture69.png')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-04.jpg', 'assets/images/products/gallery-69bb8a7f3ad79-Picture68.png')) ?>" alt="" class="stack-img behind" data-i="3">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-05.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="4">
-                                    </div>
-                                </div>
-                                <div class="hero-unified-center">
-                                    <div class="tag-pill emerald anim-up">Laptops &amp; All-in-Ones</div>
-                                    <h1 class="hero-title anim-up delay-1 mb-3">
-                                        All <span class="hl emerald">laptops</span>
-                                    </h1>
-                                    <p class="hero-desc anim-up delay-2 mb-4">
-                                        Business notebooks, all-in-ones, and convertibles from brands you trust.
-                                    </p>
-                                    <div class="hero-chip-row anim-up delay-3" data-hero-chips>
-                                        <span class="hero-chip is-lit" data-i="0">HP 23.8″ All-in-One 24-cr0073d PC</span>
-                                        <span class="hero-chip" data-i="1">HP ProBook 460 G11</span>
-                                        <span class="hero-chip" data-i="2">Lenovo ThinkPad L16 Gen 2</span>
-                                        <span class="hero-chip" data-i="3">MSI Modern 15 F13MG</span>
-                                        <span class="hero-chip" data-i="4">LENOVO 2-IN-1 / YOGA</span>
-                                    </div>
-                                    <div class="hero-rotator-wrap anim-up delay-4">
-                                        <div class="hero-rotator-label">In the spotlight</div>
-                                        <p class="hero-rotator-inner" data-hero-rot>HP 23.8″ All-in-One 24-cr0073d PC</p>
-                                    </div>
-                                    <div class="hero-swiper-nav-desktop">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
-                                <div class="hero-unified-wing hero-unified-wing--right anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-02.jpg', 'assets/images/products/69c0c07700714-Picture68.png')) ?>" alt="" class="stack-img active" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-03.jpg', 'assets/images/products/gallery-69bb8a7f39c4d-Picture69.png')) ?>" alt="" class="stack-img behind" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-04.jpg', 'assets/images/products/gallery-69bb8a7f3ad79-Picture68.png')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-05.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide3-01.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hero-swiper-nav-mobile">
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 4 — Toners -->
-                <div class="swiper-slide">
-                    <div class="hero-slide-bg hero-slide-bg--toner" style="--hero-bg: url('<?= htmlspecialchars($tonerHeroBgUrl, ENT_QUOTES, 'UTF-8') ?>');">
-                        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-5 min-h-0 lg:h-full flex items-start lg:items-stretch relative z-10">
-                            <div class="hero-unified-grid w-full">
-                                <div class="hero-unified-wing hero-unified-wing--left anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-01.jpg', 'assets/images/home/banner3.jpeg')) ?>" alt="" class="stack-img active" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-02.jpg', 'assets/images/home/banner1.jpeg')) ?>" alt="" class="stack-img behind" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-03.jpg', 'assets/images/home/banner2.jpeg')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-04.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-05.jpg', 'assets/images/home/banner3.jpeg')) ?>" alt="" class="stack-img behind" data-i="4">
-                                    </div>
-                                </div>
-                                <div class="hero-unified-center">
-                                    <div class="tag-pill rose anim-up">Toners &amp; Cartridges</div>
-                                    <h1 class="hero-title anim-up delay-1 mb-3">
-                                        Genuine <span class="hl rose"><br>toner &amp; Cartridges</span> 
-                                    </h1>
-                                    <p class="hero-desc anim-up delay-2 mb-4">
-                                        OEM and compatible cartridges — crisp prints, predictable yields, less downtime.
-                                    </p>
-                                    <div class="hero-chip-row anim-up delay-3" data-hero-chips>
-                                        <span class="hero-chip is-lit" data-i="0">Epson T664 Ink Bottles</span>
-                                        <span class="hero-chip" data-i="1">Epson 141 Ink Cartridges</span>
-                                        <span class="hero-chip" data-i="2">HP 682 Ink Cartridge Series</span>
-                                        <span class="hero-chip" data-i="3">HP GT52 Magenta Ink Bottle</span>
-                                        <span class="hero-chip" data-i="4">Canon 045 Cyan / Magenta / Yellow</span>
-                                    </div>
-                                    <div class="hero-rotator-wrap anim-up delay-4">
-                                        <div class="hero-rotator-label">Rotating picks</div>
-                                        <p class="hero-rotator-inner" data-hero-rot>Epson T664 Ink Bottles</p>
-                                    </div>
-                                    <div class="hero-swiper-nav-desktop">
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
-                                <div class="hero-unified-wing hero-unified-wing--right anim-img">
-                                    <div class="hero-img-stack" data-hero-stack>
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-02.jpg', 'assets/images/home/banner1.jpeg')) ?>" alt="" class="stack-img active" data-i="0">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-03.jpg', 'assets/images/home/banner2.jpeg')) ?>" alt="" class="stack-img behind" data-i="1">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-04.jpg', 'assets/images/products/design.jpeg')) ?>" alt="" class="stack-img behind" data-i="2">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-05.jpg', 'assets/images/home/banner3.jpeg')) ?>" alt="" class="stack-img behind" data-i="3">
-                                        <img src="<?= htmlspecialchars(swiperAsset('assets/images/home/swiper/slide4-01.jpg', 'assets/images/home/banner3.jpeg')) ?>" alt="" class="stack-img behind" data-i="4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hero-swiper-nav-mobile">
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Simple Hero Image Carousel -->
+    <div class="simple-hero-carousel">
+        <div class="simple-hero-slide-wrap">
+            <img id="heroImage" src="assets/images/home/Accessories Slide 1.png" alt="Hero Banner" class="hero-image">
+            <div class="hero-carousel-dots" role="group" aria-label="Hero banner slides">
+                <button type="button" class="carousel-dot active" data-index="0" aria-label="Slide 1"></button>
+                <button type="button" class="carousel-dot" data-index="1" aria-label="Slide 2"></button>
+                <button type="button" class="carousel-dot" data-index="2" aria-label="Slide 3"></button>
+                <button type="button" class="carousel-dot" data-index="3" aria-label="Slide 4"></button>
+                <button type="button" class="carousel-dot" data-index="4" aria-label="Slide 5"></button>
             </div>
-            <!-- <div class="swiper-pagination"></div> -->
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="assets/js/banner-slider.js"></script>
+
+    <style>
+        /* Home: hero sits flush under header (no shadow gap; image aligned to top) */
+        .page-index #main-header {
+            box-shadow: none;
+        }
+
+        /* Hero height follows slide image (no tall empty band above categories) */
+        .simple-hero-carousel {
+            position: relative;
+            width: 100%;
+            min-height: 0;
+            margin-top: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            overflow: hidden;
+            background: transparent;
+            display: block;
+        }
+
+        /* Wrap = image + dots; dots position to this box so they sit on the image */
+        .simple-hero-slide-wrap {
+            position: relative;
+            width: 100%;
+            display: block;
+        }
+
+        .hero-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: calc(100vh - 8.5rem);
+            max-height: calc(100dvh - 8.5rem);
+            object-fit: contain;
+            object-position: top center;
+            opacity: 1;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .hero-image.fade-out {
+            opacity: 0;
+        }
+
+        /* bottom may be set inline by JS so dots sit on the bitmap, not in letterbox below */
+        .hero-carousel-dots {
+            position: absolute;
+            top: auto;
+            right: 1rem;
+            bottom: 1rem;
+            left: auto;
+            transform: none;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 10;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-sizing: border-box;
+            max-width: calc(100% - 2rem);
+        }
+
+        .carousel-dot {
+            flex: 0 0 auto;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .carousel-dot.active {
+            background: rgba(255, 255, 255, 1);
+            width: 28px;
+            border-radius: 5px;
+            border: 2px solid rgba(104, 14, 104, 0.8);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 6px rgba(104, 14, 104, 0.6);
+        }
+
+        .carousel-dot:hover {
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Small screens: same right-bottom corner as desktop; tighter dots + safe area */
+        @media (max-width: 640px) {
+            .hero-carousel-dots {
+                left: auto;
+                right: 0.5rem;
+                transform: none;
+                bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+                max-width: calc(100% - 0.75rem);
+                gap: 6px;
+                padding: 5px 8px;
+            }
+
+            .carousel-dot {
+                width: 8px;
+                height: 8px;
+                border-width: 1.5px;
+                min-width: 8px;
+                min-height: 8px;
+            }
+
+            .carousel-dot.active {
+                width: 22px;
+                min-width: 22px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hero-carousel-dots {
+                right: 0.375rem;
+                max-width: calc(100% - 0.5rem);
+                gap: 4px;
+                padding: 4px 6px;
+            }
+
+            .carousel-dot.active {
+                width: 18px;
+                min-width: 18px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-image {
+                max-height: calc(100vh - 10rem);
+                max-height: calc(100dvh - 10rem);
+            }
+        }
+    </style>
+
+    <script>
+        // Simple carousel image rotation
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroCarouselImages = [
+                'assets/images/home/JKOA Slide 1.png',
+                'assets/images/home/Printers Slide 1.png',
+                'assets/images/home/Laptop & Desktop Slide 1.png',
+                'assets/images/home/Consumables slide 1.png',
+                'assets/images/home/Accessories Slide 1.png'
+            ];
+
+            let currentImageIndex = 0;
+            const heroImage = document.getElementById('heroImage');
+            const heroSlideWrap = heroImage ? heroImage.closest('.simple-hero-slide-wrap') : null;
+            const heroDots = heroSlideWrap ? heroSlideWrap.querySelector('.hero-carousel-dots') : null;
+
+            function syncHeroDotsOnImage() {
+                if (!heroImage || !heroDots) return;
+                const W = heroImage.clientWidth;
+                const H = heroImage.clientHeight;
+                const iw = heroImage.naturalWidth;
+                const ih = heroImage.naturalHeight;
+                const rootRem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+                let inset = rootRem;
+                if (window.matchMedia('(max-width: 380px)').matches) {
+                    inset = 0.5 * rootRem;
+                } else if (window.matchMedia('(max-width: 640px)').matches) {
+                    inset = 0.625 * rootRem;
+                }
+                if (!W || !H || !iw || !ih) {
+                    heroDots.style.bottom = inset + 'px';
+                    return;
+                }
+                const scale = Math.min(W / iw, H / ih);
+                const displayedH = ih * scale;
+                const gapBelow = Math.max(0, H - displayedH);
+                heroDots.style.bottom = gapBelow + inset + 'px';
+            }
+
+            function updateDots() {
+                // Query dots fresh each time to ensure we get the latest DOM state
+                const carouselDots = document.querySelectorAll('.carousel-dot');
+                carouselDots.forEach((dot, index) => {
+                    if (index === currentImageIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            function rotateImage() {
+                if (heroImage) {
+                    heroImage.classList.add('fade-out');
+                    
+                    setTimeout(() => {
+                        currentImageIndex = (currentImageIndex + 1) % heroCarouselImages.length;
+                        heroImage.src = heroCarouselImages[currentImageIndex];
+                        updateDots();
+                        heroImage.classList.remove('fade-out');
+                        syncHeroDotsOnImage();
+                    }, 300);
+                }
+            }
+
+            // Each slide visible for 8 seconds before advancing
+            setInterval(rotateImage, 8000);
+
+            // Allow manual navigation via dots
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('carousel-dot')) {
+                    const index = Array.from(document.querySelectorAll('.carousel-dot')).indexOf(e.target);
+                    if (index !== -1) {
+                        currentImageIndex = index;
+                        if (heroImage) {
+                            heroImage.classList.add('fade-out');
+                            
+                            setTimeout(() => {
+                                heroImage.src = heroCarouselImages[currentImageIndex];
+                                updateDots();
+                                heroImage.classList.remove('fade-out');
+                                syncHeroDotsOnImage();
+                            }, 300);
+                        }
+                    }
+                }
+            });
+
+            heroImage.addEventListener('load', syncHeroDotsOnImage);
+            window.addEventListener('resize', syncHeroDotsOnImage);
+            if (heroSlideWrap && typeof ResizeObserver !== 'undefined') {
+                new ResizeObserver(syncHeroDotsOnImage).observe(heroSlideWrap);
+            }
+
+            // Initialize dots on page load
+            updateDots();
+            if (heroImage.complete) syncHeroDotsOnImage();
+        });
+    </script>
 
     <!-- Categories Section -->
-    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8 sm:py-12">
+    <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-8 sm:pt-4 sm:pb-12">
         <div class="flex items-center justify-between mb-6 sm:mb-8">
             <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Categories</h2>
             <a href="category.php" class="text-gray-600 hover:text-purple-custom font-medium">View All</a>
@@ -2405,24 +2464,24 @@ $specStmt = $db->prepare("
         </div>
 
         <!-- Featured Product Banners — 6 cards, 3 columns × 2 rows -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
 
             <!-- 1. Copiers & Printers -->
-            <div id="banner-copiers-printers" class="fb-wrap h-56 sm:h-64 flex items-center px-6 sm:px-10 gap-6">
-                <div class="fb-img-wrap w-32 sm:w-40 flex-shrink-0 flex justify-center">
-                    <img class="fb-img h-28 sm:h-36 object-contain" src="" alt="">
+            <div id="banner-copiers-printers" class="fb-wrap h-80 sm:h-72 flex items-center px-3 sm:px-10 gap-3 sm:gap-6">
+                <div class="fb-img-wrap w-30 sm:w-48 flex-shrink-0 flex justify-start p-0">
+                    <img class="fb-img h-48 sm:h-56 object-contain" src="" alt="">
                 </div>
-                <div class="fb-divider hidden sm:block mx-2 my-3"></div>
-                <div class="fb-content flex-1 flex flex-col gap-1 min-w-0">
-                    <div class="fb-eyebrow fb-category mb-0.5"></div>
-                    <div class="text-white font-bold text-sm sm:text-lg leading-tight fb-name"></div>
-                    <div class="text-white/60 text-xs font-medium fb-brand"></div>
+                <div class="fb-divider hidden sm:block ml-0 mr-0 my-3"></div>
+                <div class="fb-content flex-1 flex flex-col gap-2 min-w-0">
+                    <div class="fb-eyebrow fb-category mb-1"></div>
+                    <div class="text-white font-bold text-xs sm:text-sm leading-tight fb-name"></div>
+                    <div class="text-white/60 text-xs sm:text-sm font-medium fb-brand"></div>
                     <!--<div class="text-white/50 text-xs line-clamp-2 fb-desc mt-0.5"></div>-->
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <span class="fb-stock text-[10px] font-semibold"></span>
+                        <span class="fb-stock text-xs font-semibold"></span>
                         <span class="fb-discount-badge fb-discount hidden"></span>
                     </div>
-                    <div class="mt-3 flex items-center justify-between gap-4">
+                    <div class="mt-auto flex items-center justify-between gap-4">
                         <a class="fb-cta" href="#">
                             Shop Now
                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2435,21 +2494,21 @@ $specStmt = $db->prepare("
             </div>
 
             <!-- 2. Laptops -->
-            <div id="banner-laptops" class="fb-wrap h-56 sm:h-64 flex items-center px-6 sm:px-10 gap-6">
-                <div class="fb-img-wrap w-32 sm:w-40 flex-shrink-0 flex justify-center">
-                    <img class="fb-img h-28 sm:h-36 object-contain" src="" alt="">
+            <div id="banner-laptops" class="fb-wrap h-80 sm:h-72 flex items-center px-3 sm:px-10 gap-3 sm:gap-6">
+                <div class="fb-img-wrap w-40 sm:w-48 flex-shrink-0 flex justify-start p-0">
+                    <img class="fb-img h-48 sm:h-56 object-contain" src="" alt="">
                 </div>
-                <div class="fb-divider hidden sm:block mx-2 my-3"></div>
-                <div class="fb-content flex-1 flex flex-col gap-1 min-w-0">
-                    <div class="fb-eyebrow fb-category mb-0.5"></div>
-                    <div class="text-white font-bold text-sm sm:text-lg leading-tight fb-name"></div>
-                    <div class="text-white/60 text-xs font-medium fb-brand"></div>
+                <div class="fb-divider hidden sm:block ml-0 mr-0 my-3"></div>
+                <div class="fb-content flex-1 flex flex-col gap-2 min-w-0">
+                    <div class="fb-eyebrow fb-category mb-1"></div>
+                    <div class="text-white font-bold text-xs sm:text-sm leading-tight fb-name"></div>
+                    <div class="text-white/60 text-xs sm:text-sm font-medium fb-brand"></div>
                     <!--<div class="text-white/50 text-xs line-clamp-2 fb-desc mt-0.5"></div>-->
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <span class="fb-stock text-[10px] font-semibold"></span>
+                        <span class="fb-stock text-xs font-semibold"></span>
                         <span class="fb-discount-badge fb-discount hidden"></span>
                     </div>
-                    <div class="mt-3 flex items-center justify-between gap-4">
+                    <div class="mt-auto flex items-center justify-between gap-4">
                         <a class="fb-cta" href="#">
                             Shop Now
                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2462,21 +2521,21 @@ $specStmt = $db->prepare("
             </div>
 
             <!-- 3. Desktops -->
-            <div id="banner-desktops" class="fb-wrap h-56 sm:h-64 flex items-center px-6 sm:px-10 gap-6">
-                <div class="fb-img-wrap w-32 sm:w-40 flex-shrink-0 flex justify-center">
-                    <img class="fb-img h-28 sm:h-36 object-contain" src="" alt="">
+            <div id="banner-desktops" class="fb-wrap h-80 sm:h-72 flex items-center px-3 sm:px-10 gap-3 sm:gap-6">
+                <div class="fb-img-wrap w-40 sm:w-48 flex-shrink-0 flex justify-start p-0">
+                    <img class="fb-img h-48 sm:h-56 object-contain" src="" alt="">
                 </div>
-                <div class="fb-divider hidden sm:block mx-2 my-3"></div>
-                <div class="fb-content flex-1 flex flex-col gap-1 min-w-0">
-                    <div class="fb-eyebrow fb-category mb-0.5"></div>
-                    <div class="text-white font-bold text-sm sm:text-lg leading-tight fb-name"></div>
-                    <div class="text-white/60 text-xs font-medium fb-brand"></div>
+                <div class="fb-divider hidden sm:block ml-0 mr-0 my-3"></div>
+                <div class="fb-content flex-1 flex flex-col gap-2 min-w-0">
+                    <div class="fb-eyebrow fb-category mb-1"></div>
+                    <div class="text-white font-bold text-xs sm:text-sm leading-tight fb-name"></div>
+                    <div class="text-white/60 text-xs sm:text-sm font-medium fb-brand"></div>
                     <!--<div class="text-white/50 text-xs line-clamp-2 fb-desc mt-0.5"></div>-->
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <span class="fb-stock text-[10px] font-semibold"></span>
+                        <span class="fb-stock text-xs font-semibold"></span>
                         <span class="fb-discount-badge fb-discount hidden"></span>
                     </div>
-                    <div class="mt-3 flex items-center justify-between gap-4">
+                    <div class="mt-auto flex items-center justify-between gap-4">
                         <a class="fb-cta" href="#">
                             Shop Now
                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2489,21 +2548,21 @@ $specStmt = $db->prepare("
             </div>
 
             <!-- 4. Monitors -->
-            <div id="banner-monitors" class="fb-wrap h-56 sm:h-64 flex items-center px-6 sm:px-10 gap-6">
-                <div class="fb-img-wrap w-32 sm:w-40 flex-shrink-0 flex justify-center">
-                    <img class="fb-img h-28 sm:h-36 object-contain" src="" alt="">
+            <div id="banner-monitors" class="fb-wrap h-80 sm:h-72 flex items-center px-3 sm:px-10 gap-3 sm:gap-6">
+                <div class="fb-img-wrap w-40 sm:w-48 flex-shrink-0 flex justify-start p-0">
+                    <img class="fb-img h-48 sm:h-56 object-contain" src="" alt="">
                 </div>
-                <div class="fb-divider hidden sm:block mx-2 my-3"></div>
-                <div class="fb-content flex-1 flex flex-col gap-1 min-w-0">
-                    <div class="fb-eyebrow fb-category mb-0.5"></div>
-                    <div class="text-white font-bold text-sm sm:text-lg leading-tight fb-name"></div>
-                    <div class="text-white/60 text-xs font-medium fb-brand"></div>
+                <div class="fb-divider hidden sm:block ml-0 mr-0 my-3"></div>
+                <div class="fb-content flex-1 flex flex-col gap-2 min-w-0">
+                    <div class="fb-eyebrow fb-category mb-1"></div>
+                    <div class="text-white font-bold text-xs sm:text-sm leading-tight fb-name"></div>
+                    <div class="text-white/60 text-xs sm:text-sm font-medium fb-brand"></div>
                     <!--<div class="text-white/50 text-xs line-clamp-2 fb-desc mt-0.5"></div>-->
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <span class="fb-stock text-[10px] font-semibold"></span>
+                        <span class="fb-stock text-xs font-semibold"></span>
                         <span class="fb-discount-badge fb-discount hidden"></span>
                     </div>
-                    <div class="mt-3 flex items-center justify-between gap-4">
+                    <div class="mt-auto flex items-center justify-between gap-4">
                         <a class="fb-cta" href="#">
                             Shop Now
                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2516,21 +2575,21 @@ $specStmt = $db->prepare("
             </div>
 
             <!-- 5. Toners & Cartridges -->
-            <div id="banner-toners-cartridges" class="fb-wrap h-56 sm:h-64 flex items-center px-6 sm:px-10 gap-6">
-                <div class="fb-img-wrap w-32 sm:w-40 flex-shrink-0 flex justify-center">
-                    <img class="fb-img h-28 sm:h-36 object-contain" src="" alt="">
+            <div id="banner-toners-cartridges" class="fb-wrap h-80 sm:h-72 flex items-center px-3 sm:px-10 gap-3 sm:gap-6">
+                <div class="fb-img-wrap w-40 sm:w-48 flex-shrink-0 flex justify-start p-0">
+                    <img class="fb-img h-48 sm:h-56 object-contain" src="" alt="">
                 </div>
-                <div class="fb-divider hidden sm:block mx-2 my-3"></div>
-                <div class="fb-content flex-1 flex flex-col gap-1 min-w-0">
-                    <div class="fb-eyebrow fb-category mb-0.5"></div>
-                    <div class="text-white font-bold text-sm sm:text-lg leading-tight fb-name"></div>
-                    <div class="text-white/60 text-xs font-medium fb-brand"></div>
+                <div class="fb-divider hidden sm:block ml-0 mr-0 my-3"></div>
+                <div class="fb-content flex-1 flex flex-col gap-2 min-w-0">
+                    <div class="fb-eyebrow fb-category mb-1"></div>
+                    <div class="text-white font-bold text-xs sm:text-sm leading-tight fb-name"></div>
+                    <div class="text-white/60 text-xs sm:text-sm font-medium fb-brand"></div>
                     <!--<div class="text-white/50 text-xs line-clamp-2 fb-desc mt-0.5"></div>-->
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <span class="fb-stock text-[10px] font-semibold"></span>
+                        <span class="fb-stock text-xs font-semibold"></span>
                         <span class="fb-discount-badge fb-discount hidden"></span>
                     </div>
-                    <div class="mt-3 flex items-center justify-between gap-4">
+                    <div class="mt-auto flex items-center justify-between gap-4">
                         <a class="fb-cta" href="#">
                             Shop Now
                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2543,21 +2602,21 @@ $specStmt = $db->prepare("
             </div>
 
             <!-- 6. Accessories -->
-            <div id="banner-accessories" class="fb-wrap h-56 sm:h-64 flex items-center px-6 sm:px-10 gap-6">
-                <div class="fb-img-wrap w-32 sm:w-40 flex-shrink-0 flex justify-center">
-                    <img class="fb-img h-28 sm:h-36 object-contain" src="" alt="">
+            <div id="banner-accessories" class="fb-wrap h-80 sm:h-72 flex items-center px-3 sm:px-10 gap-3 sm:gap-6">
+                <div class="fb-img-wrap w-40 sm:w-48 flex-shrink-0 flex justify-start p-0">
+                    <img class="fb-img h-48 sm:h-56 object-contain" src="" alt="">
                 </div>
-                <div class="fb-divider hidden sm:block mx-2 my-3"></div>
-                <div class="fb-content flex-1 flex flex-col gap-1 min-w-0">
-                    <div class="fb-eyebrow fb-category mb-0.5"></div>
-                    <div class="text-white font-bold text-sm sm:text-lg leading-tight fb-name"></div>
-                    <div class="text-white/60 text-xs font-medium fb-brand"></div>
+                <div class="fb-divider hidden sm:block ml-0 mr-0 my-3"></div>
+                <div class="fb-content flex-1 flex flex-col gap-2 min-w-0">
+                    <div class="fb-eyebrow fb-category mb-1"></div>
+                    <div class="text-white font-bold text-xs sm:text-sm leading-tight fb-name"></div>
+                    <div class="text-white/60 text-xs sm:text-sm font-medium fb-brand"></div>
                     <!--<div class="text-white/50 text-xs line-clamp-2 fb-desc mt-0.5"></div>-->
                     <div class="flex items-center gap-3 mt-2 flex-wrap">
-                        <span class="fb-stock text-[10px] font-semibold"></span>
+                        <span class="fb-stock text-xs font-semibold"></span>
                         <span class="fb-discount-badge fb-discount hidden"></span>
                     </div>
-                    <div class="mt-3 flex items-center justify-between gap-4">
+                    <div class="mt-auto flex items-center justify-between gap-4">
                         <a class="fb-cta" href="#">
                             Shop Now
                             <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2571,34 +2630,37 @@ $specStmt = $db->prepare("
         </div>
     </section>
 
-    <!-- Top Laptop Brands Section -->
+    <!-- Top Brands — edit <a href> and <img src/alt> below manually (not from DB) -->
     <section class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">Top Brands</h2>
         <div class="relative overflow-hidden w-full">
             <div id="brands-marquee" class="flex items-center gap-12 animate-marquee-fast" style="will-change: transform; min-width: 1600px;">
-                <?php if (!empty($brands)): ?>
-                    <?php for ($loop = 0; $loop < 2; $loop++): // Duplicate for seamless loop 
-                    ?>
-                        <?php foreach ($brands as $b): ?>
-                            <a href="products.php?brand=<?= $b['brand_id'] ?>" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                                <img src="<?= !empty($b['brand_logo']) ? 'assets/images/brands/' . htmlspecialchars($b['brand_logo']) : 'assets/images/home/hp-300x300-1 1.png' ?>"
-                                    alt="<?= htmlspecialchars($b['brand_name']) ?>"
-                                    class="h-full object-contain mx-auto">
-                            </a>
-                        <?php endforeach; ?>
-                    <?php endfor; ?>
-                <?php else: ?>
-                    <?php for ($loop = 0; $loop < 2; $loop++): ?>
-                        <img src="assets/images/home/hp-300x300-1 1.png" alt="HP" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 2.png" alt="ASUS" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 3.png" alt="Lenovo" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 4.png" alt="MSI" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 5.png" alt="Dell" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 6.png" alt="Acer" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 7.png" alt="Brother" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                        <img src="assets/images/home/hp-300x300-1 8.png" alt="Samsung" class="h-20 sm:h-24 lg:h-32 flex-shrink-0 w-40 sm:w-48 lg:w-56 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
-                    <?php endfor; ?>
-                <?php endif; ?>
+                <?php for ($loop = 0; $loop < 2; $loop++): ?>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 1.png" alt="HP" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 2.png" alt="ASUS" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 3.png" alt="Lenovo" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 4.png" alt="MSI" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 5.png" alt="Dell" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 6.png" alt="Acer" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 7.png" alt="Brother" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                    <a href="products.php" class="h-20 sm:h-24 lg:h-32 w-40 sm:w-48 lg:w-56 flex items-center justify-center flex-shrink-0 transform transition duration-300 ease-out hover:scale-110 cursor-pointer">
+                        <img src="assets/images/home/hp-300x300-1 8.png" alt="Samsung" class="max-h-full max-w-full object-contain" width="200" height="120" loading="lazy" decoding="async">
+                    </a>
+                <?php endfor; ?>
             </div>
         </div>
         <style>
@@ -2666,12 +2728,21 @@ $specStmt = $db->prepare("
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
                 <?php foreach ($bestsellers as $p): ?>
-                    <div class="bg-white rounded-2xl p-5 relative shadow-xl hover:shadow-lg transition-shadow group flex flex-col">
-                        <button onclick="addToWishlist(<?= $p['product_id'] ?>)"
-                            class="absolute top-3 right-3 w-8 h-8 bg-white border border-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors z-10">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
+                    <?php
+                    $bsPid = (int) $p['product_id'];
+                    $bsInWish = isset($wishlistIdSet[$bsPid]);
+                    ?>
+                    <div class="bg-white rounded-2xl p-5 relative shadow-xl hover:shadow-2xl transition-shadow group flex flex-col border border-gray-200 hover:border-[#4f0a4f]">
+                        <button type="button"
+                            class="wishlist-btn wishlist-btn--icon absolute top-3 right-3 w-8 h-8 bg-white border border-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors z-10<?= $bsInWish ? ' in-wishlist' : '' ?>"
+                            data-product-id="<?= $bsPid ?>"
+                            aria-label="<?= $bsInWish ? 'Remove from wishlist' : 'Add to wishlist' ?>"
+                            aria-pressed="<?= $bsInWish ? 'true' : 'false' ?>">
+                            <?php if ($bsInWish): ?>
+                                <i class="fas fa-heart text-red-500" aria-hidden="true"></i>
+                            <?php else: ?>
+                                <i class="far fa-heart text-base" aria-hidden="true"></i>
+                            <?php endif; ?>
                         </button>
 
                         <a href="product_detail.php?id=<?= $p['product_id'] ?>" class="block flex flex-col h-full">

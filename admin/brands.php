@@ -52,7 +52,7 @@ if ($status_filter !== '') {
     $query .= " AND b.is_active = :status";
 }
 if ($search) {
-    $query .= " AND (b.brand_name LIKE :search OR b.description LIKE :search)";
+    $query .= " AND (b.brand_name LIKE :search OR b.brand_description LIKE :search)";
 }
 
 $query .= " GROUP BY b.brand_id ORDER BY b.brand_name ASC LIMIT 18446744073709551615";

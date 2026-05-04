@@ -166,4 +166,15 @@ function bannerMediaUrl($path) {
     }
     return rtrim($base, '/') . '/' . $path;
 }
+
+/** @return array<int, true> Current user's wishlist product IDs (empty if guest). */
+function getWishlistProductIdSet() {
+    $uid = getUserId();
+    if (!$uid) {
+        return [];
+    }
+    require_once __DIR__ . '/../classes/Wishlist.php';
+    $w = new Wishlist();
+    return $w->getProductIdSet($uid);
+}
 ?>

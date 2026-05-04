@@ -48,19 +48,31 @@ class WishlistManager {
             const data = await response.json();
 
             if (data.success) {
-                // Toggle visual state
+                const isDetail = button.classList.contains('wishlist-btn--detail');
+                // Toggle visual state (match PHP + wishlist-buttons.css)
                 if (isInWishlist) {
                     button.classList.remove('in-wishlist');
-                    button.innerHTML = '<i class="far fa-heart"></i>'; // Empty heart
+                    button.innerHTML = isDetail
+                        ? '<i class="far fa-heart"></i>'
+                        : '<i class="far fa-heart text-base" aria-hidden="true"></i>';
+                    button.setAttribute('aria-pressed', 'false');
+                    button.setAttribute('aria-label', 'Add to wishlist');
+                    button.setAttribute('title', 'Add to wishlist');
                     this.showNotification('Removed from wishlist', 'info');
                 } else {
                     button.classList.add('in-wishlist');
-                    button.innerHTML = '<i class="fas fa-heart text-red-500"></i>'; // Filled heart
+                    button.innerHTML = isDetail
+                        ? '<i class="fas fa-heart"></i>'
+                        : '<i class="fas fa-heart text-red-500" aria-hidden="true"></i>';
+                    button.setAttribute('aria-pressed', 'true');
+                    button.setAttribute('aria-label', 'Remove from wishlist');
+                    button.setAttribute('title', 'Remove from wishlist');
                     this.showNotification('Added to wishlist!', 'success');
                 }
 
-                // Update wishlist count in header
-                this.updateWishlistCount(data.wishlist_count);
+                if (data.wishlist_count !== undefined && data.wishlist_count !== null) {
+                    this.updateWishlistCount(data.wishlist_count);
+                }
             } else {
                 if (data.message === 'Please login first') {
                     this.showNotification('Please login to add items to wishlist', 'warning');
@@ -80,10 +92,14 @@ class WishlistManager {
     }
 
     updateWishlistCount(count) {
+        const n = Number(count);
+        if (Number.isNaN(n) || n < 0) {
+            return;
+        }
         const wishlistCounts = document.querySelectorAll('.wishlist-count');
         wishlistCounts.forEach(element => {
-            element.textContent = count;
-            if (count > 0) {
+            element.textContent = String(n);
+            if (n > 0) {
                 element.classList.remove('hidden');
             } else {
                 element.classList.add('hidden');
@@ -123,11 +139,40 @@ class WishlistManager {
     }
 }
 
-// Initialize wishlist manager when DOM is loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        window.wishlistManager = new WishlistManager();
-    });
-} else {
+function initWishlistManager() {
     window.wishlistManager = new WishlistManager();
+    /**
+     * Legacy onclick="addToWishlist(id)" support — delegates to WishlistManager.
+     * Prefer: <button type="button" class="wishlist-btn" data-product-id="...">
+     */
+    window.addToWishlist = async function (productId) {
+        const mgr = window.wishlistManager;
+        if (!mgr) {
+            return;
+        }
+        const id = String(productId);
+        const existing = document.querySelector('.wishlist-btn[data-product-id="' + id + '"]');
+        if (existing) {
+            await mgr.toggleWishlist(existing);
+            return;
+        }
+        const ghost = document.createElement('button');
+        ghost.type = 'button';
+        ghost.className = 'wishlist-btn';
+        ghost.dataset.productId = id;
+        ghost.setAttribute('aria-hidden', 'true');
+        ghost.style.cssText = 'position:fixed!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;';
+        document.body.appendChild(ghost);
+        try {
+            await mgr.toggleWishlist(ghost);
+        } finally {
+            ghost.remove();
+        }
+    };
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWishlistManager);
+} else {
+    initWishlistManager();
 }

@@ -57,13 +57,18 @@ class RecentlyViewed {
         $ids = $this->get($limit);
         $placeholders = str_repeat('?,', count($ids) - 1) . '?';
         
-        $query = "SELECT p.product_id, p.product_name, p.product_slug, p.main_image, 
-                  p.price, p.sale_price, c.category_name, b.brand_name
+        $query = "SELECT p.product_id, p.product_name, p.product_slug, p.main_image,
+                  p.price, p.sale_price, p.discount_percentage,
+                  c.category_name, b.brand_name,
+                  COALESCE(AVG(r.rating), 0) AS avg_rating,
+                  COUNT(r.review_id) AS review_count
                   FROM products p
                   LEFT JOIN categories c ON p.category_id = c.category_id
                   LEFT JOIN brands b ON p.brand_id = b.brand_id
+                  LEFT JOIN product_reviews r ON p.product_id = r.product_id AND r.is_approved = 1
                   WHERE p.product_id IN ($placeholders) AND p.is_active = 1
-                  ORDER BY FIELD(p.product_id, " . implode(',', $ids) . ")";
+                  GROUP BY p.product_id
+                  ORDER BY FIELD(p.product_id, " . implode(',', array_map('intval', $ids)) . ")";
         
         $stmt = $conn->prepare($query);
         $stmt->execute($ids);

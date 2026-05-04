@@ -318,6 +318,38 @@ CREATE TABLE IF NOT EXISTS testimonials (
     INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Add Default Color Fields to Products Table
+ALTER TABLE products ADD COLUMN default_color_name VARCHAR(100) DEFAULT 'Default' AFTER product_pdf;
+ALTER TABLE products ADD COLUMN default_color_hex VARCHAR(7) DEFAULT '#f0f0f0' AFTER default_color_name;
+
+-- Index for quick lookups on default color
+CREATE INDEX idx_default_color ON products(default_color_hex);
+
+-- Product Colors Table (for laptops, monitors, printers, desktops)
+CREATE TABLE IF NOT EXISTS product_colors (
+    color_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    color_name VARCHAR(100) NOT NULL,
+    color_hex VARCHAR(7) NOT NULL,
+    display_order INT DEFAULT 0,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    INDEX idx_product (product_id),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Color Images Table (images for each color)
+CREATE TABLE IF NOT EXISTS color_images (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    color_id INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    display_order INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (color_id) REFERENCES product_colors(color_id) ON DELETE CASCADE,
+    INDEX idx_color (color_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- SKU Generator
 UPDATE products p

@@ -223,10 +223,12 @@ include 'includes/header.php';
                 <?php foreach ($products as $product): ?>
                 <tr>
                     <td class="px-6 py-4">
-                        <img src="../assets/images/products/<?= htmlspecialchars($product['main_image']) ?>" 
-                             alt="<?= htmlspecialchars($product['product_name']) ?>"
-                             class="w-16 h-16 object-cover rounded"
-                             onerror="this.src='../assets/images/default.png'">
+                        <div class="w-16 h-16 rounded border border-gray-100 bg-gray-50 flex items-center justify-center p-0.5">
+                            <img src="../assets/images/products/<?= htmlspecialchars($product['main_image']) ?>" 
+                                 alt="<?= htmlspecialchars($product['product_name']) ?>"
+                                 class="max-w-full max-h-full object-contain"
+                                 onerror="this.src='../assets/images/default.png'">
+                        </div>
                     </td>
                     <td class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900"><?= htmlspecialchars($product['product_name']) ?></div>
@@ -287,9 +289,12 @@ include 'includes/header.php';
         <?php foreach ($products as $product): ?>
         <div class="bg-white rounded-lg shadow-md p-4">
             <div class="flex gap-4">
-                <img src="../<?= htmlspecialchars($product['main_image']) ?>" 
-                     alt="<?= htmlspecialchars($product['product_name']) ?>"
-                     class="w-20 h-20 object-cover rounded">
+                <div class="w-20 h-20 rounded border border-gray-100 bg-gray-50 flex items-center justify-center p-1 shrink-0">
+                    <img src="../assets/images/products/<?= htmlspecialchars($product['main_image']) ?>" 
+                         alt="<?= htmlspecialchars($product['product_name']) ?>"
+                         class="max-w-full max-h-full object-contain"
+                         onerror="this.src='../assets/images/default.png'">
+                </div>
                 <div class="flex-1">
                     <h3 class="font-semibold text-gray-900 mb-1"><?= htmlspecialchars($product['product_name']) ?></h3>
                     <div class="text-sm space-y-1">

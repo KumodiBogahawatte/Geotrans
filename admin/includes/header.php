@@ -48,7 +48,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold">Geotrans Admin</h1>
-                        <p class="text-sm text-gray-400 mt-1">Welcome, <?= htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['admin_email']) ?></p>
+                        <p class="text-sm text-gray-400 mt-1">Welcome, <?= htmlspecialchars($_SESSION['admin_name'] ?? $_SESSION['admin_email'] ?? 'Admin') ?></p>
                     </div>
                     <button id="closeSidebar" class="lg:hidden text-gray-400 hover:text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

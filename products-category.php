@@ -54,11 +54,11 @@ $total_pages = $result['total_pages'];
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #680e68; }
-        .bg-purple-custom { background-color: #680e68; }
-        .hover\:bg-purple-custom:hover { background-color: #680e68; }
-        .hover\:text-purple-custom:hover { color: #680e68; }
-        .border-purple-custom { border-color: #680e68; }
+        .text-purple-custom { color: #7D1074; }
+        .bg-purple-custom { background-color: #7D1074; }
+        .hover\:bg-purple-custom:hover { background-color: #7D1074; }
+        .hover\:text-purple-custom:hover { color: #7D1074; }
+        .border-purple-custom { border-color: #7D1074; }
         .line-clamp-2 {
             overflow: hidden;
             display: -webkit-box;
@@ -78,7 +78,6 @@ $total_pages = $result['total_pages'];
             <span class="mx-2">/</span>
             <span class="text-gray-900"><?= htmlspecialchars($categoryData['category_name']) ?></span>
         </nav>
-        <h2 class="text-2xl font-bold mb-6">Products in <?= htmlspecialchars($categoryData['category_name']) ?></h2>
         <div class="flex flex-col md:flex-row gap-6">
             <!-- Sidebar -->
             <div class="w-full md:w-64 flex-shrink-0 space-y-6">
@@ -105,7 +104,7 @@ $total_pages = $result['total_pages'];
                                 <label class="text-xs text-gray-600">Max Price</label>
                                 <input type="number" name="max_price" value="<?= $max_price ?? '' ?>" placeholder="500000" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
                             </div>
-                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-[#4f0a4f] text-sm">Apply</button>
+                            <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-purple-700 text-sm">Apply</button>
                         </div>
                     </form>
                 </div>
@@ -133,7 +132,8 @@ $total_pages = $result['total_pages'];
                 <?php endif; ?>
             </div>
             <!-- Main Content -->
-            <div class="flex-1">
+            <div class="flex-1 mt-0">
+                <h2 class="text-2xl font-bold mb-6">Products in <?= htmlspecialchars($categoryData['category_name']) ?></h2>
                 <!-- Toolbar -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <p class="text-sm text-gray-600">
@@ -174,7 +174,7 @@ $total_pages = $result['total_pages'];
                 <?php else: ?>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
                     <?php foreach ($products as $p): ?>
-                    <div class="bg-white rounded-2xl p-5 relative shadow-sm hover:shadow-lg transition-shadow group flex flex-col h-full">
+                    <div class="bg-white rounded-2xl p-5 relative shadow-lg hover:shadow-lg transition-shadow group flex flex-col h-full">
                         <a href="product_detail.php?id=<?= $p['product_id'] ?>" class="flex flex-col flex-grow">
                             <div class="flex items-center justify-center h-48 mb-4">
                                 <?php

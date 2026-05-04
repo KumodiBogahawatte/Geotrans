@@ -29,7 +29,7 @@ $cartCount = $cart->getCount($user_id, $session_id);
 
     <?php include 'includes/header.php'; ?>
 
-    <div class="max-w-full mx-auto px-4 py-8">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <h1 class="text-3xl font-bold mb-8">Shopping Cart (<?php echo $cartCount; ?> items)</h1>
 
         <?php if (empty($cartItems)): ?>
@@ -54,10 +54,10 @@ $cartCount = $cart->getCount($user_id, $session_id);
                         ?>
                         <div class="cart-item p-4 <?php echo $index < count($cartItems) - 1 ? 'border-b' : ''; ?>" data-cart-id="<?php echo $item['cart_id']; ?>">
                             <div class="flex gap-4">
-                                <a href="product_detail.php?slug=<?php echo $item['product_slug']; ?>" class="flex-shrink-0">
+                                <a href="product_detail.php?slug=<?php echo $item['product_slug']; ?>" class="flex h-28 w-28 flex-shrink-0 items-center justify-center rounded border border-gray-100 bg-gray-50">
                                     <img src="assets/images/products/<?php echo htmlspecialchars($item['main_image']); ?>" 
                                          alt="<?php echo htmlspecialchars($item['product_name']); ?>" 
-                                         class="w-24 h-24 object-cover rounded">
+                                         class="max-h-full max-w-full object-contain p-1">
                                 </a>
                                 
                                 <div class="flex-1">
@@ -127,7 +127,7 @@ $cartCount = $cart->getCount($user_id, $session_id);
                             </div> -->
                             <div class="border-t pt-3 flex justify-between text-lg">
                                 <span class="font-bold">Total:</span>
-                                <span class="font-bold text-purple-custom" id="cart-total"><?php echo formatPrice($cartTotal + 500); ?></span>
+                                <span class="font-bold text-purple-custom" id="cart-total"><?php echo formatPrice($cartTotal); ?></span>
                             </div>
                         </div>
 

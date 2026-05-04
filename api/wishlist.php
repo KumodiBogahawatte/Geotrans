@@ -25,7 +25,7 @@ switch ($action) {
         echo json_encode([
             'success' => $result,
             'message' => $result ? 'Added to wishlist' : 'Already in wishlist',
-            'wishlist_count' => $wishlist->getCount($user_id)
+            'wishlist_count' => (int) $wishlist->getCount($user_id)
         ]);
         break;
 
@@ -34,7 +34,7 @@ switch ($action) {
         echo json_encode([
             'success' => $result,
             'message' => 'Removed from wishlist',
-            'wishlist_count' => $wishlist->getCount($user_id)
+            'wishlist_count' => (int) $wishlist->getCount($user_id)
         ]);
         break;
 
@@ -50,7 +50,7 @@ switch ($action) {
         $count = $wishlist->getCount($user_id);
         echo json_encode([
             'success' => true,
-            'wishlist_count' => $count
+            'wishlist_count' => (int) $count
         ]);
         break;
 

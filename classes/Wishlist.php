@@ -89,4 +89,20 @@ class Wishlist {
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    /** @return array<int, true> product_id => true for quick isset() checks */
+    public function getProductIdSet($user_id) {
+        if (!$user_id) {
+            return [];
+        }
+        $query = "SELECT product_id FROM " . $this->table . " WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $set = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $set[(int) $row['product_id']] = true;
+        }
+        return $set;
+    }
 }

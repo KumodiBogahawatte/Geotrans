@@ -39,6 +39,8 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
 
 ?>
 
+<link rel="stylesheet" href="<?= htmlspecialchars($base_url) ?>assets/css/wishlist-buttons.css">
+
 <!-- Top Banner -->
 <div class="text-white py-2 px-6 sm:px-8 lg:px-20 text-center text-sm sticky top-0 z-[70]" style="background: linear-gradient(90deg, #64388D 0%, #5E0456 50%, #900684 100%); margin-bottom:0;">
     <span class="bg-white px-3 py-1 rounded-full font-semibold text-xs mr-2" style="color: #680e68;">Special</span>
@@ -52,7 +54,7 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
 <header id="main-header" class="shadow-sm sticky top-[unset] z-[80] transition-all duration-300 text-white" style="top:0; background: #f0e8f1;">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 text-white">
         <!-- Mobile Header -->
-        <div class="lg:hidden flex items-center justify-between">
+        <div class="lg:hidden flex items-center justify-between w-full">
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="p-2" style="color: #680e68;">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,9 +82,7 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    <?php if ($wishlist_count > 0): ?>
-                        <span class="wishlist-count absolute -top-2 -right-2 text-black text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #ffffff;"><?php echo $wishlist_count; ?></span>
-                    <?php endif; ?>
+                    <span class="wishlist-count absolute -top-2 -right-2 text-black text-xs rounded-full min-w-[1.25rem] h-5 px-0.5 flex items-center justify-center <?= (int) $wishlist_count > 0 ? '' : 'hidden' ?>" style="background-color: #ffffff;" aria-live="polite"><?= (int) $wishlist_count ?></span>
                 </a>
 
                 <!-- Cart -->
@@ -102,13 +102,13 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
         <div id="mobile-search" class="lg:hidden hidden mt-4">
             <div class="flex items-center">
                 <div class="relative">
-                    <button id="mobile-all-categories-btn" type="button" aria-haspopup="true" aria-expanded="false" class="bg-gray-100 border-0 rounded-l-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 flex items-center justify-between gap-1" style="--tw-ring-color: #680e68;">
+                    <button id="mobile-all-categories-btn" type="button" aria-haspopup="true" aria-expanded="false" class="bg-white border-2 rounded-l-lg px-3 py-2 text-sm text-gray-700 focus:outline-none flex items-center justify-between gap-2 font-medium h-10" style="--tw-ring-color: #680e68; min-width: 90px;">
                         <span>All</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="mobile-categories-dropdown" class="absolute left-0 top-full mt-1 w-64 bg-black shadow-lg z-50 p-2 rounded hidden max-h-72 overflow-y-auto">
+                    <div id="mobile-categories-dropdown" class="absolute left-0 top-full mt-2 w-64 bg-black shadow-lg z-50 p-2 rounded hidden max-h-72 overflow-y-auto">
                         <?php foreach ($categories as $cat): ?>
                             <?php $catCount = $productObj->getCount(['category_id' => $cat['category_id']]); ?>
                             <a href="<?= $base_url ?>products-category.php?category=<?= urlencode($cat['category_slug']) ?>" class="group flex items-center justify-between px-3 py-2 rounded hover:bg-purple-50 text-white hover:text-black transition">
@@ -120,9 +120,9 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
                 </div>
                 <div class="relative flex-1">
                     <input type="text" id="mobile-search-input" placeholder="Search anything..."
-                        class="w-full px-3 py-2 border-0 bg-gray-100 text-sm focus:outline-none focus:ring-2" style="--tw-ring-color: #680e68;" />
+                        class="w-full px-3 border-2 bg-white text-gray-900 text-sm focus:outline-none h-10" style="--tw-ring-color: #680e68; border-color: #E5E7EB;" />
                 </div>
-                <button onclick="performSearch('mobile')" class="text-white px-4 py-2 rounded-r-lg transition-colors" style="background-color: #680e68;" onmouseover="this.style.backgroundColor='#4f0a4f'" onmouseout="this.style.backgroundColor='#680e68'">
+                <button onclick="performSearch('mobile')" class="text-white px-3 py-2 rounded-r-lg transition-colors font-semibold h-10 flex items-center justify-center" style="background-color: #680e68;" onmouseover="this.style.backgroundColor='#4f0a4f'" onmouseout="this.style.backgroundColor='#680e68'">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -132,16 +132,16 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
         </div>
 
         <!-- Desktop Header -->
-        <div class="hidden lg:flex items-center justify-between relative">
+        <div class="hidden lg:flex flex-wrap items-center justify-between w-full gap-4">
             <!-- Logo -->
-            <div class="flex items-center">
+            <div class="flex items-center flex-shrink-0 min-w-[120px]">
                 <a href="<?= $base_url ?>index.php" class="flex items-center">
-                    <img src="<?= $base_url ?>assets/images/geotrans-logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-16 object-contain">
+                    <img src="<?= $base_url ?>assets/images/geotrans-logo.png" alt="GeoTrans Pvt Ltd Logo" class="h-16 object-contain max-w-full">
                 </a>
             </div>
 
             <!-- Search Bar -->
-            <div class="flex items-center flex-1 max-w-2xl search-container absolute left-1/3 right-1/3 top-6 -translate-x-1/2" style="margin-top: 0.5rem;">
+            <div class="flex flex-1 min-w-[220px] max-w-2xl mx-4 w-full">
                 <?php
                 require_once __DIR__ . '/../classes/Brand.php';
                 $brandObj = new Brand();
@@ -155,30 +155,30 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
                     }
                 }
                 ?>
-                <div class="relative" style="min-width:150px;">
-                    <button id="all-categories-btn" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="bg-gray-100 border-0 rounded-l-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 w-full flex items-center justify-between" style="--tw-ring-color: #680e68;">
+                <div class="relative min-w-[140px] max-w-[180px] w-full">
+                    <button id="all-categories-btn" type="button" aria-haspopup="true" aria-expanded="false" tabindex="0" class="bg-white border-2 rounded-l-lg px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 focus:outline-none w-full flex items-center justify-between font-medium h-10" style="--tw-ring-color: #680e68;">
                         <span>All Categories</span>
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="categories-dropdown" role="menu" aria-label="Categories" class="absolute left-1/2 top-full mt-1 bg-black shadow-lg z-50 p-4 grid gap-6 hidden"
-                        style="min-width:500px; width: 1000px; max-width:90vw; grid-template-columns: repeat(6, minmax(0, 1fr));">
+                    <div id="categories-dropdown" role="menu" aria-label="Categories" class="absolute left-1/2 top-full mt-2 bg-black shadow-lg z-50 p-4 grid gap-4 sm:gap-6 hidden"
+                        style="min-width:220px; width: 90vw; max-width:1000px; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
                         <?php foreach ($categories as $cat): ?>
                             <?php $catCount = $productObj->getCount(['category_id' => $cat['category_id']]); ?>
                             <a href="<?= $base_url ?>products-category.php?category=<?= urlencode($cat['category_slug']) ?>" role="menuitem" tabindex="0" class="group flex flex-col items-center p-2 hover:bg-purple-50 text-white hover:text-black rounded transition w-full focus:bg-purple-100 focus:outline-none">
-                                <img src="<?= $base_url ?>assets/images/categories/<?= htmlspecialchars($cat['category_image'] ?? 'default.png') ?>" alt="<?= htmlspecialchars($cat['category_name']) ?>" class="w-32 h-32 object-contain mb-2" />
+                                <img src="<?= $base_url ?>assets/images/categories/<?= htmlspecialchars($cat['category_image'] ?? 'default.png') ?>" alt="<?= htmlspecialchars($cat['category_name']) ?>" class="w-16 sm:w-24 md:w-28 h-16 sm:h-24 md:h-28 object-contain mb-2" />
                                 <span class="text-xs text-center font-medium text-white group-hover:text-black"><?= htmlspecialchars($cat['category_name']) ?> <span class="text-xs text-gray-400 group-hover:text-gray-600">(<?= $catCount ?>)</span></span>
                             </a>
                         <?php endforeach; ?>
                     </div>
                 </div>
-                <div class="relative flex-1 max-w-xs" style="min-width:500px;">
+                <div class="relative flex-1 min-w-[120px]">
                     <input type="text" id="search-input" placeholder="Search anything..."
-                        class="w-full px-4 py-2 border-0 bg-gray-100 text-sm focus:outline-none focus:ring-2" style="--tw-ring-color: #680e68;" />
+                        class="w-full px-3 sm:px-4 border-2 bg-white text-gray-900 text-xs sm:text-sm focus:outline-none h-10" style="--tw-ring-color: #680e68; border-color: #E5E7EB;" />
                     <div id="search-results" class="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50 hidden"></div>
                 </div>
-                <button onclick="performSearch()" class="text-white px-6 py-2 rounded-r-lg transition-colors" style="background-color: #680e68;" onmouseover="this.style.backgroundColor='#4f0a4f'" onmouseout="this.style.backgroundColor='#680e68'">
+                <button onclick="performSearch()" class="text-white px-3 sm:px-4 py-2 rounded-r-lg transition-colors font-semibold h-10 flex items-center justify-center" style="background-color: #680e68;" onmouseover="this.style.backgroundColor='#4f0a4f'" onmouseout="this.style.backgroundColor='#680e68'">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -187,7 +187,7 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
             </div>
 
             <!-- Right Side Icons & Contact -->
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-4 flex-shrink-0 min-w-[180px] mt-4 lg:mt-0">
                 <!-- Hotline -->
                 <div class="text-right hidden xl:block">
                     <div class="text-sm text-purple-800">Hotline 24/7</div>
@@ -200,9 +200,7 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    <?php if ($wishlist_count > 0): ?>
-                        <span class="wishlist-count absolute -top-2 -right-2 text-black text-xs rounded-full w-5 h-5 flex items-center justify-center" style="background-color: #ffffff;"><?php echo $wishlist_count; ?></span>
-                    <?php endif; ?>
+                    <span class="wishlist-count absolute -top-2 -right-2 text-black text-xs rounded-full min-w-[1.25rem] h-5 px-0.5 flex items-center justify-center <?= (int) $wishlist_count > 0 ? '' : 'hidden' ?>" style="background-color: #ffffff;" aria-live="polite"><?= (int) $wishlist_count ?></span>
                 </a>
 
                 <!-- Cart -->
@@ -307,7 +305,7 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
 
         <!-- Desktop Navigation -->
         <div class="hidden lg:block max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between py-3">
+            <div class="flex flex-wrap items-center justify-between py-3 w-full">
                 <ul class="flex items-center space-x-8 text-sm">
                     <li>
                         <a href="<?= $base_url ?>index.php" class="flex items-center" style="color: #680e68; font-size:larger" onmouseover="this.style.color='#bb88bb'" onmouseout="this.style.color='#680e68'">
@@ -325,7 +323,7 @@ if (file_exists(__DIR__ . '/../config/database.php')) {
                         </a>
                     </li>
                     <li>
-                        <a href="<?= $base_url ?>contact.php" style="color: #680e68; font-size:larger" onmouseover="this.style.color='#bb88bb'" onmouseout="this.style.color='#680e68'">Contact</a>
+                        <a href="<?= $base_url ?>contact.php" class="flex items-center" style="color: #680e68; font-size:larger" onmouseover="this.style.color='#bb88bb'" onmouseout="this.style.color='#680e68'">Contact</a>
                     </li>
                 </ul>
 

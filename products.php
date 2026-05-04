@@ -47,6 +47,7 @@ $total_pages = $result['total_pages'];
 // Get categories and brands for filters
 $categories = $categoryModel->getAll();
 $brands = $brandModel->getAll();
+$wishlistIdSet = getWishlistProductIdSet();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,17 +55,31 @@ $brands = $brandModel->getAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Geotrans</title>
+    <title>Products | Geotrans</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .text-purple-custom { color: #680e68; }
-        .bg-purple-custom { background-color: #680e68; }
-        .hover\:bg-purple-custom:hover { background-color: #4f0a4f; }
-        .hover\:text-purple-custom:hover { color: #4f0a4f; }
-        .border-purple-custom { border-color: #680e68; }
-        
+        .text-purple-custom {
+            color: #680e68;
+        }
+
+        .bg-purple-custom {
+            background-color: #680e68;
+        }
+
+        .hover\:bg-purple-custom:hover {
+            background-color: #4f0a4f;
+        }
+
+        .hover\:text-purple-custom:hover {
+            color: #4f0a4f;
+        }
+
+        .border-purple-custom {
+            border-color: #680e68;
+        }
+
         .line-clamp-2 {
             overflow: hidden;
             display: -webkit-box;
@@ -142,17 +157,17 @@ $brands = $brandModel->getAll();
 
         <!-- Top Banners -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <div class="bg-gray-800 rounded-lg p-8 flex items-center justify-between" style="background-color: #A1A4AD; background-image: url('assets/images/pages/headphones-displayed-against-dark-background.jpg'); background-size: cover; background-position: center;">
+            <div class="bg-gray-800 rounded-lg p-8 flex items-center justify-between" style="background-color: #A1A4AD; background-image: url('assets/images/pages/P1.png'); background-size: cover; background-position: center;">
                 <div class="text-white">
-                    <p class="text-sm uppercase mb-2">The best place to play</p>
-                    <h2 class="text-2xl font-bold mb-4">Noise Cancelling<br>Headphones</h2>
+                    <p class="text-sm uppercase mb-2">Power Your Productivity</p>
+                    <h2 class="text-2xl font-bold mb-4">High Performance<br>Laptops</h2>
                     <a href="products.php?category=15" class="bg-white text-black px-6 py-2 rounded-full text-sm font-medium inline-block">SHOP NOW</a>
                 </div>
             </div>
-            <div class="bg-red-700 rounded-lg p-8 flex items-center justify-between" style="background-image: url('assets/images/pages/homepod-mini-2.jpeg'); background-size: cover; background-position: center;">
+            <div class="bg-red-700 rounded-lg p-8 flex items-center justify-between" style="background-image: url('assets/images/pages/P2.png'); background-size: cover; background-position: center;">
                 <div class="text-white">
-                    <p class="text-sm uppercase mb-2">Introducing New</p>
-                    <h2 class="text-2xl font-bold mb-4">Apple Homepod<br>Mini</h2>
+                    <p class="text-sm uppercase mb-2">Print with Excellence</p>
+                    <h2 class="text-2xl font-bold mb-4">Office Printers<br>Solutions</h2>
                     <a href="products.php?brand=1" class="bg-white text-black px-6 py-2 rounded-full text-sm font-medium inline-block">SHOP NOW</a>
                 </div>
             </div>
@@ -162,22 +177,22 @@ $brands = $brandModel->getAll();
         <div class="mb-8">
             <h3 class="text-sm font-semibold uppercase mb-4">Categories</h3>
             <div class="grid grid-cols-5 md:grid-cols-10 gap-4">
-                <?php 
+                <?php
                 $homeCats = $categoryModel->getHomeCategoriesDisplay();
-                foreach ($homeCats as $cat): 
+                foreach ($homeCats as $cat):
                 ?>
-                <a href="products.php?category=<?= $cat['category_id'] ?>" class="products-cat-link text-center group flex flex-col items-center">
-                    <div class="products-cat-icon-wrap mb-2">
-                        <img src="<?= !empty($cat['category_image']) ? 'assets/images/categories/' . htmlspecialchars($cat['category_image']) : 'assets/images/categories/default.png' ?>" 
-                             alt="<?= htmlspecialchars($cat['display_name'] ?? $cat['category_name']) ?>" 
-                             class="products-cat-img"
-                             width="200"
-                             height="200"
-                             loading="lazy"
-                             decoding="async">
-                    </div>
-                    <p class="text-xs group-hover:text-purple-custom"><?= htmlspecialchars($cat['display_name'] ?? $cat['category_name']) ?></p>
-                </a>
+                    <a href="products.php?category=<?= $cat['category_id'] ?>" class="products-cat-link text-center group flex flex-col items-center">
+                        <div class="products-cat-icon-wrap mb-2">
+                            <img src="<?= !empty($cat['category_image']) ? 'assets/images/categories/' . htmlspecialchars($cat['category_image']) : 'assets/images/categories/default.png' ?>"
+                                alt="<?= htmlspecialchars($cat['display_name'] ?? $cat['category_name']) ?>"
+                                class="products-cat-img"
+                                width="200"
+                                height="200"
+                                loading="lazy"
+                                decoding="async">
+                        </div>
+                        <p class="text-xs group-hover:text-purple-custom"><?= htmlspecialchars($cat['display_name'] ?? $cat['category_name']) ?></p>
+                    </a>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -205,7 +220,7 @@ $brands = $brandModel->getAll();
 
                 <!-- Price + Brands: desktop in sidebar; mobile = slide-over (opened via toolbar) -->
                 <div id="product-filters-drawer"
-                     class="fixed top-0 right-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto transition-transform duration-300 ease-out translate-x-full md:translate-x-0 md:static md:z-auto md:h-auto md:max-w-none md:shadow-none md:overflow-visible">
+                    class="fixed top-0 right-0 z-[60] h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto transition-transform duration-300 ease-out translate-x-full md:translate-x-0 md:static md:z-auto md:h-auto md:max-w-none md:shadow-none md:overflow-visible">
                     <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-3 md:hidden">
                         <h2 class="text-base font-semibold text-gray-900">Filters</h2>
                         <button type="button" id="mobile-filters-close" class="flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100" aria-label="Close filters">
@@ -218,30 +233,30 @@ $brands = $brandModel->getAll();
                             <h3 class="font-semibold mb-4">PRICE RANGE</h3>
                             <form id="priceFilterForm" method="GET" action="products.php">
                                 <?php if ($category_id): ?>
-                                <input type="hidden" name="category" value="<?= $category_id ?>">
+                                    <input type="hidden" name="category" value="<?= $category_id ?>">
                                 <?php endif; ?>
                                 <?php if ($brand_id): ?>
-                                <input type="hidden" name="brand" value="<?= $brand_id ?>">
+                                    <input type="hidden" name="brand" value="<?= $brand_id ?>">
                                 <?php endif; ?>
                                 <?php if ($search): ?>
-                                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                                    <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                                 <?php endif; ?>
                                 <?php if ($sort_by): ?>
-                                <input type="hidden" name="sort" value="<?= $sort_by ?>">
+                                    <input type="hidden" name="sort" value="<?= $sort_by ?>">
                                 <?php endif; ?>
 
                                 <div class="space-y-3">
                                     <div>
                                         <label class="text-xs text-gray-600">Min Price</label>
                                         <input type="number" name="min_price" value="<?= $min_price ?? '' ?>"
-                                               placeholder="0"
-                                               class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                            placeholder="0"
+                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
                                     </div>
                                     <div>
                                         <label class="text-xs text-gray-600">Max Price</label>
                                         <input type="number" name="max_price" value="<?= $max_price ?? '' ?>"
-                                               placeholder="500000"
-                                               class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                            placeholder="500000"
+                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
                                     </div>
                                     <button type="submit" class="w-full bg-purple-custom text-white py-2 rounded hover:bg-[#4f0a4f] text-sm">
                                         Apply
@@ -255,27 +270,27 @@ $brands = $brandModel->getAll();
                             <h3 class="font-semibold mb-4">BRANDS</h3>
                             <ul class="space-y-2 text-sm bg-gray-200 rounded-lg p-4 max-h-[50vh] overflow-y-auto md:max-h-none">
                                 <?php foreach ($brands as $b): ?>
-                                <li>
-                                    <label class="flex items-center cursor-pointer hover:text-purple-custom">
-                                        <input type="checkbox"
-                                               class="brand-filter mr-2 rounded text-purple-custom focus:ring-purple-custom"
-                                               value="<?= $b['brand_id'] ?>"
-                                               <?= $brand_id == $b['brand_id'] ? 'checked' : '' ?>>
-                                        <span class="<?= $brand_id == $b['brand_id'] ? 'text-purple-custom font-semibold' : '' ?>">
-                                            <?= htmlspecialchars($b['brand_name']) ?>
-                                        </span>
-                                    </label>
-                                </li>
+                                    <li>
+                                        <label class="flex items-center cursor-pointer hover:text-purple-custom">
+                                            <input type="checkbox"
+                                                class="brand-filter mr-2 rounded text-purple-custom focus:ring-purple-custom"
+                                                value="<?= $b['brand_id'] ?>"
+                                                <?= $brand_id == $b['brand_id'] ? 'checked' : '' ?>>
+                                            <span class="<?= $brand_id == $b['brand_id'] ? 'text-purple-custom font-semibold' : '' ?>">
+                                                <?= htmlspecialchars($b['brand_name']) ?>
+                                            </span>
+                                        </label>
+                                    </li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
 
                         <?php if ($category_id || $brand_id || $min_price || $max_price): ?>
-                        <div class="md:hidden">
-                            <a href="products.php" class="text-sm text-red-600 hover:text-red-700 font-semibold inline-block">
-                                Clear all filters
-                            </a>
-                        </div>
+                            <div class="md:hidden">
+                                <a href="products.php" class="text-sm text-red-600 hover:text-red-700 font-semibold inline-block">
+                                    Clear all filters
+                                </a>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -301,19 +316,19 @@ $brands = $brandModel->getAll();
                             <?php if ($bannerMediaUrl && preg_match('/\.(mp4|webm|ogg)$/i', (string) $banner['banner_media'])): ?>
                                 <video src="<?= htmlspecialchars($bannerMediaUrl, ENT_QUOTES, 'UTF-8') ?>" controls class="w-full h-auto max-w-full"></video>
                                 <button type="button"
-                                        class="js-media-lightbox-trigger mt-2 text-sm font-medium text-purple-custom hover:underline w-full text-center"
-                                        data-lightbox-type="video"
-                                        data-lightbox-src="<?= htmlspecialchars($bannerMediaUrl, ENT_QUOTES, 'UTF-8') ?>">
+                                    class="js-media-lightbox-trigger mt-2 text-sm font-medium text-purple-custom hover:underline w-full text-center"
+                                    data-lightbox-type="video"
+                                    data-lightbox-src="<?= htmlspecialchars($bannerMediaUrl, ENT_QUOTES, 'UTF-8') ?>">
                                     View larger
                                 </button>
                             <?php elseif ($bannerMediaUrl): ?>
                                 <div class="js-media-lightbox-trigger cursor-pointer rounded-sm focus:outline-none focus:ring-2 focus:ring-purple-custom focus:ring-offset-2"
-                                     role="button"
-                                     tabindex="0"
-                                     aria-label="View banner larger"
-                                     data-lightbox-type="image"
-                                     data-lightbox-src="<?= htmlspecialchars($bannerMediaUrl, ENT_QUOTES, 'UTF-8') ?>"
-                                     data-lightbox-alt="<?= htmlspecialchars($banner['banner_title'] ?? 'Banner', ENT_QUOTES, 'UTF-8') ?>">
+                                    role="button"
+                                    tabindex="0"
+                                    aria-label="View banner larger"
+                                    data-lightbox-type="image"
+                                    data-lightbox-src="<?= htmlspecialchars($bannerMediaUrl, ENT_QUOTES, 'UTF-8') ?>"
+                                    data-lightbox-alt="<?= htmlspecialchars($banner['banner_title'] ?? 'Banner', ENT_QUOTES, 'UTF-8') ?>">
                                     <img src="<?= htmlspecialchars($bannerMediaUrl, ENT_QUOTES, 'UTF-8') ?>" alt="" class="block w-full h-auto max-w-full object-contain pointer-events-none">
                                 </div>
                             <?php else: ?>
@@ -322,7 +337,7 @@ $brands = $brandModel->getAll();
                             <div class="text-center mt-3 px-1">
                                 <div class="font-semibold text-lg mb-1"><?= htmlspecialchars($banner['banner_title']) ?></div>
                                 <?php if ($banner['banner_link']): ?>
-                                <a href="<?= htmlspecialchars($banner['banner_link']) ?>" class="text-purple-custom hover:underline text-sm">Visit Link</a>
+                                    <a href="<?= htmlspecialchars($banner['banner_link']) ?>" class="text-purple-custom hover:underline text-sm">Visit Link</a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -330,12 +345,12 @@ $brands = $brandModel->getAll();
                 </div>
 
                 <?php if ($category_id || $brand_id || $min_price || $max_price): ?>
-                <!-- Clear Filters -->
-                <div>
-                    <a href="products.php" class="text-sm text-red-600 hover:text-red-700 font-semibold">
-                        Clear All Filters
-                    </a>
-                </div>
+                    <!-- Clear Filters -->
+                    <div>
+                        <a href="products.php" class="text-sm text-red-600 hover:text-red-700 font-semibold">
+                            Clear All Filters
+                        </a>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -349,19 +364,19 @@ $brands = $brandModel->getAll();
                     <div class="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
                         <form method="GET" action="products.php" class="flex flex-wrap items-center gap-2 min-w-0 flex-1 sm:flex-initial">
                             <?php if ($category_id): ?>
-                            <input type="hidden" name="category" value="<?= $category_id ?>">
+                                <input type="hidden" name="category" value="<?= $category_id ?>">
                             <?php endif; ?>
                             <?php if ($brand_id): ?>
-                            <input type="hidden" name="brand" value="<?= $brand_id ?>">
+                                <input type="hidden" name="brand" value="<?= $brand_id ?>">
                             <?php endif; ?>
                             <?php if ($min_price): ?>
-                            <input type="hidden" name="min_price" value="<?= $min_price ?>">
+                                <input type="hidden" name="min_price" value="<?= $min_price ?>">
                             <?php endif; ?>
                             <?php if ($max_price): ?>
-                            <input type="hidden" name="max_price" value="<?= $max_price ?>">
+                                <input type="hidden" name="max_price" value="<?= $max_price ?>">
                             <?php endif; ?>
                             <?php if ($search): ?>
-                            <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                             <?php endif; ?>
 
                             <label class="text-sm text-gray-600 shrink-0">Sort by:</label>
@@ -382,119 +397,125 @@ $brands = $brandModel->getAll();
 
                 <!-- Products Grid -->
                 <?php if (empty($products)): ?>
-                <div class="text-center py-12">
-                    <p class="text-gray-600 text-lg mb-4">No products found</p>
-                    <a href="products.php" class="text-purple-custom hover:underline">Clear filters and browse all products</a>
-                </div>
-                <?php else: ?>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-                    <?php foreach ($products as $p): ?>
-                    <div class="bg-transparent relative group flex flex-col h-full">
-                        <!-- Wishlist Button -->
-                        <button class="wishlist-btn absolute top-2 right-2 w-8 h-8 bg-white/90 text-gray-600 rounded-full flex items-center justify-center shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors z-10"
-                                data-product-id="<?= $p['product_id'] ?>">
-                            <i class="far fa-heart"></i>
-                        </button>
-
-                        <?php
-                        $mainImage = !empty($p['main_image']) ? 'assets/images/products/' . $p['main_image'] : 'assets/images/categories/default.png';
-                        $mainImageUrl = function_exists('bannerMediaUrl') ? bannerMediaUrl($mainImage) : $mainImage;
-                        ?>
-                        <div class="js-media-lightbox-trigger w-full mb-3 cursor-pointer rounded-sm focus-within:ring-2 focus-within:ring-purple-custom focus-within:ring-offset-2"
-                             role="button"
-                             tabindex="0"
-                             aria-label="View product image larger"
-                             data-lightbox-type="image"
-                             data-lightbox-src="<?= htmlspecialchars($mainImageUrl, ENT_QUOTES, 'UTF-8') ?>"
-                             data-lightbox-alt="<?= htmlspecialchars($p['product_name'], ENT_QUOTES, 'UTF-8') ?>">
-                            <img src="<?= htmlspecialchars($mainImageUrl, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($p['product_name']) ?>" class="block w-full h-auto max-w-full object-contain pointer-events-none">
-                        </div>
-                        <a href="product_detail.php?id=<?= $p['product_id'] ?>" class="flex flex-col flex-grow">
-                            <!-- Discount Badge - Fixed Height -->
-                            <div class="h-6 mb-2">
-                                <?php if ($p['discount_percentage'] > 0): ?>
-                                <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold inline-block">
-                                    -<?= $p['discount_percentage'] ?>% OFF
-                                </span>
-                                <?php endif; ?>
-                            </div>
-
-                            <!-- Product Name - Fixed Height -->
-                            <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
-                                <?= htmlspecialchars($p['product_name']) ?>
-                            </h3>
-
-                            <!-- Rating - Fixed Height -->
-                            <div class="flex items-center mb-3 h-5">
-                                <div class="flex text-yellow-400 text-xs">
-                                    <?php 
-                                    $rating = $p['avg_rating'] ?? 0;
-                                    for ($i = 1; $i <= 5; $i++) {
-                                        echo $i <= $rating ? '★' : '☆';
-                                    }
-                                    ?>
-                                </div>
-                                <span class="text-gray-500 text-xs ml-1">(<?= $p['review_count'] ?? 0 ?>)</span>
-                            </div>
-
-                            <!-- Price - Fixed Height -->
-                            <div class="flex items-baseline flex-wrap gap-2 mb-3 min-h-[1.75rem]">
-                                <?php if (!empty($p['sale_price']) && $p['sale_price'] < $p['price']): ?>
-                                    <span class="text-purple-custom font-bold text-lg">
-                                        Rs. <?= number_format($p['sale_price'], 2) ?>
-                                    </span>
-                                    <span class="text-gray-400 text-sm line-through">
-                                        Rs. <?= number_format($p['price'], 2) ?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="text-purple-custom font-bold text-lg">
-                                        Rs. <?= number_format($p['price'], 2) ?>
-                                    </span>
-                                <?php endif; ?>
-                            </div>
-                        </a>
-                        
-                        <!-- Action Buttons - Pushed to bottom -->
-                        <div class="flex gap-2 mt-auto">
-                            <button onclick="buyNowFromList(<?= $p['product_id'] ?>)" 
-                                    class="flex-1 bg-purple-custom text-white py-2 rounded-lg hover:bg-[#680e68] text-sm font-semibold transition-colors">
-                                <i class="fas fa-credit-card mr-2"></i>Buy Now
-                            </button>
-                            <button onclick="addToCart(<?= $p['product_id'] ?>)" 
-                                    class="border border-purple-custom text-purple-custom bg-transparent p-2 rounded-lg hover:bg-[#f7e6f6] hover:border-[#680e68] transition-all duration-200"
-                                    title="Add to Cart">
-                                <i class="fas fa-shopping-cart"></i>
-                            </button>
-                        </div>
+                    <div class="text-center py-12">
+                        <p class="text-gray-600 text-lg mb-4">No products found</p>
+                        <a href="products.php" class="text-purple-custom hover:underline">Clear filters and browse all products</a>
                     </div>
-                    <?php endforeach; ?>
-                </div>
+                <?php else: ?>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8 items-stretch">
+                        <?php foreach ($products as $p): ?>
+                            <?php
+                            $pid = (int) $p['product_id'];
+                            $inWish = isset($wishlistIdSet[$pid]);
+                            ?>
+                            <div class="bg-white rounded-2xl p-5 relative shadow-xl hover:shadow-2xl transition-shadow group flex flex-col h-full min-h-0 border border-gray-200 hover:border-[#4f0a4f]">
+                                <button type="button"
+                                    class="wishlist-btn wishlist-btn--icon absolute top-3 right-3 w-8 h-8 bg-white border border-gray-400 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors z-10<?= $inWish ? ' in-wishlist' : '' ?>"
+                                    data-product-id="<?= $pid ?>"
+                                    aria-label="<?= $inWish ? 'Remove from wishlist' : 'Add to wishlist' ?>"
+                                    aria-pressed="<?= $inWish ? 'true' : 'false' ?>">
+                                    <?php if ($inWish): ?>
+                                        <i class="fas fa-heart text-red-500" aria-hidden="true"></i>
+                                    <?php else: ?>
+                                        <i class="far fa-heart text-base" aria-hidden="true"></i>
+                                    <?php endif; ?>
+                                </button>
 
-                <!-- Pagination -->
-                <?php if ($total_pages > 1): ?>
-                <div class="flex justify-center items-center space-x-2">
-                    <?php if ($page > 1): ?>
-                    <a href="?page=<?= $page - 1 ?><?= $category_id ? '&category=' . $category_id : '' ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                       class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
-                        Previous
-                    </a>
+                                <a href="product_detail.php?id=<?= $p['product_id'] ?>" class="block flex flex-col flex-1 min-h-0">
+                                    <!-- Badge Section - Fixed Height -->
+                                    <div class="h-6 mb-2">
+                                        <?php if ($p['discount_percentage'] > 0): ?>
+                                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold inline-block">
+                                                -<?= $p['discount_percentage'] ?>% OFF
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <!-- Product Image -->
+                                    <div class="flex items-center justify-center h-48 mb-4 w-full shrink-0">
+                                        <?php
+                                        $mainImage = !empty($p['main_image']) ? 'assets/images/products/' . $p['main_image'] : 'assets/images/categories/default.png';
+                                        ?>
+                                        <img src="<?= $mainImage ?>" alt="<?= htmlspecialchars($p['product_name']) ?>" class="max-h-full w-full object-contain">
+                                    </div>
+
+                                    <hr><br>
+
+                                    <!-- Product Title - Fixed Height -->
+                                    <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
+                                        <?= htmlspecialchars($p['product_name']) ?>
+                                    </h3>
+
+                                    <!-- Rating Section -->
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            <?php
+                                            $rating = $p['avg_rating'] ?? 0;
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                echo $i <= $rating ? '★' : '☆';
+                                            }
+                                            ?>
+                                        </div>
+                                        <span class="text-gray-500 text-xs ml-1">(<?= $p['review_count'] ?? 0 ?>)</span>
+                                    </div>
+
+                                    <!-- Price Section -->
+                                    <div class="flex items-baseline flex-wrap gap-2 mb-3">
+                                        <?php if (!empty($p['sale_price']) && $p['sale_price'] < $p['price']): ?>
+                                            <span class="text-purple-custom font-bold text-lg">
+                                                Rs<?= number_format($p['sale_price'], 2) ?>
+                                            </span>
+                                            <span class="text-gray-400 text-sm line-through">
+                                                Rs<?= number_format($p['price'], 2) ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-purple-custom font-bold text-lg">
+                                                Rs<?= number_format($p['price'], 2) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </a>
+                                <div class="mt-auto flex flex-row gap-2 pt-2">
+                                    <button type="button" onclick="addToCart(<?= $p['product_id'] ?>)"
+                                        class="w-1/2 text-purple-custom py-2 rounded font-semibold text-sm hover:text-gray-700 transition-colors border border-purple-custom"
+                                        title="Add to Cart"
+                                        aria-label="Add to Cart">
+                                        Add to cart
+                                    </button>
+                                    <button type="button" onclick="buyNowFromList(<?= $p['product_id'] ?>)"
+                                        class="w-1/2 flex items-center justify-center bg-purple-custom text-white py-2 rounded font-semibold text-sm hover:bg-[#4f0a4f] transition-colors">
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Pagination -->
+                    <?php if ($total_pages > 1): ?>
+                        <div class="flex justify-center items-center space-x-2">
+                            <?php if ($page > 1): ?>
+                                <a href="?page=<?= $page - 1 ?><?= $category_id ? '&category=' . $category_id : '' ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>"
+                                    class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+                                    Previous
+                                </a>
+                            <?php endif; ?>
+
+                            <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
+                                <a href="?page=<?= $i ?><?= $category_id ? '&category=' . $category_id : '' ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>"
+                                    class="px-4 py-2 border rounded <?= $i == $page ? 'bg-purple-custom text-white border-purple-custom' : 'border-gray-300 hover:bg-gray-100' ?>">
+                                    <?= $i ?>
+                                </a>
+                            <?php endfor; ?>
+
+                            <?php if ($page < $total_pages): ?>
+                                <a href="?page=<?= $page + 1 ?><?= $category_id ? '&category=' . $category_id : '' ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>"
+                                    class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+                                    Next
+                                </a>
+                            <?php endif; ?>
+                        </div>
                     <?php endif; ?>
-
-                    <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
-                    <a href="?page=<?= $i ?><?= $category_id ? '&category=' . $category_id : '' ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                       class="px-4 py-2 border rounded <?= $i == $page ? 'bg-purple-custom text-white border-purple-custom' : 'border-gray-300 hover:bg-gray-100' ?>">
-                        <?= $i ?>
-                    </a>
-                    <?php endfor; ?>
-
-                    <?php if ($page < $total_pages): ?>
-                    <a href="?page=<?= $page + 1 ?><?= $category_id ? '&category=' . $category_id : '' ?><?= $brand_id ? '&brand=' . $brand_id : '' ?><?= $min_price ? '&min_price=' . $min_price : '' ?><?= $max_price ? '&max_price=' . $max_price : '' ?><?= $sort_by ? '&sort=' . $sort_by : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                       class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
-                        Next
-                    </a>
-                    <?php endif; ?>
-                </div>
-                <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -533,30 +554,30 @@ $brands = $brandModel->getAll();
             formData.append('quantity', 1);
 
             fetch('api/cart.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Redirect to checkout page
-                    window.location.href = 'checkout.php';
-                } else {
-                    if (window.cartManager) {
-                        window.cartManager.showNotification(data.message || 'Failed to add product', 'error');
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to checkout page
+                        window.location.href = 'checkout.php';
                     } else {
-                        alert(data.message || 'Failed to add product');
+                        if (window.cartManager) {
+                            window.cartManager.showNotification(data.message || 'Failed to add product', 'error');
+                        } else {
+                            alert(data.message || 'Failed to add product');
+                        }
                     }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                if (window.cartManager) {
-                    window.cartManager.showNotification('An error occurred', 'error');
-                } else {
-                    alert('An error occurred');
-                }
-            });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (window.cartManager) {
+                        window.cartManager.showNotification('An error occurred', 'error');
+                    } else {
+                        alert('An error occurred');
+                    }
+                });
         }
 
         // Brand filter checkboxes
@@ -575,7 +596,7 @@ $brands = $brandModel->getAll();
             });
         });
 
-        (function () {
+        (function() {
             const drawer = document.getElementById('product-filters-drawer');
             const backdrop = document.getElementById('mobile-filters-backdrop');
             const openBtn = document.getElementById('mobile-filters-open');
@@ -607,18 +628,18 @@ $brands = $brandModel->getAll();
             closeBtn.addEventListener('click', closeMobileFilters);
             backdrop.addEventListener('click', closeMobileFilters);
 
-            window.addEventListener('resize', function () {
+            window.addEventListener('resize', function() {
                 if (!isMobileFilters()) {
                     closeMobileFilters();
                 }
             });
 
-            document.getElementById('priceFilterForm')?.addEventListener('submit', function () {
+            document.getElementById('priceFilterForm')?.addEventListener('submit', function() {
                 if (isMobileFilters()) closeMobileFilters();
             });
         })();
 
-        (function () {
+        (function() {
             var box = document.getElementById('mediaLightbox');
             var imgEl = document.getElementById('lightboxImage');
             var vidEl = document.getElementById('lightboxVideo');
@@ -655,12 +676,12 @@ $brands = $brandModel->getAll();
                 box.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('overflow-hidden');
                 if (type === 'video') {
-                    vidEl.play().catch(function () {});
+                    vidEl.play().catch(function() {});
                 }
             }
 
-            document.querySelectorAll('.js-media-lightbox-trigger').forEach(function (el) {
-                el.addEventListener('click', function (e) {
+            document.querySelectorAll('.js-media-lightbox-trigger').forEach(function(el) {
+                el.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     var t = el.getAttribute('data-lightbox-type') || 'image';
@@ -668,7 +689,7 @@ $brands = $brandModel->getAll();
                     var alt = el.getAttribute('data-lightbox-alt') || '';
                     openLightbox(t, src, alt);
                 });
-                el.addEventListener('keydown', function (e) {
+                el.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         el.click();
@@ -678,7 +699,7 @@ $brands = $brandModel->getAll();
 
             closeBtn && closeBtn.addEventListener('click', closeLightbox);
             backdrop && backdrop.addEventListener('click', closeLightbox);
-            document.addEventListener('keydown', function (e) {
+            document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && !box.classList.contains('hidden')) {
                     closeLightbox();
                 }
@@ -687,4 +708,5 @@ $brands = $brandModel->getAll();
     </script>
 
 </body>
+
 </html>

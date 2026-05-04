@@ -39,7 +39,7 @@ class Brand {
                   WHERE b.is_active = 1
                   GROUP BY b.brand_id
                   HAVING product_count > 0
-                  ORDER BY product_count DESC
+                  ORDER BY product_count ASC
                   LIMIT :limit";
         
         $stmt = $this->conn->prepare($query);
