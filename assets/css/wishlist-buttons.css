@@ -1,0 +1,30 @@
+/* Wishlist heart: default vs saved (in-wishlist) — works with wishlist.js toggles */
+
+.wishlist-btn.wishlist-btn--icon.in-wishlist {
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+}
+
+.wishlist-btn.wishlist-btn--icon.in-wishlist:hover {
+    background-color: #fecaca !important;
+    border-color: #dc2626 !important;
+    color: #dc2626 !important;
+}
+
+/* Product detail row: outlined red default; filled when saved */
+.wishlist-btn.wishlist-btn--detail.in-wishlist {
+    background-color: #ef4444 !important;
+    color: #fff !important;
+    border-color: #ef4444 !important;
+}
+
+.wishlist-btn.wishlist-btn--detail.in-wishlist:hover {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #fff !important;
+}
+
+.wishlist-btn.wishlist-btn--detail.in-wishlist i {
+    color: #fff !important;
+}
